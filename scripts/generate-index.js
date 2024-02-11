@@ -17,7 +17,7 @@ const folders = shell
 // Generate HTML content for index.html
 let linksHtml = folders
   .map((folder) => {
-    return `<li><a href="https://erkal.github.io/${folder}/index.html">${folder}</a></li>`;
+    return `<li><a href="./${folder}/index.html">${folder}</a></li>`;
   })
   .join("\n");
 
