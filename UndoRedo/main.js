@@ -7173,7 +7173,7 @@ var $author$project$Playground$Playground$githubLink = A3($author$project$Playgr
 var $author$project$Tools$HtmlHelpers$HtmlHelpers$hiddenIf = function (condition) {
 	return condition ? A2($elm$html$Html$Attributes$style, 'display', 'none') : $elm$html$Html$Attributes$class('');
 };
-var $author$project$Playground$Playground$homeButton = A3($author$project$Playground$Playground$iconLink, 'Home', '../WebPage/index.html', $author$project$Playground$Icons$icons.h0);
+var $author$project$Playground$Playground$homeButton = A3($author$project$Playground$Playground$iconLink, 'Home', '../HomePage/index.html', $author$project$Playground$Icons$icons.h0);
 var $author$project$Playground$Tape$isNoTape = function (_v0) {
 	var state = _v0.a;
 	return _Utils_eq(state, $author$project$Playground$Tape$NoTape);
@@ -9148,7 +9148,7 @@ var $author$project$Tools$StyledElements$StyledElements$withHomePageHeader = fun
 									[
 										$elm$html$Html$Attributes$class('p-4 w-20 h-20'),
 										$elm$html$Html$Attributes$class('text-white/40 hover:text-white/80'),
-										$elm$html$Html$Attributes$href('../WebPage/index.html'),
+										$elm$html$Html$Attributes$href('../HomePage/index.html'),
 										$elm$html$Html$Attributes$title('Home')
 									]),
 								_List_fromArray(

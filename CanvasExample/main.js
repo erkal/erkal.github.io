@@ -7069,7 +7069,7 @@ var $author$project$Playground$Playground$githubLink = A3($author$project$Playgr
 var $author$project$Tools$HtmlHelpers$HtmlHelpers$hiddenIf = function (condition) {
 	return condition ? A2($elm$html$Html$Attributes$style, 'display', 'none') : $elm$html$Html$Attributes$class('');
 };
-var $author$project$Playground$Playground$homeButton = A3($author$project$Playground$Playground$iconLink, 'Home', '../WebPage/index.html', $author$project$Playground$Icons$icons.h2);
+var $author$project$Playground$Playground$homeButton = A3($author$project$Playground$Playground$iconLink, 'Home', '../HomePage/index.html', $author$project$Playground$Icons$icons.h2);
 var $author$project$Playground$Tape$isNoTape = function (_v0) {
 	var state = _v0.a;
 	return _Utils_eq(state, $author$project$Playground$Tape$NoTape);
