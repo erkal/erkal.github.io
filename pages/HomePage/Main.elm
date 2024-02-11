@@ -42,6 +42,7 @@ cards computer model =
             , sourceCodeLink = "https://github.com/erkal/kite"
             }
             "Kite: An Interactive Visualization Tool for Graph Theory"
+        , cardWithInternalLink "UndoRedo" "Implementing safe undo/redo in Elm. A blog post with interactive explanations"
         , cardWithInternalLink "TrixelEditor" "A trixel editor with zoom and pan"
         , cardWithInternalLink "RedFacedCube" "The Red-Faced Cube: One of the puzzles from Martin Gardner's column. It has a unique solution!"
         , cardWithInternalLink "WaveInWave" "A Creative coding example"
@@ -63,7 +64,6 @@ cards computer model =
         , cardWithInternalLink "ZoomAndPan" "Zooming and panning"
         , cardWithInternalLink "CubeAndCube" "Another simple example with pastel colors"
         , cardWithInternalLink "CanvasExample" "An elm-playground-like API on top of joakin/elm-canvas"
-        , cardWithInternalLink "UndoRedo" "Implementing safe undo/redo in Elm. A blog post with interactive explanations"
         ]
 
 
