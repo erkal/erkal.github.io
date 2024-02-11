@@ -8544,7 +8544,7 @@ var $author$project$HomePage$Main$cards = F2(
 					A2($author$project$HomePage$Main$cardWithInternalLink, 'RecursiveTree', 'Simple example for recursion'),
 					A2($author$project$HomePage$Main$cardWithInternalLink, 'TheSomaCube', 'Just a start for a puzzle game. It is not working yet'),
 					A2($author$project$HomePage$Main$cardWithInternalLink, 'GooeyEffect', 'An example showing the use of GLSL shaders'),
-					A2($author$project$HomePage$Main$cardWithInternalLink, 'GrowingSquares', 'A Creative coding example'),
+					A2($author$project$HomePage$Main$cardWithInternalLink, 'Vortex', 'A Creative coding example'),
 					A2($author$project$HomePage$Main$cardWithInternalLink, 'TurningBlocks', 'A Creative coding example'),
 					A2($author$project$HomePage$Main$cardWithInternalLink, 'ZoomAndPan', 'Zooming and panning'),
 					A2($author$project$HomePage$Main$cardWithInternalLink, 'CubeAndCube', 'Another simple example with pastel colors'),
