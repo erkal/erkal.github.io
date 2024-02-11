@@ -8528,6 +8528,7 @@ var $author$project$HomePage$Main$cards = F2(
 					$author$project$HomePage$Main$card,
 					{eb: 'https://erkal.github.io/kite/', ef: './assets/kite.png', e_: 'https://github.com/erkal/kite'},
 					'Kite: An Interactive Visualization Tool for Graph Theory'),
+					A2($author$project$HomePage$Main$cardWithInternalLink, 'UndoRedo', 'Implementing safe undo/redo in Elm. A blog post with interactive explanations'),
 					A2($author$project$HomePage$Main$cardWithInternalLink, 'TrixelEditor', 'A trixel editor with zoom and pan'),
 					A2($author$project$HomePage$Main$cardWithInternalLink, 'RedFacedCube', 'The Red-Faced Cube: One of the puzzles from Martin Gardner\'s column. It has a unique solution!'),
 					A2($author$project$HomePage$Main$cardWithInternalLink, 'WaveInWave', 'A Creative coding example'),
@@ -8548,8 +8549,7 @@ var $author$project$HomePage$Main$cards = F2(
 					A2($author$project$HomePage$Main$cardWithInternalLink, 'TurningBlocks', 'A Creative coding example'),
 					A2($author$project$HomePage$Main$cardWithInternalLink, 'ZoomAndPan', 'Zooming and panning'),
 					A2($author$project$HomePage$Main$cardWithInternalLink, 'CubeAndCube', 'Another simple example with pastel colors'),
-					A2($author$project$HomePage$Main$cardWithInternalLink, 'CanvasExample', 'An elm-playground-like API on top of joakin/elm-canvas'),
-					A2($author$project$HomePage$Main$cardWithInternalLink, 'UndoRedo', 'Implementing safe undo/redo in Elm. A blog post with interactive explanations')
+					A2($author$project$HomePage$Main$cardWithInternalLink, 'CanvasExample', 'An elm-playground-like API on top of joakin/elm-canvas')
 				]));
 	});
 var $author$project$Tools$StyledElements$StyledElements$withHomePageHeader = function (content) {
