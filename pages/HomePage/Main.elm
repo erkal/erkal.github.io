@@ -58,7 +58,7 @@ cards computer model =
         , cardWithInternalLink "RecursiveTree" "Simple example for recursion"
         , cardWithInternalLink "TheSomaCube" "Just a start for a puzzle game. It is not working yet"
         , cardWithInternalLink "GooeyEffect" "An example showing the use of GLSL shaders"
-        , cardWithInternalLink "GrowingSquares" "A Creative coding example"
+        , cardWithInternalLink "Vortex" "A Creative coding example"
         , cardWithInternalLink "TurningBlocks" "A Creative coding example"
         , cardWithInternalLink "ZoomAndPan" "Zooming and panning"
         , cardWithInternalLink "CubeAndCube" "Another simple example with pastel colors"
