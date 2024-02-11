@@ -1,4 +1,4 @@
-module WebPage.Main exposing (main)
+module HomePage.Main exposing (main)
 
 import Html exposing (Html, a, div, img, text)
 import Html.Attributes as HA exposing (class, href, src, target)

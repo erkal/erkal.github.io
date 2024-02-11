@@ -13,9 +13,9 @@
     "watch-elm": "npx elm-watch hot",
     "build-tailwind": "npx tailwindcss -i ./playground-exploration/src/style.css -o ./build/output.css",
     "watch-tailwind": "npm run build-tailwind && chokidar './**/*.elm' './**/*.css' -c 'npm run build-tailwind'",
-    "dev": "node ./scripts/prebuild.js && npx run-pty % npm run watch-tailwind % npm run watch-elm % open http://localhost:8000/",
+    "dev": "node ./scripts/prebuild.js && npx run-pty % npm run watch-tailwind % npm run watch-elm % node ./scripts/generate-index.js % open http://localhost:8000/",
     "build-elm": "npx elm-watch make --optimize",
-    "build": "node ./scripts/prebuild.js && npm run build-tailwind && npm run build-elm",
+    "build": "node ./scripts/prebuild.js && npm run build-tailwind && npm run build-elm && node ./scripts/generate-index.js",
     "deploy": "npm run build && gh-pages -d build"
   },
   "devDependencies": {

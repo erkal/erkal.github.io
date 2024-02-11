@@ -391,7 +391,7 @@ iconLink title linkAddress icon =
 
 homeButton : Html msg
 homeButton =
-    iconLink "Home" "../WebPage/index.html" Icons.icons.home
+    iconLink "Home" "../HomePage/index.html" Icons.icons.home
 
 
 twitterLink : Html msg
