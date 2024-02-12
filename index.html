@@ -1,78 +1,121 @@
-
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Index of Pages:</title>
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
 
-  <style>
-    body {
-      font-family: 'Arial', sans-serif;
-      background-color: #303030;
-      color: #fff;
-      margin: 0;
-      padding: 20px;
-    }
-    .container {
-      max-width: 600px;
-      margin-left: auto;
-      margin-right: auto;
-    }
-    ul {
-      list-style-type: none;
-      padding: 0;
-    }
-    li {
-      margin-bottom: 10px;
-    }
-    a {
-      color: #1e90ff;
-      text-decoration: none;
-    }
-    a:hover {
-      text-decoration: underline;
-    }
-    @media (max-width: 600px) {
-        body {
-            padding-left: 10px;
-            padding-right: 10px;
-        }
-        .container { width:auto;}
-     }
-</style>
+    <link rel="stylesheet" href="./output.css" />
 
-</head>
-<body>
-<div class="container">
-<h1>Index of Pages</h1>
-<ul><li><a href="./AAA_UsingImages/index.html">AAA_UsingImages</a></li>
-<li><a href="./BallGame/index.html">BallGame</a></li>
-<li><a href="./CanvasExample/index.html">CanvasExample</a></li>
-<li><a href="./Carousel/index.html">Carousel</a></li>
-<li><a href="./ColorShower/index.html">ColorShower</a></li>
-<li><a href="./CubeAndCube/index.html">CubeAndCube</a></li>
-<li><a href="./DancingCubes/index.html">DancingCubes</a></li>
-<li><a href="./GooeyEffect/index.html">GooeyEffect</a></li>
-<li><a href="./GrowingSquares/index.html">GrowingSquares</a></li>
-<li><a href="./HappyBirthdayAndrey/index.html">HappyBirthdayAndrey</a></li>
-<li><a href="./HomePage/index.html">HomePage</a></li>
-<li><a href="./IsomorphismGame/index.html">IsomorphismGame</a></li>
-<li><a href="./JohnHarrisEightRollingCubes/index.html">JohnHarrisEightRollingCubes</a></li>
-<li><a href="./MultipleShadowsFromIanMackenzie/index.html">MultipleShadowsFromIanMackenzie</a></li>
-<li><a href="./PlanetarySystem/index.html">PlanetarySystem</a></li>
-<li><a href="./RecursiveRotation/index.html">RecursiveRotation</a></li>
-<li><a href="./RecursiveTree/index.html">RecursiveTree</a></li>
-<li><a href="./RedFacedCube/index.html">RedFacedCube</a></li>
-<li><a href="./SensoTest/index.html">SensoTest</a></li>
-<li><a href="./Template/index.html">Template</a></li>
-<li><a href="./TheSomaCube/index.html">TheSomaCube</a></li>
-<li><a href="./TrixelEditor/index.html">TrixelEditor</a></li>
-<li><a href="./TurningBlocks/index.html">TurningBlocks</a></li>
-<li><a href="./UndoRedo/index.html">UndoRedo</a></li>
-<li><a href="./Vortex/index.html">Vortex</a></li>
-<li><a href="./WaveInWave/index.html">WaveInWave</a></li>
-<li><a href="./ZoomAndPan/index.html">ZoomAndPan</a></li></ul>
-</div>
-</body>
+    <!-- fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter&family=Roboto+Mono&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- elm logo -->
+    <link
+      rel="icon"
+      href="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f3/Elm_logo.svg/1200px-Elm_logo.svg.png"
+      type="image/png"
+    />
+
+    <!-- PlayEGI for Senso -->
+    <script src="./PlayEGI.js"></script>
+  </head>
+
+  <body class="overflow-hidden">
+    <div id="app"></div>
+
+    <script src="https://unpkg.com/elm-canvas@2/elm-canvas.js"></script>
+
+    <script src="main.js"></script>
+
+    <script type="module">
+      import { sendInputsToElmApp } from "./input.js";
+
+      // Patch the `Element` prototype so we can access the bounding client rect
+      // through a decoder. This uses a computed property to call the actual
+      // getBoundingClientRect method automagically.
+      Object.defineProperty(Element.prototype, "boundingClientRect", {
+        configurable: false,
+        enumerable: true,
+        get() {
+          const canvas = document.getElementById("canvas");
+          const elements = canvas.getElementsByClassName("canvas-element");
+          const data = Array.from(elements).map((element) => ({
+            id: element.id,
+            boundingClientRect: element.getBoundingClientRect(),
+          }));
+
+          app.ports.boundingBoxDataFromDom.send(data);
+
+          return this.getBoundingClientRect();
+        },
+      });
+
+      const app = Elm.HomePage.Main.init({
+        node: document.querySelector("#app"),
+        flags: {
+          inputs:
+            /*
+                  For some reason, elm-watch cannot hot-reload if the `inputs` object is imported from `input.js`.
+                  The following is a copy of the `inputs` object in `input.js`.
+            */
+            {
+              dt: 0,
+              clock: 0,
+              keyboard: {
+                // states
+                pressedKeys: [],
+                control: false,
+                alt: false,
+                shift: false,
+                left: false,
+                right: false,
+                up: false,
+                down: false,
+                // actions
+                downs: [],
+              },
+              pointer: {
+                // states
+                x: 0,
+                y: 0,
+                isDown: false,
+                // actions
+                down: false,
+                move: false,
+                up: false,
+                rightDown: false,
+                rightUp: false,
+              },
+              wheel: {
+                // actions
+                deltaX: 0,
+                deltaY: 0,
+              },
+              sensoState: {
+                center: { x: 0, y: 0, f: 0 },
+                right: { x: 0, y: 0, f: 0 },
+                up: { x: 0, y: 0, f: 0 },
+                left: { x: 0, y: 0, f: 0 },
+                down: { x: 0, y: 0, f: 0 },
+              },
+              screen: {
+                width: window.innerWidth,
+                height: window.innerHeight,
+              },
+              devicePixelRatio: window.devicePixelRatio,
+            },
+        },
+      });
+
+      sendInputsToElmApp(app);
+    </script>
+  </body>
 </html>
