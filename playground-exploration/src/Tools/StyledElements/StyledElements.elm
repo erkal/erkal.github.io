@@ -24,7 +24,7 @@ withHomePageHeader content =
                 [ a
                     [ class "p-4 w-20 h-20"
                     , class "text-white/40 hover:text-white/80"
-                    , href "../HomePage/index.html"
+                    , href "../index.html"
                     , HA.title "Home"
                     ]
                     [ Icons.icons.home ]
