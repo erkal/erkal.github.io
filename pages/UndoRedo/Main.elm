@@ -8,7 +8,7 @@ import Playground.Icons as Icons
 import Playground.Playground as Playground exposing (..)
 import Playground.Tape exposing (Message(..))
 import Tools.HtmlHelpers.HtmlHelpers exposing (classIf)
-import Tools.StyledElements.StyledElements exposing (withHomePageHeader)
+import Tools.StyledElements.StyledElements exposing (iconButton, markdownBlock, textInput, withHomePageHeader)
 import UndoRedo.UndoList as UndoList exposing (UndoList)
 
 
@@ -181,7 +181,7 @@ view computer model =
     withHomePageHeader <|
         div [ class "px-4 sm:px-16 mb-32" ]
             [ markdownBlock """
-#  Resolving the "Great Undo-Redo Quandary" in Elm
+# Resolving the "Great Undo-Redo Quandary" in Elm
 
 [Source code of this page](https://github.com/erkal/erkal.github.io/tree/main/pages/UndoRedo)
 
@@ -226,7 +226,7 @@ new state { past, present } =
     }
 ```
 
-Note that when entering a new state into UndoList, any existing future states are removed, similar to most applications with undo/redo functionality. This brings us to the second part of this post.
+Note that when entering a new state into `UndoList`, any existing future states are removed, similar to most applications with undo/redo functionality. This brings us to the second part of this post.
 
 ## Part 2: Confronting the Undo/Redo Quandary
 
@@ -240,7 +240,7 @@ So, the question arises: How do we address this issue? Is there a better way to 
 
 Initially, I believed that *undo trees* were the only viable solution. However, after reading [Resolving the Great Undo-Redo Quandary](https://github.com/zaboople/klonk/blob/404dc90559840684ad16c9ba22f9464622e675d3/TheGURQ.md), I became convinced otherwise. The simpler alternative presented in this resource effectively demonstrates its ease of use and efficiency.
 
-The concept behind this alternative is astonishingly straightforward. If you make edits following a series of 'undo' actions, the future - that is, your 'redo' options - are effectively added to your past. Additionally, your previous 'undo' actions also become part of your past.
+The concept behind this alternative is astonishingly straightforward. If you make edits following a series of 'undo' actions, the `future` - that is, your 'redo' options - are effectively added to your `past`. This means that your previous 'undo' actions become part of your history.
 
 This ensures that **no action is ever truly lost**; everything becomes part of a recoverable history. This allows for more flexibility and less stress.
 
@@ -269,7 +269,7 @@ newSafe state { past, present, future } =
 
 ### Making It More Concise
 
-Note that each time we edit following an 'undo' action, the `UndoList` expands by the length of the future list. This might not be ideal because it could lead to *exponential growth*, as [discussed here](https://github.com/zaboople/klonk/blob/404dc90559840684ad16c9ba22f9464622e675d3/TheGURQ.md#memory-space-usage).
+Note that each time we edit following an 'undo' action, the `UndoList` expands by the length of the `future`. This might not be ideal because it could lead to *exponential growth*, as [discussed here](https://github.com/zaboople/klonk/blob/404dc90559840684ad16c9ba22f9464622e675d3/TheGURQ.md#memory-space-usage).
 
 To prevent this from happening, you can **collapse consecutive undos** into a single step:
 """
@@ -340,7 +340,7 @@ viewUndoListInteractive computer model interactiveID =
             , class "flex flex-row items-center"
             ]
             [ div [ class "grow" ] [ markdownBlock (header interactiveID) ]
-            , div [ class "flex-none" ] [ button (PressedResetInteractiveButton interactiveID) "Reset" Icons.icons.reset ]
+            , div [ class "flex-none" ] [ iconButton (PressedResetInteractiveButton interactiveID) "Reset" Icons.icons.reset ]
             ]
         , div [ class "flex flex-col gap-4 sm:flex-row sm:gap-16" ]
             [ div [ class "flex flex-col gap-4" ]
@@ -352,66 +352,31 @@ viewUndoListInteractive computer model interactiveID =
         ]
 
 
-markdownBlock : String -> Html msg
-markdownBlock =
-    Markdown.toHtml
-        [ class "prose prose-gruvbox lg:prose-xl max-w-none"
-        , class "select-text"
-        ]
-
-
-button : Msg -> String -> Html Msg -> Html Msg
-button msg title icon =
-    div
-        [ HA.title title
-        , class "w-12 h-12 p-2"
-        , class "rounded-full shadow-lg"
-        , class "cursor-pointer"
-        , class "bg-white/60 text-black"
-        , class "hover:bg-black/60 hover:text-white active:bg-black active:text-white/60"
-        , class "transition-all"
-        , onClick msg
-        ]
-        [ icon ]
-
-
 viewButtons : Computer -> Model -> InteractiveID -> Html Msg
 viewButtons computer model interactiveID =
     div [ class "flex flex-col gap-2" ]
         [ markdownBlock "Press the undo/redo buttons:"
         , div [ class "p-2 flex-none flex flex-row gap-2" ]
-            [ button (PressedUndoButton interactiveID) "Undo" Icons.icons.undo
-            , button (PressedRedoButton interactiveID) "Redo" Icons.icons.redo
+            [ iconButton (PressedUndoButton interactiveID) "Undo" Icons.icons.undo
+            , iconButton (PressedRedoButton interactiveID) "Redo" Icons.icons.redo
             ]
         ]
 
 
 viewInputArea : Computer -> Model -> InteractiveID -> Html Msg
 viewInputArea computer model interactiveID =
-    div [ class "flex flex-col gap-2" ]
-        [ label []
-            [ markdownBlock "And edit your `state`:" ]
-        , div []
-            [ input
-                [ class "p-2 w-full text-gray-900 bg-white/60 font-mono font-bold"
-                , class "focus:outline-none focus:ring focus:ring-2 focus:ring-black"
-                , Html.Events.onInput (EditedTextArea interactiveID)
-                , value
-                    (case interactiveID of
-                        UndoRedoUsual ->
-                            model.undoListUsual.present
+    textInput (EditedTextArea interactiveID)
+        "And edit your `state`:"
+        (case interactiveID of
+            UndoRedoUsual ->
+                model.undoListUsual.present
 
-                        UndoRedoSafe ->
-                            model.undoListSafe.present
+            UndoRedoSafe ->
+                model.undoListSafe.present
 
-                        UndoRedoSafeConcise ->
-                            model.undoListSafeConcise.present
-                    )
-                ]
-                []
-            , div [ class "w-full h-1 bg-black" ] []
-            ]
-        ]
+            UndoRedoSafeConcise ->
+                model.undoListSafeConcise.present
+        )
 
 
 viewUndoList : Computer -> Model -> InteractiveID -> Html Msg

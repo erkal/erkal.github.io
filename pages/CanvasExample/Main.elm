@@ -76,7 +76,7 @@ view computer model =
         { sceneWidthInPixels = round computer.screen.width
         , camera = camera computer
         }
-        [ rectangle 1000 1000 purple
+        [ rectangle 25 25 purple
         , rectangle 4 4 lightBlue
         , rectangle 2 2 lightGray
             |> moveX 3

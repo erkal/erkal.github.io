@@ -1,7 +1,9 @@
 module Tools.StyledElements.StyledElements exposing (..)
 
-import Html exposing (Html, a, div)
-import Html.Attributes as HA exposing (class, href, target)
+import Html exposing (Html, a, div, input, label)
+import Html.Attributes as HA exposing (class, href, target, value)
+import Html.Events exposing (onClick)
+import Markdown
 import Playground.Icons as Icons
 
 
@@ -46,5 +48,46 @@ withHomePageHeader content =
                     [ Icons.icons.githubCat ]
                 ]
             , content
+            ]
+        ]
+
+
+markdownBlock : String -> Html msg
+markdownBlock =
+    Markdown.toHtml
+        [ class "prose prose-gruvbox lg:prose-xl max-w-none"
+        , class "select-text"
+        ]
+
+
+iconButton : msg -> String -> Html msg -> Html msg
+iconButton msg title icon =
+    div
+        [ HA.title title
+        , class "w-12 h-12 p-2"
+        , class "rounded-full shadow-lg"
+        , class "cursor-pointer"
+        , class "bg-white/60 text-black"
+        , class "hover:bg-black/60 hover:text-white active:bg-black active:text-white/60"
+        , class "transition-all"
+        , onClick msg
+        ]
+        [ icon ]
+
+
+textInput : (String -> msg) -> String -> String -> Html msg
+textInput msg label_ value_ =
+    div [ class "flex flex-col gap-2" ]
+        [ label []
+            [ markdownBlock label_ ]
+        , div []
+            [ input
+                [ class "p-2 w-full text-gray-900 bg-white/60 font-mono font-bold"
+                , class "focus:outline-none focus:ring focus:ring-2 focus:ring-black"
+                , Html.Events.onInput msg
+                , value value_
+                ]
+                []
+            , div [ class "w-full h-1 bg-black" ] []
             ]
         ]
