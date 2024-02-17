@@ -212,7 +212,6 @@ const sendInputsToElmApp = (app) => {
   });
 
   window.addEventListener("keyup", (e) => {
-    console.log("keyup", e.code);
     inputs.keyboard.pressedKeys = inputs.keyboard.pressedKeys.filter(
       (code) => code != e.code
     );
