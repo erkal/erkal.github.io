@@ -8,8 +8,7 @@ module RedFacedCube.Swipe exposing
     , update
     )
 
-import Dict
-import Playground.Playground as Playground exposing (Computer)
+import Playground.Playground exposing (Computer)
 
 
 type Swipe

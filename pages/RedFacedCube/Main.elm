@@ -351,7 +351,9 @@ startRollAnimation computer startPosition rollDirection willBeSolved newWorld mo
 view : Computer -> Model -> Html Msg
 view computer model =
     div
-        [ class "fixed w-full h-full" ]
+        [ class "fixed w-full h-full"
+        , style "touch-action" "none"
+        ]
         [ div [ class "absolute" ] [ Html.map never <| viewShapes computer model ]
         , headerText computer model
         , explanationText computer model

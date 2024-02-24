@@ -4,7 +4,7 @@ import Camera exposing (Camera, perspective)
 import Carousel.Carousel as Carousel exposing (Carousel)
 import Color exposing (Color, blue, charcoal, darkBlue, gray, green, lightBlue, lightBrown, orange, purple, red, rgb255)
 import Html exposing (Html, div, text)
-import Html.Attributes exposing (class)
+import Html.Attributes exposing (class, style)
 import Playground.Playground as Playground exposing (..)
 import Playground.Tape exposing (Message(..))
 import Scene exposing (..)
@@ -97,7 +97,10 @@ camera =
 
 view : Computer -> Model -> Html Never
 view computer model =
-    div [ class "absolute" ]
+    div
+        [ class "absolute"
+        , style "touch-action" "none"
+        ]
         [ div
             [ class "absolute p-4 text-white/80"
             , class "grid place-items-center w-full"

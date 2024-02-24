@@ -54,7 +54,12 @@ withHomePageHeader content =
 
 markdownBlock : String -> Html msg
 markdownBlock =
-    Markdown.toHtml
+    Markdown.toHtmlWith
+        { githubFlavored = Just { tables = True, breaks = True }
+        , defaultHighlighting = Nothing
+        , sanitize = True
+        , smartypants = True
+        }
         [ class "prose prose-gruvbox lg:prose-xl max-w-none"
         , class "select-text"
         ]

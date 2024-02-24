@@ -240,7 +240,7 @@ So, the question arises: How do we address this issue? Is there a better way to 
 
 Initially, I believed that *undo trees* were the only viable solution. However, after reading [Resolving the Great Undo-Redo Quandary](https://github.com/zaboople/klonk/blob/404dc90559840684ad16c9ba22f9464622e675d3/TheGURQ.md), I became convinced otherwise. The simpler alternative presented in this resource effectively demonstrates its ease of use and efficiency.
 
-The concept behind this alternative is astonishingly straightforward. If you make edits following a series of 'undo' actions, the `future` - that is, your 'redo' options - are effectively added to your `past`. This means that your previous 'undo' actions become part of your history.
+The concept behind this alternative is astonishingly straightforward. If you make edits following a series of 'undo' actions, the `future` - that is, your 'redo' options - are effectively added to your `past`. Additionally, your 'undo' actions become part of your history.
 
 This ensures that **no action is ever truly lost**; everything becomes part of a recoverable history. This allows for more flexibility and less stress.
 

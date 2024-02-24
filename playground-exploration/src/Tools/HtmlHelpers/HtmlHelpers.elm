@@ -9,11 +9,7 @@ import Tools.Geometry.Geometry exposing (Point2d)
 
 hiddenIf : Bool -> Attribute msg
 hiddenIf condition =
-    if condition then
-        style "display" "none"
-
-    else
-        class ""
+    styleIf condition "display" "none"
 
 
 showIf : Bool -> Attribute msg
@@ -37,42 +33,6 @@ styleIf condition styleName style_ =
 
     else
         style "" ""
-
-
-onClickWithoutPropagation : msg -> Attribute msg
-onClickWithoutPropagation msg =
-    stopPropagationOn "click"
-        (msg
-            |> Decode.succeed
-            |> Decode.map (\msg_ -> ( msg_, True ))
-        )
-
-
-onMouseDownWithoutPropagation : msg -> Attribute msg
-onMouseDownWithoutPropagation msg =
-    stopPropagationOn "mousedown"
-        (msg
-            |> Decode.succeed
-            |> Decode.map (\msg_ -> ( msg_, True ))
-        )
-
-
-onMouseMoveWithoutPropagation : msg -> Attribute msg
-onMouseMoveWithoutPropagation msg =
-    stopPropagationOn "mousemove"
-        (msg
-            |> Decode.succeed
-            |> Decode.map (\msg_ -> ( msg_, True ))
-        )
-
-
-onMouseOverWithoutPropagation : msg -> Attribute msg
-onMouseOverWithoutPropagation msg =
-    stopPropagationOn "mouseover"
-        (msg
-            |> Decode.succeed
-            |> Decode.map (\msg_ -> ( msg_, True ))
-        )
 
 
 

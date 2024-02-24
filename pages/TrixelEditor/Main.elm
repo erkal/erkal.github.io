@@ -44,7 +44,7 @@ type alias Model =
     , panAndZoomUI : PanAndZoom
     , editorIsOn : Bool
     , selectedColorIndex : Int
-    , mouseOveredUV : { u : Float, v : Float }
+    , pointerOveredUV : { u : Float, v : Float }
     }
 
 
@@ -81,7 +81,7 @@ init computer =
             []
     , panAndZoomUI = PanAndZoom.init { minZoom = 10, maxZoom = 70 }
     , editorIsOn = True
-    , mouseOveredUV = { u = 0, v = 0 }
+    , pointerOveredUV = { u = 0, v = 0 }
     , selectedColorIndex = 0
     }
 
@@ -132,7 +132,7 @@ insertTrixelOnPointerDown computer model =
         model
             |> mapCurrentWorld
                 (World.insert
-                    (Face.at model.mouseOveredUV)
+                    (Face.at model.pointerOveredUV)
                     model.selectedColorIndex
                 )
 
@@ -145,7 +145,7 @@ removeTrixelOnShiftMouseDown computer model =
     if computer.keyboard.shift && computer.pointer.isDown then
         model
             |> mapCurrentWorld
-                (World.remove (Face.at model.mouseOveredUV))
+                (World.remove (Face.at model.pointerOveredUV))
 
     else
         model
@@ -169,7 +169,7 @@ updateMouseOverUV computer model =
 
         Just p ->
             { model
-                | mouseOveredUV =
+                | pointerOveredUV =
                     fromCanvasCoordinates
                         { x = p.x
                         , y = p.y
@@ -184,7 +184,10 @@ updateMouseOverUV computer model =
 view : Computer -> Model -> Html Msg
 view computer model =
     div [ cursorForSpaceDragging computer model ]
-        [ div [ class "fixed w-full h-full" ]
+        [ div
+            [ class "fixed w-full h-full"
+            , style "touch-action" "none"
+            ]
             [ Html.map never (viewWebGLCanvas computer model) ]
         , div
             [ class "absolute w-screen h-screen text-center text-lg text-white/60"
@@ -244,7 +247,7 @@ drawMouseOveredFace : Computer -> Model -> Shape
 drawMouseOveredFace computer model =
     drawFace computer
         (Pages.current model.pages).palette
-        ( Face.at model.mouseOveredUV, model.selectedColorIndex )
+        ( Face.at model.pointerOveredUV, model.selectedColorIndex )
 
 
 drawFaces : Computer -> Model -> Shape
