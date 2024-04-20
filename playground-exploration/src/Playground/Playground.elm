@@ -441,7 +441,7 @@ viewHUD computer model =
         viewConfigurations : Html (Msg appMsg)
         viewConfigurations =
             div
-                [ class "overflow-y-auto left-12 bg-black/20"
+                [ class "overflow-y-auto left-12 bg-black/40"
                 , style "width" "260px"
                 , style "height" <| String.fromFloat computer.screen.height ++ "px"
                 , class "pointer-events-auto"
@@ -453,7 +453,7 @@ viewHUD computer model =
         viewInputs : Html (Msg appMsg)
         viewInputs =
             div
-                [ class "overflow-y-auto left-12 bg-black/20"
+                [ class "overflow-y-auto left-12 bg-black/40"
                 , style "width" "260px"
                 , style "height" <| String.fromFloat (Tape.currentComputer model.tape).screen.height ++ "px"
                 , class "pointer-events-auto"
@@ -536,15 +536,6 @@ viewComputer model =
 
             else
                 "False"
-
-        fpsAsText : Tape appModel -> String
-        fpsAsText tape =
-            case Tape.getFps tape of
-                Nothing ->
-                    "..."
-
-                Just fps ->
-                    String.fromInt fps
     in
     div
         [ class "p-6 text-sm text-white/80"
@@ -552,7 +543,6 @@ viewComputer model =
         ]
         [ div [ class "flex flex-col gap-2" ]
             [ div [ class "text-2xl font-bold" ] [ text "Tape" ]
-            , div [] [ Html.text ("fps: " ++ fpsAsText model.tape) ]
             , div [] [ Html.text ("frame: " ++ (model.tape |> Tape.getCurrentFrameIndex |> String.fromInt)) ]
             ]
         , div [ class "flex flex-col gap-2" ]

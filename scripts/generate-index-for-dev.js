@@ -44,7 +44,7 @@ const cssStyle = `
       margin-bottom: 10px;
     }
     a {
-      color: #1e90ff;
+      color: lightblue;
       text-decoration: none;
     }
     a:hover {

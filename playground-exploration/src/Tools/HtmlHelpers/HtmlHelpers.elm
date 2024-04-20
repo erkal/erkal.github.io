@@ -2,8 +2,7 @@ module Tools.HtmlHelpers.HtmlHelpers exposing (..)
 
 import Html exposing (Attribute, Html, div, text)
 import Html.Attributes exposing (class, style)
-import Html.Events exposing (on, preventDefaultOn, stopPropagationOn)
-import Json.Decode as Decode exposing (Decoder)
+import Html.Events.Extra.Pointer exposing (onWithOptions)
 import Tools.Geometry.Geometry exposing (Point2d)
 
 
@@ -39,46 +38,6 @@ styleIf condition styleName style_ =
 --
 
 
-type alias BoundingClientRect =
-    { x : Float
-    , y : Float
-    , width : Float
-    , height : Float
-    , top : Float
-    , right : Float
-    , bottom : Float
-    , left : Float
-    }
-
-
-includedInBoundingClientRect : BoundingClientRect -> Point2d -> Bool
-includedInBoundingClientRect rect point =
-    List.all identity
-        [ rect.left < point.x
-        , rect.right > point.x
-        , rect.top < point.y
-        , rect.bottom > point.y
-        ]
-
-
-boundingClientRectsIntersect : BoundingClientRect -> BoundingClientRect -> Bool
-boundingClientRectsIntersect rect1 rect2 =
-    List.all identity
-        [ rect1.left < rect2.right
-        , rect1.right > rect2.left
-        , rect1.top < rect2.bottom
-        , rect1.bottom > rect2.top
-        ]
-
-
-boundingClientRectDecoder : Decoder BoundingClientRect
-boundingClientRectDecoder =
-    Decode.map8 BoundingClientRect
-        (Decode.field "x" Decode.float)
-        (Decode.field "y" Decode.float)
-        (Decode.field "width" Decode.float)
-        (Decode.field "height" Decode.float)
-        (Decode.field "top" Decode.float)
-        (Decode.field "right" Decode.float)
-        (Decode.field "bottom" Decode.float)
-        (Decode.field "left" Decode.float)
+onPointerDownWithoutPropagation : msg -> Attribute msg
+onPointerDownWithoutPropagation msg =
+    onWithOptions "pointerdown" { stopPropagation = True, preventDefault = False } (\_ -> msg)

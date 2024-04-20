@@ -5,7 +5,6 @@ module Playground.Tape exposing
     , currentAppModel
     , currentComputer
     , getCurrentFrameIndex
-    , getFps
     , init
     , initNoTape
     , isNoTape
@@ -103,16 +102,6 @@ isPlaying (Tape state _) =
 getCurrentFrameIndex : Tape appModel -> Int
 getCurrentFrameIndex (Tape _ timeline) =
     SelectList.getCurrentIndex timeline
-
-
-getFps : Tape appModel -> Maybe Int
-getFps ((Tape state timeline) as tape) =
-    timeline
-        |> SelectList.getBeforeReversed
-        |> List.drop 59
-        |> List.head
-        |> Maybe.map (Tuple.first >> .clock)
-        |> Maybe.map (\t -> round (60 / ((currentComputer tape).clock - t)))
 
 
 getTotalSize : Tape appModel -> Int

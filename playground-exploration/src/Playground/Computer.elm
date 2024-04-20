@@ -3,6 +3,7 @@ module Playground.Computer exposing (..)
 import Color exposing (Color)
 import Playground.Configurations as Configurations exposing (Configurations)
 import Playground.Senso as Senso exposing (Senso, SensoState)
+import Tools.BoundingClientRect.BoundingClientRect exposing (BoundingClientRect)
 
 
 type alias Inputs =
@@ -13,6 +14,7 @@ type alias Inputs =
     , wheel : Wheel
     , screen : Screen
     , devicePixelRatio : Float
+    , boundingClientRects : List { id : String, boundingClientRect : BoundingClientRect }
     , sensoState : SensoState
     }
 
@@ -30,6 +32,7 @@ type alias Computer =
     , screen : Screen
     , devicePixelRatio : Float
     , senso : Senso
+    , boundingClientRects : List { id : String, boundingClientRect : BoundingClientRect }
 
     --
     , configurations : Configurations
@@ -87,6 +90,7 @@ init initialConfigurations inputs =
     , senso = Senso.init
     , screen = inputs.screen
     , devicePixelRatio = inputs.devicePixelRatio
+    , boundingClientRects = []
     , configurations = initialConfigurations
     }
 
@@ -103,6 +107,7 @@ tick inputs computer =
         , wheel = inputs.wheel
         , senso = computer.senso |> Senso.update inputs.sensoState
         , screen = inputs.screen
+        , boundingClientRects = inputs.boundingClientRects
         , devicePixelRatio = inputs.devicePixelRatio
     }
 

@@ -25,14 +25,19 @@ toString : Address -> String
 toString address =
     address
         |> List.map String.fromInt
-        |> String.join " "
+        |> String.join addressSeparator
 
 
 fromString : String -> Address
 fromString string =
     string
-        |> String.split " "
+        |> String.split addressSeparator
         |> List.filterMap String.toInt
+
+
+addressSeparator : String
+addressSeparator =
+    " - "
 
 
 {-| Increment last element of the path.

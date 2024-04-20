@@ -29,8 +29,8 @@ preventElmInputs("wheel");
 preventElmInputs("keydown");
 
 const inputs =
-  /* 
-    initial inputs 
+  /*
+    initial inputs
   */
   {
     dt: 0,
@@ -77,11 +77,12 @@ const inputs =
       height: window.innerHeight,
     },
     devicePixelRatio: window.devicePixelRatio,
+    boundingClientRects: [],
   };
 
 const sendInputsToElmApp = (app) => {
-  /* 
-    helper functions for getting information out of events 
+  /*
+    helper functions for getting information out of events
   */
   const isControlKey = (e) =>
     ["ControlLeft", "ControlRight", "MetaLeft", "MetaRight"].includes(e.code);
@@ -95,8 +96,8 @@ const sendInputsToElmApp = (app) => {
   const isLeftMouseButton = (e) => e.button == 0;
   const isRightMouseButton = (e) => e.button == 2;
 
-  /* 
-    the states should be reset when the browser tab looses focus 
+  /*
+    the states should be reset when the browser tab looses focus
   */
   function resetStates(inputs) {
     inputs.keyboard.pressedKeys = [];
@@ -110,8 +111,8 @@ const sendInputsToElmApp = (app) => {
     inputs.pointer.isDown = false;
   }
 
-  /* 
-    the actions live only one tick. They must be reset for the next tick 
+  /*
+    the actions live only one tick. They must be reset for the next tick
   */
   function resetActions(inputs) {
     inputs.keyboard.downs = [];
@@ -124,7 +125,19 @@ const sendInputsToElmApp = (app) => {
     inputs.wheel.deltaY = 0;
   }
 
-  /* 
+  function updateBoundingClientRects(inputs) {
+    const canvas = document.getElementById("canvas");
+    if (canvas) {
+      const elements = canvas.getElementsByClassName("canvas-element");
+      const data = Array.from(elements).map((element) => ({
+        id: element.id,
+        boundingClientRect: element.getBoundingClientRect(),
+      }));
+      inputs.boundingClientRects = data;
+    }
+  }
+
+  /*
     listen to Senso signals
   */
   var stateForSensoGame = 0;
@@ -175,12 +188,14 @@ const sendInputsToElmApp = (app) => {
     }
   });
 
-  /* 
+  /*
     listen to events and update the inputs
   */
   window.addEventListener("keydown", (e) => {
     inputs.keyboard.downs.push(e.code);
-    inputs.keyboard.pressedKeys.push(e.code);
+    if (!inputs.keyboard.pressedKeys.includes(e.code)) {
+      inputs.keyboard.pressedKeys.push(e.code);
+    }
 
     if (isControlKey(e)) {
       inputs.keyboard.control = true;
@@ -311,7 +326,7 @@ const sendInputsToElmApp = (app) => {
     };
   });
 
-  /* 
+  /*
       And lastly, the animation frame loop where we
         - update time in inputs,
         - send it to the elm app and
@@ -329,6 +344,9 @@ const sendInputsToElmApp = (app) => {
       // set clock and delta time
       inputs.dt = dt;
       inputs.clock = newClock;
+
+      // update boundingClientRects
+      updateBoundingClientRects(inputs);
 
       // log here for debugging purposes:
       // console.log("yeeeey", inputs);
