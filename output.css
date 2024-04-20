@@ -135,7 +135,7 @@ code,
 kbd,
 samp,
 pre {
-  font-family: Roboto Mono, monospace;
+  font-family: Recursive, monospace;
   /* 1 */
   font-feature-settings: normal;
   /* 2 */
@@ -1771,7 +1771,7 @@ input[type="range"]::-moz-range-thumb {
 }
 
 .font-mono {
-  font-family: Roboto Mono, monospace;
+  font-family: Recursive, monospace;
 }
 
 .text-2xl {
