@@ -1,8 +1,8 @@
 module Vortex.Main exposing (main)
 
 import Camera exposing (Camera, perspectiveWithOrbit)
-import Color exposing (hsl, rgb255)
-import Color.Oklch
+import Color exposing (blue, green, hsl, rgb255, white, yellow)
+import Color.Oklch exposing (oklch, toColor)
 import Html exposing (Html)
 import Playground.Playground as Playground exposing (..)
 import Playground.Tape exposing (Message(..))
@@ -33,10 +33,6 @@ initialConfigurations =
         , floatConfig "camera azimuth" ( 0, 2 * pi ) 0
         , floatConfig "camera elevation" ( -pi / 2, pi / 2 ) 0.5
         ]
-    , configBlock "Time"
-        True
-        [ floatConfig "period" ( 0.1, 60 ) 40
-        ]
     ]
 
 
@@ -54,44 +50,43 @@ camera computer =
         }
 
 
-view : Computer -> () -> Html Never
-view computer model =
+scene : Computer -> List Shape -> Html Never
+scene computer =
     Scene.sunny
         { devicePixelRatio = computer.devicePixelRatio
         , screen = computer.screen
         , camera = camera computer
-        , backgroundColor = rgb255 26 46 46
+        , backgroundColor = rgb255 38 35 54
         , sunlightAzimuth = -(degrees 135)
         , sunlightElevation = -(degrees 45)
         }
-        [ group (List.range 0 n |> List.map (vortex computer))
-        ]
 
 
-n : Int
+
+--
+
+
+view : Computer -> () -> Html Never
+view ({ clock } as computer) model =
+    scene computer
+        (List.range 0 n |> List.map (vortex clock))
+
+
 n =
     1200
 
 
-wavyNumber : Computer -> Int -> Float
-wavyNumber computer index =
-    (toFloat index / toFloat n)
-        + wave 0 1 (getFloat "period" computer) computer.clock
-
-
-vortex : Computer -> Int -> Shape
-vortex computer index =
+vortex clock i =
     let
         s =
-            wavyNumber computer index
+            (toFloat i / toFloat n) + sin (0.01 * clock)
 
         color =
-            Color.Oklch.oklch 0.95 0.2 s
-                |> Color.Oklch.toColor
+            oklch 0.95 0.2 s |> toColor
     in
     block (matte color) ( 2, 4, 2 )
         |> scale (0.5 + s)
         |> moveX (10 * s)
-        |> rotateY (0.1 * s * computer.clock)
-        |> rotateX (toFloat index * 0.01 * s)
+        |> rotateY (0.1 * s * clock)
+        |> rotateX (toFloat i * 0.01 * s)
         |> rotateY (s * 2 * pi)

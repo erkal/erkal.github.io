@@ -4,7 +4,7 @@ module.exports = {
     extend: {
       fontFamily: {
         sans: ["Inter", "sans-serif", "Arial", "Helvetica", "system-ui"],
-        mono: ["Recursive", "monospace"],
+        mono: ["JetBrains Mono", "monospace"],
       },
       typography: ({ theme }) => ({
         gruvbox: {

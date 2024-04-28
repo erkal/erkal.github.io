@@ -4,7 +4,7 @@ import Color exposing (black)
 import Color.Convert exposing (colorToHex, hexToColor)
 import Html exposing (Html, div, input, label, text)
 import Html.Attributes as HA exposing (checked, class, for, id, name, style, type_)
-import Html.Events exposing (onCheck)
+import Html.Events as HE exposing (onCheck)
 import Html.Events.Extra exposing (onChange)
 import Playground.Configurations exposing (..)
 import Tools.SelectList.SelectList as SelectList
@@ -54,6 +54,22 @@ viewConfig ( name, config ) =
                     ]
                 ]
 
+        StringConfig value ->
+            div [ class "flex flex-col gap-2" ]
+                [ label []
+                    [ text name ]
+                , div []
+                    [ input
+                        [ class "p-2 w-full text-gray-900 bg-white/60 font-mono font-bold"
+                        , class "focus:outline-none focus:ring focus:ring-2 focus:ring-black"
+                        , HE.onInput (SetString name)
+                        , HA.value value
+                        ]
+                        []
+                    , div [ class "w-full h-1 bg-black" ] []
+                    ]
+                ]
+
         FloatConfig ( min, max ) value ->
             viewSliderInput
                 { name = name
@@ -86,7 +102,7 @@ viewConfig ( name, config ) =
                     , class "w-full h-8 p-0 cursor-pointer"
                     , id name
                     , HA.name name
-                    , Html.Events.onInput
+                    , HE.onInput
                         (\newValue ->
                             SetColor name
                                 (newValue
@@ -143,7 +159,7 @@ viewSliderInput { name, value, min, max, step, onChange } =
             , HA.max (String.fromFloat max)
             , HA.value (String.fromFloat value)
             , HA.step (String.fromFloat step)
-            , Html.Events.onInput (String.toFloat >> Maybe.withDefault 42 >> onChange)
+            , HE.onInput (String.toFloat >> Maybe.withDefault 42 >> onChange)
             ]
             []
         ]

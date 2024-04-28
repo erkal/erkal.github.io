@@ -19,6 +19,7 @@ type alias Block =
 
 type Config
     = FloatConfig ( Float, Float ) Float
+    | StringConfig String
     | IntConfig ( Int, Int ) Int
     | ColorConfig Color
     | BoolConfig Bool
@@ -97,6 +98,27 @@ getFloatFromBlock name block =
             )
 
 
+getString : String -> Configurations -> String
+getString name configurations =
+    configurations
+        |> List.Extra.findMap (getStringFromBlock name)
+        |> Maybe.withDefault ""
+
+
+getStringFromBlock : String -> Block -> Maybe String
+getStringFromBlock name block =
+    block.configs
+        |> List.Extra.findMap
+            (\( k, config ) ->
+                case ( k == name, config ) of
+                    ( True, StringConfig value ) ->
+                        Just value
+
+                    _ ->
+                        Nothing
+            )
+
+
 getColor : String -> Configurations -> Color
 getColor name configurations =
     configurations
@@ -145,6 +167,7 @@ getSelectedOptionFromBlock name block =
 
 type Msg
     = SetFloat String Float
+    | SetString String String
     | SetInt String Int
     | SetColor String Color
     | SetBool String Bool
@@ -176,6 +199,19 @@ updateConfigs msg =
                         case config of
                             IntConfig ( min, max ) _ ->
                                 IntConfig ( min, max ) newValue
+
+                            _ ->
+                                config
+                    )
+                )
+
+        SetString name newValue ->
+            List.Extra.updateIf (Tuple.first >> (==) name)
+                (Tuple.mapSecond
+                    (\config ->
+                        case config of
+                            StringConfig _ ->
+                                StringConfig newValue
 
                             _ ->
                                 config

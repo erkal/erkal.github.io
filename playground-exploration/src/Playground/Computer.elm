@@ -136,6 +136,11 @@ getFloat name computer =
     computer.configurations |> Configurations.getFloat name
 
 
+getString : String -> Computer -> String
+getString name computer =
+    computer.configurations |> Configurations.getString name
+
+
 getColor : String -> Computer -> Color
 getColor name computer =
     computer.configurations |> Configurations.getColor name

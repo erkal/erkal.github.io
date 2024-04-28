@@ -37,7 +37,7 @@ fromString string =
 
 addressSeparator : String
 addressSeparator =
-    " - "
+    "-"
 
 
 {-| Increment last element of the path.

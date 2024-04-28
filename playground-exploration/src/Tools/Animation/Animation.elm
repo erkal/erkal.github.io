@@ -4,6 +4,8 @@ module Tools.Animation.Animation exposing
     , zigzag
     )
 
+import Float.Extra
+
 
 type alias Time =
     Float
@@ -79,5 +81,4 @@ zigzag lo hi period time =
 
 toFrac : Float -> Time -> Float
 toFrac period time =
-    (time - toFloat (floor (time / period)) * period)
-        / period
+    Float.Extra.modBy period time / period

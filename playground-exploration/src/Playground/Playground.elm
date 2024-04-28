@@ -3,7 +3,7 @@ port module Playground.Playground exposing
     , boolConfig, colorConfig, configBlock, floatConfig, intConfig, optionsConfig
     , getBool, getColor, getFloat, getInt, getOption
     , Computer, Keyboard, Pointer, Screen
-    , Playground, simpleApplication
+    , Playground, getString, simpleApplication, stringConfig
     )
 
 {-|
@@ -120,6 +120,10 @@ boolConfig name value =
     ( name, Configurations.BoolConfig value )
 
 
+stringConfig name value =
+    ( name, Configurations.StringConfig value )
+
+
 intConfig name ( min, max ) value =
     ( name, Configurations.IntConfig ( min, max ) value )
 
@@ -154,6 +158,10 @@ getInt =
 
 getFloat =
     Computer.getFloat
+
+
+getString =
+    Computer.getString
 
 
 getOption =
@@ -441,7 +449,7 @@ viewHUD computer model =
         viewConfigurations : Html (Msg appMsg)
         viewConfigurations =
             div
-                [ class "overflow-y-auto left-12 bg-black/40"
+                [ class "overflow-y-auto left-12 bg-black"
                 , style "width" "260px"
                 , style "height" <| String.fromFloat computer.screen.height ++ "px"
                 , class "pointer-events-auto"
