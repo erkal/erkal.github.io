@@ -135,7 +135,7 @@ code,
 kbd,
 samp,
 pre {
-  font-family: Recursive, monospace;
+  font-family: JetBrains Mono, monospace;
   /* 1 */
   font-feature-settings: normal;
   /* 2 */
@@ -1180,14 +1180,6 @@ input[type="range"]::-moz-range-thumb {
   background-color: rgb(229 231 235 / var(--tw-bg-opacity));
 }
 
-.pointer-events-none {
-  pointer-events: none;
-}
-
-.pointer-events-auto {
-  pointer-events: auto;
-}
-
 .collapse {
   visibility: collapse;
 }
@@ -1771,7 +1763,7 @@ input[type="range"]::-moz-range-thumb {
 }
 
 .font-mono {
-  font-family: Recursive, monospace;
+  font-family: JetBrains Mono, monospace;
 }
 
 .text-2xl {
