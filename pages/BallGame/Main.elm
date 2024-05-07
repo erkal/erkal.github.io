@@ -71,7 +71,7 @@ initialConfigurations =
         ]
     , configBlock "Physics Parameters"
         True
-        [ boolConfig "fix time steps" True
+        [ boolConfig "fix time steps" False
         , floatConfig "gas force" ( 20, 60 ) 40
         , floatConfig "friction" ( 0, 1 ) 0.4
         , floatConfig "direction change speed" ( 1, 5 ) 3

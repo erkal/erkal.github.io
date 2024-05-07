@@ -33,7 +33,8 @@ port module Playground.Playground exposing
 import Browser
 import Html exposing (Attribute, Html, a, button, div, text)
 import Html.Attributes as HA exposing (class, href, style, target)
-import Html.Events
+import Html.Events exposing (stopPropagationOn)
+import Json.Decode as Decode
 import Playground.Computer as Computer exposing (Computer, Inputs, Wheel)
 import Playground.Configurations as Configurations exposing (Block, Config(..), Configurations)
 import Playground.ConfigurationsView as ConfigurationsGUI
@@ -232,7 +233,8 @@ init app flags =
 
 
 type Msg appMsg
-    = ClickedDistractionFreeButton
+    = NoOp
+    | ClickedDistractionFreeButton
     | ClickedOnShowInputsButton
     | ClickedOnShowConfigurationsButton
     | InputsArrived Inputs
@@ -412,6 +414,15 @@ githubLink =
     iconLink "GitHub" "https://github.com/erkal" Icons.icons.githubCat
 
 
+stopPropagationOfInputs : List (Html.Attribute (Msg appMsg))
+stopPropagationOfInputs =
+    [ stopPropagationOn "mousedown" (Decode.succeed ( NoOp, True ))
+    , stopPropagationOn "pointerdown" (Decode.succeed ( NoOp, True ))
+    , stopPropagationOn "wheel" (Decode.succeed ( NoOp, True ))
+    , stopPropagationOn "keydown" (Decode.succeed ( NoOp, True ))
+    ]
+
+
 viewHUD : Computer -> Model appModel -> Html (Msg appMsg)
 viewHUD computer model =
     let
@@ -431,7 +442,6 @@ viewHUD computer model =
         leftStripe =
             div
                 [ class "w-12 h-full bg-black/80"
-                , class "pointer-events-auto"
                 , class "flex flex-col justify-between"
                 ]
                 [ div [ class "flex flex-col" ]
@@ -452,7 +462,6 @@ viewHUD computer model =
                 [ class "overflow-y-auto left-12 bg-black"
                 , style "width" "260px"
                 , style "height" <| String.fromFloat computer.screen.height ++ "px"
-                , class "pointer-events-auto"
                 , hiddenIf (model.leftBarState /= ShowingConfigurations)
                 ]
                 [ Html.map FromConfigurationsEditor (ConfigurationsGUI.viewConfigurations (currentComputer model.tape).configurations)
@@ -464,7 +473,6 @@ viewHUD computer model =
                 [ class "overflow-y-auto left-12 bg-black/40"
                 , style "width" "260px"
                 , style "height" <| String.fromFloat (Tape.currentComputer model.tape).screen.height ++ "px"
-                , class "pointer-events-auto"
                 , hiddenIf (model.leftBarState /= ShowingInputs)
                 ]
                 [ viewComputer model
@@ -474,24 +482,16 @@ viewHUD computer model =
         viewTape =
             div
                 [ class "absolute bottom-0 right-0 w-fit h-12 bg-black rounded-tl-lg"
-                , class "pointer-events-auto"
                 ]
                 [ Html.map FromTapeControls (Tape.view model.tape) ]
     in
     if model.distractionFree then
-        div
-            [ class "prevent-elm-inputs"
-            , class "absolute top-0 left-0 w-12 h-12"
-            ]
-            [ yinYangButton
+        div stopPropagationOfInputs
+            [ div [ class "absolute top-0 left-0 w-12 h-12" ] [ yinYangButton ]
             ]
 
     else
-        div
-            [ class "prevent-elm-inputs"
-            , class "absolute top-0 left-0 h-full w-full"
-            , class "pointer-events-none"
-            ]
+        div stopPropagationOfInputs
             [ div
                 [ class "absolute left-0 top-0 h-full"
                 , class "flex flex-row"
@@ -502,7 +502,6 @@ viewHUD computer model =
                 ]
             , div
                 [ class "absolute left-0 top-0"
-                , class "pointer-events-none"
                 , hiddenIf (Tape.isRecording model.tape || Tape.isNoTape model.tape)
                 ]
                 [ viewPointer computer model

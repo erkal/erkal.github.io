@@ -2,7 +2,8 @@ module UndoRedo.Main exposing (main)
 
 import Html exposing (Html, a, div, input, label, text, textarea)
 import Html.Attributes as HA exposing (class, href, target, value)
-import Html.Events exposing (onClick, onMouseDown)
+import Html.Events exposing (onClick, onMouseDown, preventDefaultOn)
+import Json.Decode as Decode
 import Markdown
 import Playground.Icons as Icons
 import Playground.Playground as Playground exposing (..)
@@ -69,7 +70,8 @@ type InteractiveID
 
 
 type Msg
-    = SelectedInteractive InteractiveID
+    = NoOp
+    | SelectedInteractive InteractiveID
     | PressedUndoButton InteractiveID
     | PressedRedoButton InteractiveID
     | PressedResetInteractiveButton InteractiveID
@@ -176,10 +178,25 @@ pressedKeyboardShortcutForRedo computer =
 -- VIEW
 
 
+preventBrowsersDefaultUndoRedoKeyboardShortcuts : Html.Attribute Msg
+preventBrowsersDefaultUndoRedoKeyboardShortcuts =
+    preventDefaultOn "keydown"
+        (Decode.map3
+            (\ctrl meta key -> { ctrl = ctrl, meta = meta, key = key })
+            (Decode.field "ctrlKey" Decode.bool)
+            (Decode.field "metaKey" Decode.bool)
+            (Decode.field "code" Decode.string)
+            |> Decode.map (\{ ctrl, meta, key } -> ( NoOp, (ctrl || meta) && (key == "KeyZ") ))
+        )
+
+
 view : Computer -> Model -> Html Msg
 view computer model =
     withHomePageHeader <|
-        div [ class "px-4 sm:px-16 mb-32" ]
+        div
+            [ class "px-4 sm:px-16 mb-32"
+            , preventBrowsersDefaultUndoRedoKeyboardShortcuts
+            ]
             [ markdownBlock """
 # Resolving the "Great Undo-Redo Quandary" in Elm
 

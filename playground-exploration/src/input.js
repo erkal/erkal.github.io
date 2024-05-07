@@ -1,33 +1,5 @@
 export { sendInputsToElmApp, inputs };
 
-// prevent browser's default behavior for undo/redo
-document.addEventListener("keydown", function (e) {
-  if ((e.ctrlKey || e.metaKey) && (e.key === "z" || e.key === "Z")) {
-    e.preventDefault();
-  }
-});
-
-const preventElmInputs = (eventType) => {
-  document.addEventListener(
-    eventType,
-    function (e) {
-      let elements = document.querySelectorAll(".prevent-elm-inputs");
-      if (
-        e.target &&
-        Array.from(elements).some((element) => element.contains(e.target))
-      ) {
-        e.stopPropagation();
-      }
-    },
-    true
-  );
-};
-
-preventElmInputs("pointerdown");
-preventElmInputs("mousedown");
-preventElmInputs("wheel");
-preventElmInputs("keydown");
-
 const inputs =
   /*
     initial inputs
@@ -337,28 +309,28 @@ const sendInputsToElmApp = (app) => {
     const newClock = timeStamp / 1000;
 
     const dt = newClock - inputs.clock;
-    if (dt < 0.009) {
-      // skip one frame if the screen has high refresh rate (120Hz on some ipads)
-      window.requestAnimationFrame(tick);
-    } else {
-      // set clock and delta time
-      inputs.dt = dt;
-      inputs.clock = newClock;
+    // if (dt < 0.009) {
+    //   // skip one frame if the screen has high refresh rate (120Hz on some ipads)
+    //   window.requestAnimationFrame(tick);
+    // } else {
+    // set clock and delta time
+    inputs.dt = dt;
+    inputs.clock = newClock;
 
-      // update boundingClientRects
-      updateBoundingClientRects(inputs);
+    // update boundingClientRects
+    updateBoundingClientRects(inputs);
 
-      // log here for debugging purposes:
-      // console.log("yeeeey", inputs);
+    // log here for debugging purposes:
+    // console.log("yeeeey", inputs);
 
-      // Send the `inputs` to elm app
-      app.ports?.tick?.send?.(inputs);
+    // Send the `inputs` to elm app
+    app.ports?.tick?.send?.(inputs);
 
-      // reset actions
-      resetActions(inputs);
+    // reset actions
+    resetActions(inputs);
 
-      // loop
-      window.requestAnimationFrame(tick);
-    }
+    // loop
+    window.requestAnimationFrame(tick);
+    // }
   }
 };

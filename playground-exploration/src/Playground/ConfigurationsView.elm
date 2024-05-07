@@ -15,7 +15,6 @@ viewConfigurations configurations =
     div
         [ class "p-6 text-gray-300"
         , class "flex flex-col gap-12"
-        , class "pointer-events-auto"
         ]
         (List.map viewBlock configurations)
 

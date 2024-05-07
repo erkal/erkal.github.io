@@ -9,8 +9,11 @@ import Dict.Any as AnyDict exposing (AnyDict)
 import Geometry exposing (Point)
 import Html exposing (Html, button, div, h2, hr, option, p, select, span, text)
 import Html.Attributes exposing (class, style, value)
-import Html.Events exposing (onClick)
+import Html.Events exposing (onClick, stopPropagationOn)
 import Html.Events.Extra exposing (onChange)
+import Html.Events.Extra.Mouse as Mouse
+import Html.Events.Extra.Pointer as Pointer
+import Html.Events.Extra.Wheel as Wheel
 import Json.Decode as Decode
 import Json.Encode as Encode
 import List.Nonempty as Nonempty
@@ -352,7 +355,8 @@ drawGrid computer =
 
 
 type Msg
-    = PressedEditorOnOffButton
+    = NoOp
+    | PressedEditorOnOffButton
     | SelectPalette Palette
     | SelectColor Int
     | PressedButtonForSettingBackgroundColor
@@ -379,11 +383,22 @@ handleMsgFromEditor editorMsg model =
         FromLevelEditor levelEditorMsg ->
             { model | pages = model.pages |> Pages.update levelEditorMsg }
 
+        _ ->
+            model
+
+
+stopPropagationOfInputs : List (Html.Attribute Msg)
+stopPropagationOfInputs =
+    [ stopPropagationOn "mousedown" (Decode.succeed ( NoOp, True ))
+    , stopPropagationOn "pointerdown" (Decode.succeed ( NoOp, True ))
+    , stopPropagationOn "wheel" (Decode.succeed ( NoOp, True ))
+    , stopPropagationOn "keydown" (Decode.succeed ( NoOp, True ))
+    ]
+
 
 viewEditor : Computer -> Model -> Html Msg
 viewEditor computer model =
-    div
-        [ class "prevent-elm-inputs" ]
+    div stopPropagationOfInputs
         [ editorContent computer model
         , editorToggleButton model
         ]
