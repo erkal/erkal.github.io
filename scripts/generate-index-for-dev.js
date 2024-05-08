@@ -25,9 +25,9 @@ let linksHtml = folders
 const cssStyle = `
   <style>
     body {
-      font-family: 'Arial', sans-serif;
-      background-color: #303030;
-      color: #fff;
+      font-family: 'JetBrains Mono', monospace;
+      background-color: #3B3A36;
+      color: #D79921;
       margin: 0;
       padding: 20px;
     }
@@ -69,6 +69,13 @@ let htmlContent = `
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Index of Pages:</title>
 ${cssStyle}
+<!-- fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link
+  href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&display=swap"
+  rel="stylesheet"
+/>
 </head>
 <body>
 <div class="container">
