@@ -1,19 +1,19 @@
 module Vortex.Main exposing (main)
 
+import Animation exposing (..)
 import Camera exposing (Camera, perspectiveWithOrbit)
 import Color exposing (blue, green, hsl, rgb255, white, yellow)
 import Color.Oklch exposing (oklch, toColor)
 import Html exposing (Html)
-import Playground.Playground as Playground exposing (..)
+import Play exposing (..)
 import Playground.Tape exposing (Message(..))
 import Scene exposing (..)
 import Scene3d.Material exposing (matte)
-import Tools.Animation.Animation exposing (..)
 
 
 main : Playground () Never
 main =
-    Playground.simpleApplication
+    Play.simpleApplication
         { initialConfigurations = initialConfigurations
         , init = \_ -> ()
         , update = \_ _ -> identity
@@ -26,6 +26,7 @@ main =
 -- INIT
 
 
+initialConfigurations : Configurations
 initialConfigurations =
     [ configBlock "Camera"
         True

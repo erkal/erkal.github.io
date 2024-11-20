@@ -6,7 +6,7 @@ import Html exposing (Html, br, div, p, text)
 import Html.Attributes exposing (class, style)
 import JohnHarrisEightRollingCubes.Cube exposing (Axis(..), Cube(..), RedFaceDirection(..), RollDirection(..), Sign(..))
 import JohnHarrisEightRollingCubes.World as World exposing (RollResult(..), World)
-import Playground.Playground as Playground exposing (..)
+import Play exposing (..)
 import Playground.Tape exposing (Message(..))
 import Scene exposing (..)
 import Scene3d.Material exposing (matte)
@@ -22,7 +22,7 @@ import Scene3d.Material exposing (matte)
 
 main : Playground Model Never
 main =
-    Playground.simpleApplication
+    Play.simpleApplication
         { initialConfigurations = initialConfigurations
         , init = init
         , update = update
@@ -51,6 +51,7 @@ type State
 -- INIT
 
 
+initialConfigurations : Configurations
 initialConfigurations =
     [ configBlock "Camera"
         True

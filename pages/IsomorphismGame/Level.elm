@@ -1,6 +1,6 @@
 module IsomorphismGame.Level exposing (..)
 
-import Geometry exposing (Point)
+import Geometry3d exposing (Point)
 import IsomorphismGame.Graph as Graph exposing (Graph(..), Graph_PreEncoded, VertexId, insertEdge, insertVertex)
 
 

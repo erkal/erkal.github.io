@@ -1,17 +1,17 @@
 module CubeAndCube.Main exposing (main)
 
+import Animation exposing (..)
 import Camera exposing (Camera, perspective)
 import Color exposing (blue, gray, green, red, rgb255)
 import Html exposing (Html)
-import Playground.Playground as Playground exposing (..)
+import Play exposing (..)
 import Scene exposing (..)
 import Scene3d.Material exposing (matte)
-import Tools.Animation.Animation exposing (..)
 
 
 main : Playground {} Never
 main =
-    Playground.simpleApplication
+    Play.simpleApplication
         { initialConfigurations = []
         , init = \_ -> {}
         , update = \_ _ _ -> {}

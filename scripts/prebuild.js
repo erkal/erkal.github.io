@@ -14,13 +14,13 @@ if (shell.test("-d", buildDir)) {
 shell.mkdir("-p", buildDir);
 
 // Copy input.js file to the build directory
-shell.cp("playground-exploration/src/input.js", buildDir);
+shell.cp("packages/playground/src/input.js", buildDir);
 
 // Copy PlayEGI.js file to the build directory
-shell.cp("playground-exploration/src/PlayEGI.js", buildDir);
+shell.cp("packages/playground/src/PlayEGI.js", buildDir);
 
 // Copy elm-canvas.js file to the build directory
-shell.cp("scene-2d/elm-canvas.js", buildDir);
+shell.cp("packages/scene-2d/elm-canvas.js", buildDir);
 
 // Initialize a variable for targets JSON
 let targets = {};
@@ -46,7 +46,7 @@ function processDirectory(dir) {
     // Copy scripts/index.html and replace every occurrence of
     // EXAMPLE_NAME with the example directory name
     let templateFile = fs.readFileSync(
-      "playground-exploration/src/index-template.html",
+      "packages/playground/src/index-template.html",
       "utf8"
     );
     let resultFile = templateFile.replace(/EXAMPLE_NAME/g, exampleName);

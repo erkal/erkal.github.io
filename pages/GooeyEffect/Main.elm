@@ -3,14 +3,14 @@ module GooeyEffect.Main exposing (main)
 import Html exposing (Html)
 import Html.Attributes exposing (height, style, width)
 import Math.Vector2 exposing (Vec2, vec2)
-import Playground.Playground as Playground exposing (..)
+import Play exposing (..)
 import Playground.Tape exposing (Message(..))
 import WebGL exposing (Mesh, Shader)
 
 
 main : Playground Model Never
 main =
-    Playground.simpleApplication
+    Play.simpleApplication
         { initialConfigurations = initialConfigurations
         , init = init
         , update = update
@@ -27,6 +27,7 @@ type alias Model =
 -- INIT
 
 
+initialConfigurations : Configurations
 initialConfigurations =
     [ configBlock "Parameters"
         True

@@ -5,6 +5,7 @@ import Color exposing (blue, green, lightBlue, red, rgb255, white, yellow)
 import Html exposing (Html, button, div, input, p, pre, span, text, textarea)
 import Html.Attributes exposing (checked, class, cols, for, id, name, rows, style, type_, value)
 import Html.Events exposing (onClick)
+import Icons
 import Illuminance
 import IsomorphismGame.GeometryHelpers as GeometryHelpers exposing (Point, lerp)
 import IsomorphismGame.Graph as Graph exposing (Graph, VertexData, VertexId)
@@ -12,22 +13,21 @@ import IsomorphismGame.HardcodedLevels exposing (hardcodedLevels)
 import IsomorphismGame.Level as Level exposing (BaseGraph, Level, PlayerGraph)
 import IsomorphismGame.Level.Decode
 import IsomorphismGame.Level.Encode
+import Levels exposing (Levels)
 import Light
 import LuminousFlux
-import Playground.Icons as Icons
-import Playground.Playground as Playground exposing (..)
+import Play exposing (..)
 import Playground.Tape exposing (Message(..))
 import Scene exposing (..)
 import Scene3d
 import Scene3d.Light
 import Scene3d.Material exposing (matte)
 import Temperature
-import Tools.Pages.Pages as Pages exposing (Pages)
 
 
 main : Playground Model Msg
 main =
-    Playground.simpleApplication
+    Play.simpleApplication
         { initialConfigurations = initialConfigurations
         , init = init
         , update = update
@@ -38,7 +38,7 @@ main =
 
 type alias Model =
     { editorIsOn : Bool
-    , levels : Pages Level
+    , levels : Levels Level
     , pointerXY : Point
     , gameState : GameState
     , editorState : EditorState
@@ -63,6 +63,7 @@ type EditorState
 -- INIT
 
 
+initialConfigurations : Configurations
 initialConfigurations =
     [ configBlock "Camera"
         True
@@ -106,12 +107,12 @@ init : Computer -> Model
 init computer =
     { editorIsOn = False
     , levels =
-        Pages.init
+        Levels.init
             IsomorphismGame.Level.Encode.encode
             IsomorphismGame.Level.Decode.decoder
-            { name = "level 1", page = Level.exampleLevel }
+            { name = "level 1", level = Level.exampleLevel }
             []
-            |> Pages.importJSON hardcodedLevels
+            |> Levels.importJSON hardcodedLevels
     , pointerXY = Point 0 0 0
     , gameState = Idle
     , editorState = EditorIdle
@@ -125,14 +126,14 @@ init computer =
 mapCurrentBaseGraph : (BaseGraph -> BaseGraph) -> Model -> Model
 mapCurrentBaseGraph up model =
     { model
-        | levels = Pages.mapCurrent (Level.mapBaseGraph up) model.levels
+        | levels = Levels.mapCurrent (Level.mapBaseGraph up) model.levels
     }
 
 
 mapCurrentPlayerGraph : (PlayerGraph -> PlayerGraph) -> Model -> Model
 mapCurrentPlayerGraph up model =
     { model
-        | levels = Pages.mapCurrent (Level.mapPlayerGraph up) model.levels
+        | levels = Levels.mapCurrent (Level.mapPlayerGraph up) model.levels
     }
 
 
@@ -178,10 +179,10 @@ tickPlayerVertices : Computer -> Model -> Model
 tickPlayerVertices computer model =
     let
         baseGraph =
-            (Pages.current model.levels).baseGraph
+            (Levels.current model.levels).baseGraph
 
         playerGraph =
-            (Pages.current model.levels).playerGraph
+            (Levels.current model.levels).playerGraph
 
         lerpToBaseVertex vertexId vertexData =
             case model.gameState of
@@ -259,7 +260,7 @@ handleInputForEditor computer model =
 
 nearestBaseVertex : Computer -> Model -> Maybe VertexId
 nearestBaseVertex computer model =
-    Graph.nearestVertex model.pointerXY (Pages.current model.levels).baseGraph
+    Graph.nearestVertex model.pointerXY (Levels.current model.levels).baseGraph
 
 
 playerVertexOnTheNearestBaseVertex : Computer -> Model -> Maybe VertexId
@@ -268,7 +269,7 @@ playerVertexOnTheNearestBaseVertex computer model =
         v =
             nearestBaseVertex computer model
     in
-    Graph.vertices (Pages.current model.levels).playerGraph
+    Graph.vertices (Levels.current model.levels).playerGraph
         |> List.filter (\( _, { data } ) -> Just data.mappedToBaseVertex == v)
         |> List.head
         |> Maybe.map Tuple.first
@@ -298,7 +299,7 @@ insertBaseEdge computer model =
         case ( model.editorState, nearestBaseVertex computer model ) of
             ( DraggingBaseEdge { sourceId }, Just targetId ) ->
                 if
-                    distanceXY (Graph.getPosition targetId (Pages.current model.levels).baseGraph) model.pointerXY
+                    distanceXY (Graph.getPosition targetId (Levels.current model.levels).baseGraph) model.pointerXY
                         < getFloat "pointer reach" computer
                 then
                     model
@@ -329,7 +330,7 @@ insertVertex computer model =
                                 Point 0 0 0
 
                             Just vertexId ->
-                                Graph.getPosition vertexId (Pages.current model.levels).baseGraph
+                                Graph.getPosition vertexId (Levels.current model.levels).baseGraph
                 in
                 if
                     distanceXY positionOfNearestVertex model.pointerXY
@@ -359,7 +360,7 @@ startDraggingPlayerVertex computer model =
         case ( model.gameState, playerVertexOnTheNearestBaseVertex computer model ) of
             ( Idle, Just vertexId ) ->
                 if
-                    distanceXY (Graph.getPosition vertexId (Pages.current model.levels).playerGraph) model.pointerXY
+                    distanceXY (Graph.getPosition vertexId (Levels.current model.levels).playerGraph) model.pointerXY
                         < getFloat "pointer reach" computer
                 then
                     { model
@@ -394,7 +395,7 @@ startDraggingBaseVertex computer model =
         of
             ( EditorIdle, Just vertexId ) ->
                 if
-                    distanceXY (Graph.getPosition vertexId (Pages.current model.levels).baseGraph) model.pointerXY
+                    distanceXY (Graph.getPosition vertexId (Levels.current model.levels).baseGraph) model.pointerXY
                         < getFloat "pointer reach" computer
                 then
                     { model | editorState = DraggingBaseVertex { vertexId = vertexId } }
@@ -448,7 +449,7 @@ endDraggingPlayerVertex computer model =
                                         | data =
                                             vertexData.data
                                                 |> setMappedVertexTo
-                                                    (Graph.getData dragData.dragged (Pages.current model.levels).playerGraph
+                                                    (Graph.getData dragData.dragged (Levels.current model.levels).playerGraph
                                                         |> Maybe.map .mappedToBaseVertex
                                                         |> Maybe.withDefault 0
                                                     )
@@ -607,7 +608,7 @@ drawDraggedBaseEdge computer model =
         DraggingBaseEdge { sourceId } ->
             let
                 sourcePosition =
-                    Graph.getPosition sourceId (Pages.current model.levels).baseGraph
+                    Graph.getPosition sourceId (Levels.current model.levels).baseGraph
 
                 ( length, rotation ) =
                     toPolar
@@ -661,7 +662,7 @@ drawPlayerGraph computer model =
 drawVerticesOfPlayerGraph : Computer -> Model -> Shape
 drawVerticesOfPlayerGraph computer model =
     group
-        (Graph.vertices (Pages.current model.levels).playerGraph
+        (Graph.vertices (Levels.current model.levels).playerGraph
             |> List.map (drawPlayerVertex computer model)
         )
 
@@ -686,7 +687,7 @@ drawEdgesOfPlayerGraph : Computer -> Model -> Shape
 drawEdgesOfPlayerGraph computer model =
     group
         (model.levels
-            |> Pages.current
+            |> Levels.current
             |> .playerGraph
             |> Graph.edges
             |> List.map (drawPlayerEdge computer)
@@ -759,7 +760,7 @@ drawBaseGraph computer model =
 drawVerticesOfBaseGraph : Computer -> Model -> Shape
 drawVerticesOfBaseGraph computer model =
     group
-        (Graph.vertices (Pages.current model.levels).baseGraph
+        (Graph.vertices (Levels.current model.levels).baseGraph
             |> List.map (drawBaseVertex computer)
         )
 
@@ -781,7 +782,7 @@ drawEdgesOfBaseGraph : Computer -> Model -> Shape
 drawEdgesOfBaseGraph computer model =
     group
         (model.levels
-            |> Pages.current
+            |> Levels.current
             |> .baseGraph
             |> Graph.edges
             |> List.map (drawBaseEdge computer)
@@ -827,7 +828,7 @@ drawBaseEdge computer { sourcePosition, targetPosition, sourceId, targetId } =
 type Msg
     = PressedEditorOnOffButton
     | PressedResetPlayerGraphButton
-    | FromLevelEditor Pages.Msg
+    | FromLevelEditor Levels.Msg
 
 
 handleMsgFromEditor : Msg -> Model -> Model
@@ -837,10 +838,10 @@ handleMsgFromEditor editorMsg model =
             { model | editorIsOn = not model.editorIsOn }
 
         PressedResetPlayerGraphButton ->
-            { model | levels = model.levels |> Pages.mapCurrent Level.resetPlayerGraph }
+            { model | levels = model.levels |> Levels.mapCurrent Level.resetPlayerGraph }
 
         FromLevelEditor levelEditorMsg ->
-            { model | levels = model.levels |> Pages.update levelEditorMsg }
+            { model | levels = model.levels |> Levels.update levelEditorMsg }
 
 
 viewEditor : Computer -> Model -> Html Msg
@@ -896,8 +897,8 @@ editorContent computer model =
 levelSelection : Model -> Html Msg
 levelSelection model =
     div []
-        [ div [ class "text-lg" ] [ text "Pages" ]
-        , div [ class "p-4" ] [ Html.map FromLevelEditor (Pages.view model.levels) ]
+        [ div [ class "text-lg" ] [ text "Levels" ]
+        , div [ class "p-4" ] [ Html.map FromLevelEditor (Levels.view model.levels) ]
         ]
 
 

@@ -1,17 +1,17 @@
 module CanvasExample.Main exposing (main)
 
 import Color exposing (black, blue, darkBlue, darkGreen, darkPurple, gray, green, lightBlue, lightGray, lightGreen, lightPurple, lightYellow, purple, red, rgb255, white)
+import Geometry2d exposing (..)
 import Html exposing (Html)
-import Playground.Playground as Playground exposing (..)
+import Play exposing (..)
 import Playground.Tape exposing (Message(..))
 import Scene2d exposing (..)
 import Scene2d.Camera as Camera exposing (Camera)
-import Tools.Geometry.Geometry exposing (..)
 
 
 main : Playground Model Never
 main =
-    Playground.simpleApplication
+    Play.simpleApplication
         { initialConfigurations = initialConfigurations
         , init = init
         , update = update
@@ -28,6 +28,7 @@ type alias Model =
 -- INIT
 
 
+initialConfigurations : Configurations
 initialConfigurations =
     []
 

@@ -8,27 +8,27 @@ import BallGame.World.Physics.Collision.Primitives.Geometry2d exposing (Point2d,
 import BallGame.World.Physics.Tick
 import Camera exposing (Camera, orthographic, perspectiveWithOrbit)
 import Color exposing (Color, black, blue, darkGreen, green, hsl, red, rgb255, white, yellow)
-import Geometry exposing (Point, Vector)
+import Geometry3d exposing (Point, Vector)
 import Html exposing (Html, button, div, p, text)
 import Html.Attributes exposing (class, style)
 import Html.Events exposing (onClick)
+import Icons
 import Illuminance
+import Levels exposing (Levels)
 import Light
 import LuminousFlux
-import Playground.Icons as Icons
-import Playground.Playground as Playground exposing (..)
+import Play exposing (..)
 import Playground.Tape exposing (Message(..))
 import Scene exposing (..)
 import Scene3d
 import Scene3d.Light
 import Scene3d.Material as Material
 import Temperature
-import Tools.Pages.Pages as Pages exposing (Pages)
 
 
 main : Playground Model Msg
 main =
-    Playground.simpleApplication
+    Play.simpleApplication
         { initialConfigurations = initialConfigurations
         , init = init
         , update = update
@@ -38,7 +38,7 @@ main =
 
 
 type alias Model =
-    { levels : Pages World
+    { levels : Levels World
     , editorIsOn : Bool
     , state : State
     , camera : Camera
@@ -55,6 +55,7 @@ type State
 -- INIT
 
 
+initialConfigurations : Configurations
 initialConfigurations =
     [ configBlock "View Options"
         True
@@ -81,7 +82,7 @@ initialConfigurations =
 
 init : Computer -> Model
 init computer =
-    { levels = Pages.init BallGame.World.Encode.encode BallGame.World.Decode.decoder { name = "level 1", page = World.init } []
+    { levels = Levels.init BallGame.World.Encode.encode BallGame.World.Decode.decoder { name = "level 1", level = World.init } []
     , editorIsOn = True
     , state = Idle
     , camera = camera computer { x = 0, y = 0, z = 0 }
@@ -185,7 +186,7 @@ moveCamera : Computer -> Model -> Model
 moveCamera computer model =
     let
         ball =
-            (Pages.current model.levels).ball
+            (Levels.current model.levels).ball
     in
     { model
         | camera =
@@ -197,9 +198,9 @@ tickWorld : Computer -> Model -> Model
 tickWorld computer model =
     let
         newWorld =
-            Pages.current model.levels |> BallGame.World.Physics.Tick.tick computer
+            Levels.current model.levels |> BallGame.World.Physics.Tick.tick computer
     in
-    { model | levels = model.levels |> Pages.mapCurrent (always newWorld) }
+    { model | levels = model.levels |> Levels.mapCurrent (always newWorld) }
 
 
 
@@ -351,7 +352,7 @@ thickLine computer color thickness ( start, end ) =
             )
 
         { radius, azimuth, inclination } =
-            Geometry.toSphericalCoordinates ( x, y, z )
+            Geometry3d.toSphericalCoordinates ( x, y, z )
     in
     cylinder (material computer color) (thickness / 2) radius
         |> rotateZ (degrees 90)
@@ -387,12 +388,12 @@ drawPolygons computer model =
                 [ triangle material_
                     ( to3dPoint start
                     , to3dPoint end
-                    , to3dPoint start |> Geometry.translateBy ( 0, 0, -height )
+                    , to3dPoint start |> Geometry3d.translateBy ( 0, 0, -height )
                     )
                 , triangle material_
-                    ( to3dPoint start |> Geometry.translateBy ( 0, 0, -height )
+                    ( to3dPoint start |> Geometry3d.translateBy ( 0, 0, -height )
                     , to3dPoint end
-                    , to3dPoint end |> Geometry.translateBy ( 0, 0, -height )
+                    , to3dPoint end |> Geometry3d.translateBy ( 0, 0, -height )
                     )
                 ]
 
@@ -410,14 +411,14 @@ drawPolygons computer model =
                 ]
     in
     group
-        ((Pages.current model.levels).polygons |> List.map drawPolygon)
+        ((Levels.current model.levels).polygons |> List.map drawPolygon)
 
 
 drawBall : Computer -> Model -> Shape
 drawBall computer model =
     let
         ball =
-            (Pages.current model.levels).ball
+            (Levels.current model.levels).ball
 
         playerBall =
             group
@@ -468,7 +469,7 @@ drawBallTrail computer model =
     if getBool "draw ball trail" computer then
         let
             ball =
-                (Pages.current model.levels).ball
+                (Levels.current model.levels).ball
         in
         group
             (ball.trail
@@ -487,7 +488,7 @@ type Msg
     = PressedEditorOnOffButton
     | ClickedButtonStartDrawingPolygon
     | ClickedButtonFinishDrawingPolygon (List Point2d)
-    | FromLevelEditor Pages.Msg
+    | FromLevelEditor Levels.Msg
 
 
 handleEditorMsg : Msg -> Model -> Model
@@ -505,11 +506,11 @@ handleEditorMsg editorMessage model =
         ClickedButtonFinishDrawingPolygon points ->
             { model
                 | state = Idle
-                , levels = model.levels |> Pages.mapCurrent (World.addPolygon points)
+                , levels = model.levels |> Levels.mapCurrent (World.addPolygon points)
             }
 
         FromLevelEditor levelEditorMsg ->
-            { model | levels = model.levels |> Pages.update levelEditorMsg }
+            { model | levels = model.levels |> Levels.update levelEditorMsg }
 
 
 viewEditor : Computer -> Model -> Html Msg
@@ -591,6 +592,6 @@ makeButton msg string =
 pageSelection : Model -> Html Msg
 pageSelection model =
     div []
-        [ div [ class "text-lg" ] [ text "Pages" ]
-        , div [ class "p-4" ] [ Html.map FromLevelEditor (Pages.view model.levels) ]
+        [ div [ class "text-lg" ] [ text "Levels" ]
+        , div [ class "p-4" ] [ Html.map FromLevelEditor (Levels.view model.levels) ]
         ]

@@ -1,17 +1,19 @@
 module RedFacedCube.Main exposing (main)
 
+import Animation exposing (wave)
 import Camera exposing (Camera, perspectiveWithOrbit)
 import Color exposing (darkRed, hsl, lightRed, rgb255, white)
 import Ease
-import Geometry exposing (Point, Vector)
-import Html exposing (Html, br, button, div, p, pre, span, text, textarea)
+import Geometry3d exposing (Point, Vector)
+import Html exposing (Attribute, Html, br, button, div, p, pre, span, text, textarea)
 import Html.Attributes exposing (checked, class, cols, for, id, name, rows, style, type_, value)
 import Html.Events exposing (onClick)
+import Icons
 import Illuminance
+import Levels exposing (Levels)
 import Light
 import LuminousFlux
-import Playground.Icons as Icons
-import Playground.Playground as Playground exposing (..)
+import Play exposing (..)
 import Playground.Tape exposing (Message(..))
 import RedFacedCube.Cell exposing (Cell, RollDirection(..))
 import RedFacedCube.Cube as Cube exposing (Axis(..), Cube(..), RedFaceDirection(..), Sign(..))
@@ -28,9 +30,6 @@ import Scene3d
 import Scene3d.Light
 import Scene3d.Material exposing (matte)
 import Temperature
-import Tools.Animation.Animation exposing (wave)
-import Tools.HtmlHelpers.HtmlHelpers exposing (classIf)
-import Tools.Pages.Pages as Pages exposing (Pages)
 
 
 
@@ -43,7 +42,7 @@ import Tools.Pages.Pages as Pages exposing (Pages)
 
 main : Playground Model Msg
 main =
-    Playground.simpleApplication
+    Play.simpleApplication
         { initialConfigurations = initialConfigurations
         , init = init
         , update = update
@@ -54,7 +53,7 @@ main =
 
 type alias Model =
     { state : State
-    , levels : Pages World
+    , levels : Levels World
     , editor : Editor
     , cellUnderPointer : Cell
     , swipe : Swipe
@@ -83,6 +82,7 @@ type State
 -- INIT
 
 
+initialConfigurations : Configurations
 initialConfigurations =
     [ configBlock "Camera"
         True
@@ -115,12 +115,12 @@ init : Computer -> Model
 init computer =
     { state = NoAnimation
     , levels =
-        Pages.init
+        Levels.init
             RedFacedCube.World.Encode.encodeWorld
             RedFacedCube.World.Decode.decodeWorld
-            { name = "level 1", page = World.levelFromBook }
+            { name = "level 1", level = World.levelFromBook }
             []
-            |> Pages.importJSON hardcodedLevels
+            |> Levels.importJSON hardcodedLevels
     , editor = Editor.init
     , cellUnderPointer = ( 0, 0 )
     , swipe = Swipe.init
@@ -135,10 +135,10 @@ update : Computer -> Message Msg -> Model -> Model
 update computer message model =
     let
         playerCube =
-            (Pages.current model.levels).playerCube
+            (Levels.current model.levels).playerCube
 
         levelEditingCube =
-            (Pages.current model.levels).levelEditingCube
+            (Levels.current model.levels).levelEditingCube
 
         handleUserInput =
             case inputToRollDirection computer model of
@@ -236,7 +236,7 @@ swipeInputToRollDirection swipe =
 
 attemptRollForPlayer : RollDirection -> Cell -> Computer -> Model -> Model
 attemptRollForPlayer rollDirection startCell computer model =
-    case Pages.current model.levels |> World.step rollDirection of
+    case Levels.current model.levels |> World.step rollDirection of
         ViolatesRule CannotCrossPath ->
             model
 
@@ -266,7 +266,7 @@ attemptRollForPlayer rollDirection startCell computer model =
 
 attemptRollForLevelEditing : RollDirection -> Cell -> Computer -> Model -> Model
 attemptRollForLevelEditing rollDirection startCell computer model =
-    case Pages.current model.levels |> World.stepForLevelEditing rollDirection of
+    case Levels.current model.levels |> World.stepForLevelEditing rollDirection of
         CannotRoll_LevelFinishedBecauseTopFaceIsRed ->
             model
 
@@ -290,7 +290,7 @@ stopAnimation computer model =
 
                         else
                             NoAnimation
-                    , levels = model.levels |> Pages.mapCurrent (always newWorld)
+                    , levels = model.levels |> Levels.mapCurrent (always newWorld)
                 }
 
             else
@@ -392,6 +392,15 @@ explanationText computer model =
         ]
 
 
+classIf : Bool -> String -> Attribute msg
+classIf condition className =
+    if condition then
+        class className
+
+    else
+        class ""
+
+
 headerText : Computer -> Model -> Html Msg
 headerText computer model =
     div [ class "absolute w-full" ]
@@ -414,7 +423,7 @@ camera computer model =
         { focalPoint =
             let
                 center =
-                    World.center (Pages.current model.levels)
+                    World.center (Levels.current model.levels)
             in
             { x = center.x, y = center.y, z = 0 }
         , azimuth = getFloat "camera azimuth" computer
@@ -427,7 +436,7 @@ viewShapes : Computer -> Model -> Html Never
 viewShapes computer model =
     let
         (Cube ( x, y ) _) =
-            (Pages.current model.levels).playerCube
+            (Levels.current model.levels).playerCube
 
         ( cubeX, cubeY ) =
             -- This is only for the camera follow rolling cube smoothly
@@ -529,7 +538,7 @@ drawMarkForFinishCell : Computer -> Model -> Shape
 drawMarkForFinishCell computer model =
     let
         ( x, y ) =
-            (Pages.current model.levels).levelEditingPath.last
+            (Levels.current model.levels).levelEditingPath.last
     in
     cylinder (matte (getColor "finish mark color" computer)) 0.3 1
         |> rotateX (degrees 90)
@@ -548,7 +557,7 @@ drawBoard computer model =
                 |> moveY (toFloat y)
     in
     group
-        ((Pages.current model.levels).levelEditingPath
+        ((Levels.current model.levels).levelEditingPath
             |> Path.cells
             |> List.map drawCellOnPath
         )
@@ -611,7 +620,7 @@ drawWallsForLevelEditingPath computer model =
     let
         pathToDraw =
             model.editor.mouseOveredSolution
-                |> Maybe.withDefault (Pages.current model.levels).levelEditingPath
+                |> Maybe.withDefault (Levels.current model.levels).levelEditingPath
     in
     group
         (pathToDraw
@@ -624,9 +633,9 @@ drawWallsForLevelEditingPath computer model =
 drawWallsForPlayerPath : Computer -> Model -> Shape
 drawWallsForPlayerPath computer model =
     group
-        ((Pages.current model.levels).levelEditingPath
+        ((Levels.current model.levels).levelEditingPath
             |> Path.wallsWithDuplicates
-            |> List.filter (\wall -> not (Path.crosses wall (Pages.current model.levels).playerPath))
+            |> List.filter (\wall -> not (Path.crosses wall (Levels.current model.levels).playerPath))
             |> List.map (drawWall computer)
         )
 
@@ -659,7 +668,7 @@ drawPlayerPath computer model =
                 |> moveY (toFloat y)
     in
     group
-        ((Pages.current model.levels).playerPath
+        ((Levels.current model.levels).playerPath
             |> Path.cells
             |> List.indexedMap drawCellOnPath
         )
@@ -669,7 +678,7 @@ drawPlayerCube : Computer -> Model -> Shape
 drawPlayerCube computer model =
     let
         (Cube ( x, y ) redFaceDirection) =
-            (Pages.current model.levels).playerCube
+            (Levels.current model.levels).playerCube
 
         s =
             getFloat "cubes side length" computer
@@ -722,7 +731,7 @@ drawLevelEditingCube : Computer -> Model -> Shape
 drawLevelEditingCube computer model =
     let
         (Cube ( x, y ) redFaceDirection) =
-            (Pages.current model.levels).levelEditingCube
+            (Levels.current model.levels).levelEditingCube
 
         s =
             getFloat "cubes side length" computer
@@ -859,7 +868,7 @@ type Msg
     | PressedCalculateSolutionsButton
     | MouseEnterSolution Path
     | MouseLeftSolution
-    | FromLevelEditor Pages.Msg
+    | FromLevelEditor Levels.Msg
 
 
 handleMsgFromEditor : Msg -> Model -> Model
@@ -872,7 +881,7 @@ handleMsgFromEditor editorMsg ({ editor } as model) =
                         |> Editor.toggle
                 , levels =
                     model.levels
-                        |> Pages.mapCurrent World.reset
+                        |> Levels.mapCurrent World.reset
                 , state =
                     NoAnimation
             }
@@ -881,11 +890,11 @@ handleMsgFromEditor editorMsg ({ editor } as model) =
             { model
                 | levels =
                     model.levels
-                        |> Pages.mapCurrent
+                        |> Levels.mapCurrent
                             (\world ->
                                 { world
                                     | calculatedSolutions =
-                                        Pages.current model.levels |> World.calculateSolutions
+                                        Levels.current model.levels |> World.calculateSolutions
                                 }
                             )
             }
@@ -903,7 +912,7 @@ handleMsgFromEditor editorMsg ({ editor } as model) =
             }
 
         FromLevelEditor levelEditorMsg ->
-            { model | levels = model.levels |> Pages.update levelEditorMsg }
+            { model | levels = model.levels |> Levels.update levelEditorMsg }
 
 
 viewEditor : Computer -> Model -> Html Msg
@@ -961,7 +970,7 @@ viewSolutions computer model =
             [ div [ class "text-lg" ] [ Html.text "Solution Calculator" ]
             , makeButton PressedCalculateSolutionsButton "Calculate all solutions"
             , div []
-                (Pages.current model.levels
+                (Levels.current model.levels
                     |> .calculatedSolutions
                     |> List.indexedMap
                         (\i p ->
@@ -1005,6 +1014,6 @@ makeButton msg string =
 levelSelection : Model -> Html Msg
 levelSelection model =
     div []
-        [ div [ class "text-lg" ] [ text "Pages" ]
-        , div [ class "p-4" ] [ Html.map FromLevelEditor (Pages.view model.levels) ]
+        [ div [ class "text-lg" ] [ text "Levels" ]
+        , div [ class "p-4" ] [ Html.map FromLevelEditor (Levels.view model.levels) ]
         ]

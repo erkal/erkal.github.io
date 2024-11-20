@@ -25,7 +25,7 @@ let linksHtml = folders
 const cssStyle = `
   <style>
     body {
-      font-family: 'JetBrains Mono', monospace;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
       background-color: #3B3A36;
       color: #D79921;
       margin: 0;

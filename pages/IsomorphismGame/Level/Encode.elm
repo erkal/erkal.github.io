@@ -1,6 +1,6 @@
 module IsomorphismGame.Level.Encode exposing (encode)
 
-import Geometry
+import Geometry3d
 import IsomorphismGame.Graph as Graph exposing (Graph_PreEncoded, VertexData, VertexId)
 import IsomorphismGame.Level as Level exposing (BaseGraph, Level, Level_PreEncoded)
 import Json.Encode exposing (Value)
@@ -27,7 +27,7 @@ encodePrepared levelToEncode =
 -- TODO: double-check generated code
 
 
-encodeGeometryPoint : Geometry.Point -> Value
+encodeGeometryPoint : Geometry3d.Point -> Value
 encodeGeometryPoint point =
     Json.Encode.object <|
         [ ( "x", Json.Encode.float point.x )

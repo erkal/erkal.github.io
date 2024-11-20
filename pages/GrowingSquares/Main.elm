@@ -1,19 +1,19 @@
 module GrowingSquares.Main exposing (main)
 
+import Animation exposing (..)
 import Camera exposing (Camera, perspective)
 import Color exposing (Color, blue, gray, green, red, rgb255)
-import Geometry exposing (Point)
+import Geometry3d exposing (Point)
 import Html exposing (Html)
-import Playground.Playground as Playground exposing (..)
+import Play exposing (..)
 import Playground.Tape exposing (Message(..))
 import Scene exposing (..)
 import Scene3d.Material as Material exposing (matte)
-import Tools.Animation.Animation exposing (..)
 
 
 main : Playground Model Never
 main =
-    Playground.simpleApplication
+    Play.simpleApplication
         { initialConfigurations = initialConfigurations
         , init = init
         , update = update
@@ -43,6 +43,7 @@ constants =
 -- INIT
 
 
+initialConfigurations : Configurations
 initialConfigurations =
     []
 

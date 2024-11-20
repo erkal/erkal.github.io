@@ -1,18 +1,18 @@
 module RecursiveTree.Main exposing (main)
 
+import Animation exposing (spin, wave)
 import Camera exposing (Camera, perspective)
 import Color exposing (blue, gray, hsl, lightBlue)
 import Html exposing (Html)
-import Playground.Playground as Playground exposing (..)
+import Play exposing (..)
 import Playground.Tape exposing (Message(..))
 import Scene exposing (..)
 import Scene3d.Material exposing (matte)
-import Tools.Animation.Animation exposing (spin, wave)
 
 
 main : Playground Model Never
 main =
-    Playground.simpleApplication
+    Play.simpleApplication
         { initialConfigurations = initialConfigurations
         , init = init
         , update = update
@@ -29,6 +29,7 @@ type alias Model =
 -- INIT
 
 
+initialConfigurations : Configurations
 initialConfigurations =
     [ configBlock "Parameters"
         True

@@ -1,5 +1,6 @@
 module HappyBirthdayAndrey.Main exposing (main)
 
+import Animation exposing (wave)
 import Camera exposing (Camera, perspective)
 import Color exposing (Color, black, yellow)
 import Html exposing (Html, div, text)
@@ -7,7 +8,7 @@ import Html.Attributes exposing (class)
 import Illuminance
 import Light
 import LuminousFlux
-import Playground.Playground as Playground exposing (..)
+import Play exposing (..)
 import Playground.Tape exposing (Message(..))
 import Scene exposing (..)
 import Scene3d
@@ -15,12 +16,11 @@ import Scene3d.Light
 import Scene3d.Material exposing (matte)
 import Set exposing (Set)
 import Temperature
-import Tools.Animation.Animation exposing (wave)
 
 
 main : Playground Model Never
 main =
-    Playground.simpleApplication
+    Play.simpleApplication
         { initialConfigurations = initialConfigurations
         , init = init
         , update = update
@@ -38,6 +38,7 @@ type alias Model =
 -- INIT
 
 
+initialConfigurations : Configurations
 initialConfigurations =
     []
 

@@ -8,7 +8,7 @@ module RedFacedCube.Swipe exposing
     , update
     )
 
-import Playground.Playground exposing (Computer)
+import Play exposing (Computer)
 
 
 type Swipe

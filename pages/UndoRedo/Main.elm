@@ -1,21 +1,19 @@
 module UndoRedo.Main exposing (main)
 
-import Html exposing (Html, a, div, input, label, text, textarea)
+import DesignSystem exposing (buttonWithIcon, markdownBlock, textInput, withHomePageHeader)
+import Html exposing (Attribute, Html, a, div, input, label, text, textarea)
 import Html.Attributes as HA exposing (class, href, target, value)
 import Html.Events exposing (onClick, onMouseDown, preventDefaultOn)
+import Icons
 import Json.Decode as Decode
-import Markdown
-import Playground.Icons as Icons
-import Playground.Playground as Playground exposing (..)
+import Play exposing (..)
 import Playground.Tape exposing (Message(..))
-import Tools.HtmlHelpers.HtmlHelpers exposing (classIf)
-import Tools.StyledElements.StyledElements exposing (iconButton, markdownBlock, textInput, withHomePageHeader)
 import UndoRedo.UndoList as UndoList exposing (UndoList)
 
 
 main : Playground Model Msg
 main =
-    Playground.simpleApplication
+    Play.simpleApplication
         { initialConfigurations = []
         , init = init
         , update = update
@@ -357,11 +355,18 @@ viewUndoListInteractive computer model interactiveID =
             , class "flex flex-row items-center"
             ]
             [ div [ class "grow" ] [ markdownBlock (header interactiveID) ]
-            , div [ class "flex-none" ] [ iconButton (PressedResetInteractiveButton interactiveID) "Reset" Icons.icons.reset ]
+            , div [ class "flex-none" ]
+                [ buttonWithIcon
+                    { name = "Reset"
+                    , icon = Icons.icons.reset
+                    , onClick = PressedResetInteractiveButton interactiveID
+                    }
+                ]
             ]
         , div [ class "flex flex-col gap-4 sm:flex-row sm:gap-16" ]
             [ div [ class "flex flex-col gap-4" ]
                 [ viewButtons computer model interactiveID
+                , markdownBlock "And edit your `state`:"
                 , viewInputArea computer model interactiveID
                 ]
             , viewUndoList computer model interactiveID
@@ -369,31 +374,50 @@ viewUndoListInteractive computer model interactiveID =
         ]
 
 
+classIf : Bool -> String -> Attribute msg
+classIf condition className =
+    if condition then
+        class className
+
+    else
+        class ""
+
+
 viewButtons : Computer -> Model -> InteractiveID -> Html Msg
 viewButtons computer model interactiveID =
     div [ class "flex flex-col gap-2" ]
         [ markdownBlock "Press the undo/redo buttons:"
         , div [ class "p-2 flex-none flex flex-row gap-2" ]
-            [ iconButton (PressedUndoButton interactiveID) "Undo" Icons.icons.undo
-            , iconButton (PressedRedoButton interactiveID) "Redo" Icons.icons.redo
+            [ buttonWithIcon
+                { name = "Undo"
+                , icon = Icons.icons.undo
+                , onClick = PressedUndoButton interactiveID
+                }
+            , buttonWithIcon
+                { name = "Redo"
+                , icon = Icons.icons.redo
+                , onClick = PressedRedoButton interactiveID
+                }
             ]
         ]
 
 
 viewInputArea : Computer -> Model -> InteractiveID -> Html Msg
 viewInputArea computer model interactiveID =
-    textInput (EditedTextArea interactiveID)
-        "And edit your `state`:"
-        (case interactiveID of
-            UndoRedoUsual ->
-                model.undoListUsual.present
+    textInput
+        { name = ""
+        , onChange = EditedTextArea interactiveID
+        , value =
+            case interactiveID of
+                UndoRedoUsual ->
+                    model.undoListUsual.present
 
-            UndoRedoSafe ->
-                model.undoListSafe.present
+                UndoRedoSafe ->
+                    model.undoListSafe.present
 
-            UndoRedoSafeConcise ->
-                model.undoListSafeConcise.present
-        )
+                UndoRedoSafeConcise ->
+                    model.undoListSafeConcise.present
+        }
 
 
 viewUndoList : Computer -> Model -> InteractiveID -> Html Msg

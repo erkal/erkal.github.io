@@ -1,19 +1,19 @@
 module AAA_UsingImages.Main exposing (main)
 
+import Animation exposing (..)
 import Camera exposing (Camera, perspectiveWithOrbit)
 import Color exposing (hsl, rgb255)
 import Html exposing (Html, div)
 import Html.Attributes exposing (class, style)
-import Playground.Playground as Playground exposing (..)
+import Play exposing (..)
 import Playground.Tape exposing (Message(..))
 import Scene exposing (..)
 import Scene3d.Material exposing (matte)
-import Tools.Animation.Animation exposing (..)
 
 
 main : Playground Model Never
 main =
-    Playground.simpleApplication
+    Play.simpleApplication
         { initialConfigurations = initialConfigurations
         , init = init
         , update = update
@@ -30,6 +30,7 @@ type alias Model =
 -- INIT
 
 
+initialConfigurations : Configurations
 initialConfigurations =
     []
 

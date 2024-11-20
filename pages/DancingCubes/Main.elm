@@ -1,18 +1,18 @@
 module DancingCubes.Main exposing (main)
 
+import Animation exposing (wave)
 import Camera exposing (Camera, perspective)
 import Color exposing (hsl, rgba, white)
 import Html exposing (Html)
-import Playground.Playground as Playground exposing (..)
+import Play exposing (..)
 import Playground.Tape exposing (Message(..))
 import Scene exposing (..)
 import Scene3d.Material exposing (matte)
-import Tools.Animation.Animation exposing (wave)
 
 
 main : Playground Model Never
 main =
-    Playground.simpleApplication
+    Play.simpleApplication
         { initialConfigurations = initialConfigurations
         , init = init
         , update = update
@@ -69,6 +69,7 @@ view computer model =
         [ cubes computer ]
 
 
+initialConfigurations : Configurations
 initialConfigurations =
     [ configBlock "Camera"
         True

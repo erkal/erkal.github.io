@@ -6,24 +6,21 @@ module TrixelEditor.Main exposing (main)
 import Camera exposing (Camera, perspective)
 import Color exposing (Color, black, blue, green, red, white)
 import Dict.Any as AnyDict exposing (AnyDict)
-import Geometry exposing (Point)
+import Geometry3d exposing (Point)
 import Html exposing (Html, button, div, h2, hr, option, p, select, span, text)
 import Html.Attributes exposing (class, style, value)
 import Html.Events exposing (onClick, stopPropagationOn)
 import Html.Events.Extra exposing (onChange)
-import Html.Events.Extra.Mouse as Mouse
-import Html.Events.Extra.Pointer as Pointer
-import Html.Events.Extra.Wheel as Wheel
+import Icons
 import Json.Decode as Decode
 import Json.Encode as Encode
+import Levels exposing (Levels)
 import List.Nonempty as Nonempty
-import Playground.Icons as Icons
-import Playground.Playground as Playground exposing (..)
+import PanAndZoom exposing (PanAndZoom)
+import Play exposing (..)
 import Playground.Tape exposing (Message(..))
 import Scene exposing (..)
 import Scene3d.Material exposing (matte)
-import Tools.Pages.Pages as Pages exposing (Pages)
-import Tools.PanAndZoom.PanAndZoom as PanAndZoom exposing (PanAndZoom)
 import TrixelEditor.ColorPalette as ColorPalette exposing (Palette(..))
 import TrixelEditor.TrixelGrid.CoordinateTransformations exposing (fromCanvasCoordinates, toCanvasCoordinates)
 import TrixelEditor.TrixelGrid.Face as Face exposing (Face(..), LR(..))
@@ -33,7 +30,7 @@ import TrixelEditor.World as World exposing (ColorIndex, World)
 
 main : Playground Model Msg
 main =
-    Playground.simpleApplication
+    Play.simpleApplication
         { initialConfigurations = initialConfigurations
         , init = init
         , update = update
@@ -43,7 +40,7 @@ main =
 
 
 type alias Model =
-    { pages : Pages World
+    { pages : Levels World
     , panAndZoomUI : PanAndZoom
     , editorIsOn : Bool
     , selectedColorIndex : Int
@@ -53,18 +50,19 @@ type alias Model =
 
 mapCurrentWorld : (World -> World) -> Model -> Model
 mapCurrentWorld up model =
-    { model | pages = Pages.mapCurrent up model.pages }
+    { model | pages = Levels.mapCurrent up model.pages }
 
 
 currentPalette : Model -> Palette
 currentPalette =
-    .pages >> Pages.current >> .palette
+    .pages >> Levels.current >> .palette
 
 
 
 -- INIT
 
 
+initialConfigurations : Configurations
 initialConfigurations =
     [ configBlock "Parameters"
         True
@@ -76,11 +74,11 @@ initialConfigurations =
 init : Computer -> Model
 init computer =
     { pages =
-        Pages.init
+        Levels.init
             -- TODO: Decode encode World
             (always (Encode.string ""))
             (Decode.succeed World.empty)
-            { name = "1", page = World.empty }
+            { name = "1", level = World.empty }
             []
     , panAndZoomUI = PanAndZoom.init { minZoom = 10, maxZoom = 70 }
     , editorIsOn = True
@@ -222,8 +220,8 @@ viewWebGLCanvas computer model =
         , screen = computer.screen
         , camera = toPerspectiveCamera computer.screen model.panAndZoomUI
         , backgroundColor =
-            (Pages.current model.pages).palette
-                |> ColorPalette.get (Pages.current model.pages).backgroundColorIndex
+            (Levels.current model.pages).palette
+                |> ColorPalette.get (Levels.current model.pages).backgroundColorIndex
         , sunlightAzimuth = degrees 225
         , sunlightElevation = degrees 315
         }
@@ -249,7 +247,7 @@ axes =
 drawMouseOveredFace : Computer -> Model -> Shape
 drawMouseOveredFace computer model =
     drawFace computer
-        (Pages.current model.pages).palette
+        (Levels.current model.pages).palette
         ( Face.at model.pointerOveredUV, model.selectedColorIndex )
 
 
@@ -257,7 +255,7 @@ drawFaces : Computer -> Model -> Shape
 drawFaces computer model =
     let
         world =
-            Pages.current model.pages
+            Levels.current model.pages
     in
     group
         (world.trixels |> AnyDict.toList |> List.map (drawFace computer world.palette))
@@ -360,7 +358,7 @@ type Msg
     | SelectPalette Palette
     | SelectColor Int
     | PressedButtonForSettingBackgroundColor
-    | FromLevelEditor Pages.Msg
+    | FromLevelEditor Levels.Msg
 
 
 handleMsgFromEditor : Msg -> Model -> Model
@@ -381,7 +379,7 @@ handleMsgFromEditor editorMsg model =
                 |> mapCurrentWorld (World.setBackgroundColorIndex model.selectedColorIndex)
 
         FromLevelEditor levelEditorMsg ->
-            { model | pages = model.pages |> Pages.update levelEditorMsg }
+            { model | pages = model.pages |> Levels.update levelEditorMsg }
 
         _ ->
             model
@@ -467,10 +465,10 @@ viewColorSelection model =
 pageSelection : Model -> Html Msg
 pageSelection model =
     div [ class "p-4 border-[0.5px] border-white/20" ]
-        [ div [ class "text-lg" ] [ text "Pages" ]
+        [ div [ class "text-lg" ] [ text "Levels" ]
         , div [ class "p-4" ]
             [ Html.map FromLevelEditor
-                (Pages.view model.pages)
+                (Levels.view model.pages)
             ]
         ]
 
@@ -507,7 +505,7 @@ viewColorPalette : Model -> Html Msg
 viewColorPalette model =
     let
         world =
-            Pages.current model.pages
+            Levels.current model.pages
 
         boxSize =
             18

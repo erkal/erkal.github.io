@@ -4,19 +4,17 @@ import Camera exposing (Camera, perspectiveWithOrbit)
 import Color exposing (blue, green, hsl, red, rgb255)
 import Html exposing (Html, div, text)
 import Html.Attributes exposing (class)
-import Playground.Playground as Playground exposing (..)
+import Play exposing (..)
 import Playground.Senso as Senso
 import Playground.Tape exposing (Message(..))
 import Round
 import Scene exposing (..)
 import Scene3d.Material exposing (matte)
-import Tools.Animation.Animation exposing (..)
-import Tools.Geometry.Geometry exposing (Point2d, distance)
 
 
 main : Playground Model Never
 main =
-    Playground.simpleApplication
+    Play.simpleApplication
         { initialConfigurations = initialConfigurations
         , init = init
         , update = update
@@ -25,6 +23,7 @@ main =
         }
 
 
+initialConfigurations : Configurations
 initialConfigurations =
     [ configBlock "Camera"
         True

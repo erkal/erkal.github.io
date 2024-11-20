@@ -1,6 +1,6 @@
 module IsomorphismGame.Level.Decode exposing (decoder)
 
-import Geometry
+import Geometry3d
 import IsomorphismGame.Graph as Graph exposing (VertexId)
 import IsomorphismGame.Level as Level exposing (BaseGraph, Level, Level_PreEncoded, PlayerGraph, PlayerGraphVertexData)
 import Json.Decode exposing (Decoder, Error, Value)
@@ -29,9 +29,9 @@ decoderForPreEncoded =
 -- TODO: double-check generated code
 
 
-geometryPointDecoder : Decoder Geometry.Point
+geometryPointDecoder : Decoder Geometry3d.Point
 geometryPointDecoder =
-    Json.Decode.succeed Geometry.Point
+    Json.Decode.succeed Geometry3d.Point
         |> required "x" Json.Decode.float
         |> required "y" Json.Decode.float
         |> required "z" Json.Decode.float

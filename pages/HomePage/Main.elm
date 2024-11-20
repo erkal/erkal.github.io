@@ -1,16 +1,16 @@
 module HomePage.Main exposing (main)
 
+import DesignSystem exposing (withHomePageHeader)
 import Html exposing (Html, a, div, img, text)
 import Html.Attributes as HA exposing (class, href, src, target)
-import Playground.Icons as Icons
-import Playground.Playground as Playground exposing (..)
+import Icons
+import Play exposing (..)
 import Playground.Tape exposing (Message(..))
-import Tools.StyledElements.StyledElements exposing (withHomePageHeader)
 
 
 main : Playground Model Never
 main =
-    Playground.simpleApplication
+    Play.simpleApplication
         { initialConfigurations = []
         , init = \_ -> {}
         , update = \_ _ _ -> {}
@@ -61,7 +61,6 @@ cards computer model =
         , cardWithInternalLink "GooeyEffect" "An example showing the use of GLSL shaders"
         , cardWithInternalLink "Vortex" "A Creative coding example"
         , cardWithInternalLink "TurningBlocks" "A Creative coding example"
-        , cardWithInternalLink "ZoomAndPan" "Zooming and panning"
         , cardWithInternalLink "CubeAndCube" "Another simple example with pastel colors"
         , cardWithInternalLink "CanvasExample" "An elm-playground-like API on top of joakin/elm-canvas"
         ]

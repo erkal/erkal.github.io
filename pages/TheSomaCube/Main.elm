@@ -1,21 +1,21 @@
 module TheSomaCube.Main exposing (main)
 
+import Animation exposing (wave)
 import Camera exposing (Camera, perspectiveWithOrbit)
 import Color exposing (Color, black, hsl, rgba, white)
 import Html exposing (Html, div, h2, p, text)
 import Html.Attributes exposing (class, style)
-import Playground.Playground as Playground exposing (..)
+import Play exposing (..)
 import Playground.Tape exposing (Message(..))
 import Scene exposing (..)
 import Scene3d.Material exposing (matte)
 import TheSomaCube.Palette as Palette
 import TheSomaCube.World as World exposing (Piece, World)
-import Tools.Animation.Animation exposing (wave)
 
 
 main : Playground Model Never
 main =
-    Playground.simpleApplication
+    Play.simpleApplication
         { initialConfigurations = initialConfigurations
         , init = init
         , update = update
@@ -32,6 +32,7 @@ type alias Model =
 -- INIT
 
 
+initialConfigurations : Configurations
 initialConfigurations =
     [ configBlock "Camera"
         True
