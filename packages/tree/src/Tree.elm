@@ -1,4 +1,4 @@
-module Tree.Tree exposing
+module Tree exposing
     ( Tree
     , branch, leaf
     , get, updateAt, replaceAt, removeAt, insertBefore, insertAfter

@@ -56,8 +56,7 @@
             "noahzgordon/elm-color-extra": "1.0.2",
             "rtfeldman/elm-css": "18.0.0",
             "stil4m/elm-syntax": "7.3.2",
-            "turboMaCk/any-dict": "2.6.0",
-            "zwilias/elm-rosetree": "1.5.0"
+            "turboMaCk/any-dict": "2.6.0"
         },
         "indirect": {
             "avh4/elm-fifo": "1.0.4",
