@@ -323,11 +323,9 @@ const sendInputsToElmApp = (app) => {
   window.addEventListener(
     "wheel",
     (e) => {
-      // Prevent the default browser back/forward gesture
-      // e.preventDefault();
-
       if (e.ctrlKey && !inputs.keyboard.control) {
-        // CTRL is pressed but not pressed :/ This is the (awkward) way Chrome lets you know about the pinching gesture from trackpad.
+        // CTRL is pressed but not pressed, the (awkward) way Chrome gets the pinch-gesture
+        e.preventDefault();
         inputs.wheel.pinchDeltaForChrome = e.deltaY;
       } else {
         inputs.wheel.deltaX = e.deltaX;
