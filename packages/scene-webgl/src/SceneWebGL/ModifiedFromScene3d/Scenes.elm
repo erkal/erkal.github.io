@@ -1,4 +1,4 @@
-module ModifiedFromScene3d.Scenes exposing
+module SceneWebGL.ModifiedFromScene3d.Scenes exposing
     ( customWithDevicePixelRatio
     , sunnyWithDevicePixelRatio
     , unlitWithDevicePixelRatio

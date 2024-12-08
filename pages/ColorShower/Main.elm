@@ -1,13 +1,13 @@
 module ColorShower.Main exposing (main)
 
 import Animation exposing (wave)
-import Camera exposing (Camera, perspectiveWithOrbit)
 import Color exposing (hsl)
 import Html exposing (Html)
 import Play exposing (..)
 import Playground.Tape exposing (Message(..))
-import Scene exposing (..)
 import Scene3d.Material exposing (matte)
+import SceneWebGL exposing (..)
+import SceneWebGL.Camera as Camera exposing (Camera, perspectiveWithOrbit)
 
 
 main : Playground Model Never
@@ -60,18 +60,15 @@ camera computer =
 initialConfigurations : Configurations
 initialConfigurations =
     [ configBlock "Camera"
-        True
         [ floatConfig "camera distance" ( 3, 60 ) 50
         , floatConfig "camera azimuth" ( 0, 2 * pi ) 0
         , floatConfig "camera elevation" ( -pi / 2, pi / 2 ) 0.5
         ]
     , configBlock "Parameters"
-        True
         [ floatConfig "delay per index" ( 0, 1 ) 0.15
         , intConfig "number of spheres" ( 10, 100 ) 50
         ]
     , configBlock "Colors and light"
-        True
         [ floatConfig "saturation" ( 0, 1 ) 0.5
         , floatConfig "lighting" ( 0, 1 ) 0.7
         , colorConfig "background color" (hsl 0.85 0.32 0.45)
@@ -81,7 +78,7 @@ initialConfigurations =
 
 view : Computer -> Model -> Html Never
 view computer _ =
-    Scene.sunny
+    SceneWebGL.sunny
         { devicePixelRatio = computer.devicePixelRatio
         , screen = computer.screen
         , camera = camera computer

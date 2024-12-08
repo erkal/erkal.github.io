@@ -1,18 +1,18 @@
 module MultipleShadowsFromIanMackenzie.Main exposing (main)
 
 import Animation exposing (spin, wave)
-import Camera exposing (Camera, perspective)
 import Color exposing (blue, brown, gray, green, hsl, lightBlue, lightGreen, lightPurple, orange, red, white)
 import Html exposing (Html)
 import Illuminance
-import Light
 import LuminousFlux
 import Play exposing (..)
 import Playground.Tape exposing (Message(..))
-import Scene exposing (..)
 import Scene3d
 import Scene3d.Light
 import Scene3d.Material exposing (matte)
+import SceneWebGL exposing (..)
+import SceneWebGL.Camera as Camera exposing (Camera, perspective)
+import SceneWebGL.Light as Light
 import Temperature
 
 
@@ -43,12 +43,10 @@ init computer =
 initialConfigurations : Configurations
 initialConfigurations =
     [ configBlock "Parameters"
-        True
         [ intConfig "number of tree blocks" ( 1, 20 ) 16
         , floatConfig "turning speed of the tree" ( 0.1, 4 ) 1
         ]
     , configBlock "Lighting"
-        True
         [ floatConfig "azimuth for third light" ( -pi, pi ) 1
         , floatConfig "elevation for third light" ( -pi, pi ) -2
         , floatConfig "azimuth for fourth light" ( -pi, pi ) 1
@@ -113,7 +111,7 @@ view computer model =
                 , intensityBelow = Illuminance.lux 10
                 }
     in
-    Scene.custom
+    SceneWebGL.custom
         { devicePixelRatio = computer.devicePixelRatio
         , screen = computer.screen
         , camera = camera

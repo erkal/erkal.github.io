@@ -1,14 +1,14 @@
 module TheSomaCube.Main exposing (main)
 
 import Animation exposing (wave)
-import Camera exposing (Camera, perspectiveWithOrbit)
 import Color exposing (Color, black, hsl, rgba, white)
 import Html exposing (Html, div, h2, p, text)
 import Html.Attributes exposing (class, style)
 import Play exposing (..)
 import Playground.Tape exposing (Message(..))
-import Scene exposing (..)
 import Scene3d.Material exposing (matte)
+import SceneWebGL exposing (..)
+import SceneWebGL.Camera as Camera exposing (Camera, perspectiveWithOrbit)
 import TheSomaCube.Palette as Palette
 import TheSomaCube.World as World exposing (Piece, World)
 
@@ -35,18 +35,15 @@ type alias Model =
 initialConfigurations : Configurations
 initialConfigurations =
     [ configBlock "Camera"
-        True
         [ floatConfig "camera distance" ( 3, 60 ) 20
         , floatConfig "camera azimuth" ( 0, 2 * pi ) 0.6
         , floatConfig "camera elevation" ( -pi / 2, pi / 2 ) 0.4
         ]
     , configBlock "Parameters"
-        True
         [ floatConfig "cube scale" ( 0.1, 1 ) 0.95
         , floatConfig "edge width" ( 0.001, 0.5 ) 0.1
         ]
     , configBlock "Colors and light"
-        True
         [ floatConfig "sunlight azimuth" ( 0, 2 * pi ) 5.5
         , floatConfig "sunlight elevation" ( -pi / 2, pi / 2 ) -1
         , floatConfig "saturation" ( 0, 1 ) 0.6
@@ -102,7 +99,7 @@ view computer model =
 
 viewShapes : Computer -> Model -> Html Never
 viewShapes computer model =
-    Scene.sunny
+    SceneWebGL.sunny
         { devicePixelRatio = computer.devicePixelRatio
         , screen = computer.screen
         , camera = camera computer

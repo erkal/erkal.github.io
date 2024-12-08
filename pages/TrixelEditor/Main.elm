@@ -3,7 +3,6 @@ module TrixelEditor.Main exposing (main)
 -- The coordinate system is as described in the following article
 -- http://www-cs-students.stanford.edu/~amitp/game-programming/grids/
 
-import Camera exposing (Camera, perspective)
 import Color exposing (Color, black, blue, green, red, white)
 import Dict.Any as AnyDict exposing (AnyDict)
 import Geometry3d exposing (Point)
@@ -16,11 +15,11 @@ import Json.Decode as Decode
 import Json.Encode as Encode
 import Levels exposing (Levels)
 import List.Nonempty as Nonempty
-import PanAndZoom exposing (PanAndZoom)
 import Play exposing (..)
 import Playground.Tape exposing (Message(..))
-import Scene exposing (..)
 import Scene3d.Material exposing (matte)
+import SceneWebGL exposing (..)
+import SceneWebGL.Camera as Camera exposing (Camera, perspective)
 import TrixelEditor.ColorPalette as ColorPalette exposing (Palette(..))
 import TrixelEditor.TrixelGrid.CoordinateTransformations exposing (fromCanvasCoordinates, toCanvasCoordinates)
 import TrixelEditor.TrixelGrid.Face as Face exposing (Face(..), LR(..))
@@ -41,7 +40,6 @@ main =
 
 type alias Model =
     { pages : Levels World
-    , panAndZoomUI : PanAndZoom
     , editorIsOn : Bool
     , selectedColorIndex : Int
     , pointerOveredUV : { u : Float, v : Float }
@@ -65,8 +63,8 @@ currentPalette =
 initialConfigurations : Configurations
 initialConfigurations =
     [ configBlock "Parameters"
-        True
-        [ floatConfig "trixel scale" ( 0.5, 1 ) 1
+        [ floatConfig "camera distance" ( 5, 80 ) 10
+        , floatConfig "trixel scale" ( 0.5, 1 ) 1
         ]
     ]
 
@@ -80,7 +78,6 @@ init computer =
             (Decode.succeed World.empty)
             { name = "1", level = World.empty }
             []
-    , panAndZoomUI = PanAndZoom.init { minZoom = 10, maxZoom = 70 }
     , editorIsOn = True
     , pointerOveredUV = { u = 0, v = 0 }
     , selectedColorIndex = 0
@@ -96,7 +93,6 @@ update computer message model =
     case message of
         Tick ->
             model
-                |> updatePanAndZoomUI computer
                 |> updateMouseOverUV computer
                 |> insertTrixelOnPointerDown computer
                 |> removeTrixelOnShiftMouseDown computer
@@ -104,27 +100,6 @@ update computer message model =
         Message editorMsg ->
             model
                 |> handleMsgFromEditor editorMsg
-
-
-toPerspectiveCamera : Screen -> PanAndZoom -> Camera
-toPerspectiveCamera screen panAndZoomUI =
-    let
-        { panX, panY, zoom } =
-            PanAndZoom.get { yIsUp = True } panAndZoomUI
-    in
-    Camera.perspective
-        { focalPoint =
-            { x = panX
-            , y = panY
-            , z = 0
-            }
-        , eyePoint =
-            { x = panX
-            , y = panY
-            , z = screen.height / zoom
-            }
-        , upDirection = { x = 0, y = 1, z = 0 }
-        }
 
 
 insertTrixelOnPointerDown : Computer -> Model -> Model
@@ -152,19 +127,26 @@ removeTrixelOnShiftMouseDown computer model =
         model
 
 
-updatePanAndZoomUI : Computer -> Model -> Model
-updatePanAndZoomUI computer model =
-    { model | panAndZoomUI = model.panAndZoomUI |> PanAndZoom.tick computer }
+camera : Computer -> Camera
+camera computer =
+    Camera.perspective
+        { focalPoint =
+            { x = 0
+            , y = 0
+            , z = 0
+            }
+        , eyePoint =
+            { x = 0
+            , y = 0
+            , z = getFloat "camera distance" computer
+            }
+        , upDirection = { x = 0, y = 1, z = 0 }
+        }
 
 
 updateMouseOverUV : Computer -> Model -> Model
 updateMouseOverUV computer model =
-    case
-        Camera.mouseOverXY
-            (toPerspectiveCamera computer.screen model.panAndZoomUI)
-            computer.screen
-            computer.pointer
-    of
+    case Camera.mouseOverXY (camera computer) computer.screen computer.pointer of
         Nothing ->
             model
 
@@ -184,7 +166,7 @@ updateMouseOverUV computer model =
 
 view : Computer -> Model -> Html Msg
 view computer model =
-    div [ cursorForSpaceDragging computer model ]
+    div []
         [ div
             [ class "fixed w-full h-full"
             , style "touch-action" "none"
@@ -199,26 +181,12 @@ view computer model =
         ]
 
 
-cursorForSpaceDragging : Computer -> Model -> Html.Attribute Msg
-cursorForSpaceDragging computer model =
-    style "cursor" <|
-        if List.member "Space" computer.keyboard.pressedKeys then
-            if PanAndZoom.isPanningWithSpaceBar model.panAndZoomUI then
-                "grabbing"
-
-            else
-                "grab"
-
-        else
-            "default"
-
-
 viewWebGLCanvas : Computer -> Model -> Html Never
 viewWebGLCanvas computer model =
-    Scene.sunny
+    SceneWebGL.sunny
         { devicePixelRatio = computer.devicePixelRatio
         , screen = computer.screen
-        , camera = toPerspectiveCamera computer.screen model.panAndZoomUI
+        , camera = camera computer
         , backgroundColor =
             (Levels.current model.pages).palette
                 |> ColorPalette.get (Levels.current model.pages).backgroundColorIndex

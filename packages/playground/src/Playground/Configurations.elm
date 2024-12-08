@@ -12,7 +12,6 @@ type alias Configurations =
 
 type alias Block =
     { name : String
-    , isOpen : Bool
     , configs : List ( String, Config )
     }
 
@@ -26,9 +25,9 @@ type Config
     | OptionsConfig (SelectList String)
 
 
-configBlock : String -> Bool -> List ( String, Config ) -> Block
-configBlock name isOn configList =
-    Block name isOn configList
+configBlock : String -> List ( String, Config ) -> Block
+configBlock name configList =
+    Block name configList
 
 
 

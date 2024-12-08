@@ -20,7 +20,7 @@ shell.cp("packages/playground/src/input.js", buildDir);
 shell.cp("packages/playground/src/PlayEGI.js", buildDir);
 
 // Copy elm-canvas.js file to the build directory
-shell.cp("packages/scene-2d/elm-canvas.js", buildDir);
+shell.cp("packages/scene-canvas2d/elm-canvas.js", buildDir);
 
 // Initialize a variable for targets JSON
 let targets = {};

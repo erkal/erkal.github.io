@@ -1,6 +1,5 @@
 module SensoTest.Main exposing (main)
 
-import Camera exposing (Camera, perspectiveWithOrbit)
 import Color exposing (blue, green, hsl, red, rgb255)
 import Html exposing (Html, div, text)
 import Html.Attributes exposing (class)
@@ -8,8 +7,9 @@ import Play exposing (..)
 import Playground.Senso as Senso
 import Playground.Tape exposing (Message(..))
 import Round
-import Scene exposing (..)
 import Scene3d.Material exposing (matte)
+import SceneWebGL exposing (..)
+import SceneWebGL.Camera as Camera exposing (Camera, perspectiveWithOrbit)
 
 
 main : Playground Model Never
@@ -26,12 +26,10 @@ main =
 initialConfigurations : Configurations
 initialConfigurations =
     [ configBlock "Camera"
-        True
         [ floatConfig "camera azimuth" ( 0, 2 * pi ) 0
         , floatConfig "camera elevation" ( -pi / 2, pi / 2 ) 0
         ]
     , configBlock "Other things"
-        True
         [ optionsConfig "some options" ( [ "option 1", "option 2" ], "option 3", [ "option 4", "option 5" ] )
         ]
     ]
@@ -120,7 +118,7 @@ viewSensoAsText { senso } =
 
 viewSensoAsDrawing : Computer -> Model -> Html Never
 viewSensoAsDrawing computer model =
-    Scene.sunny
+    SceneWebGL.sunny
         { devicePixelRatio = computer.devicePixelRatio
         , screen = computer.screen
         , camera = camera computer

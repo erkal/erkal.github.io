@@ -1,12 +1,12 @@
 module CanvasExample.Main exposing (main)
 
+import Camera exposing (Camera)
 import Color exposing (black, blue, darkBlue, darkGreen, darkPurple, gray, green, lightBlue, lightGray, lightGreen, lightPurple, lightYellow, purple, red, rgb255, white)
 import Geometry2d exposing (..)
 import Html exposing (Html)
 import Play exposing (..)
 import Playground.Tape exposing (Message(..))
-import Scene2d exposing (..)
-import Scene2d.Camera as Camera exposing (Camera)
+import SceneCanvas2D exposing (..)
 
 
 main : Playground Model Never
@@ -51,7 +51,7 @@ update computer message model =
                     Point2d
                         (0.5 + computer.pointer.x / computer.screen.width)
                         (0.5 - computer.pointer.y / computer.screen.width)
-                        |> Camera.toGameCoordinates (camera computer)
+                        |> Camera.screenCoordinatesToCanvasCoordinates (camera computer)
             }
 
         Message appMsg ->
@@ -62,7 +62,7 @@ camera : Computer -> Camera
 camera computer =
     Camera.init
         { aspectRatio = computer.screen.width / computer.screen.height
-        , gameWidth = 20
+        , fOVWidth = 20
         , yIsUp = False
         }
 
@@ -73,7 +73,7 @@ camera computer =
 
 view : Computer -> Model -> Html Never
 view computer model =
-    Scene2d.toHtml
+    SceneCanvas2D.toHtml
         { sceneWidthInPixels = round computer.screen.width
         , camera = camera computer
         }

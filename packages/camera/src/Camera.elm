@@ -1,18 +1,19 @@
-module Scene2d.Camera exposing
+module Camera exposing
     ( Camera
     , init
     , getViewPoint, getViewportAspectRatio
-    , getX, getY, getZ
+    , getX, getY, getZ, getXY
     , left, bottom, right, top
     , topAtZ, bottomAtZ, leftAtZ, rightAtZ
     , width, height
-    , getBoundingBoxAtZ
-    , toGameCoordinates
-    , setCoordinates, setX, setY, setZ
-    , mapX, mapY, mapZ
-    , moveX, moveY, moveZ
+    , getFOVBoundingBoxAtZ
+    , getZoomFactor
+    , setX, setY, setZ, setXY
+    , mapX, mapY, mapZ, mapXY
+    , moveXY, moveX, moveY, moveZ
     , lerp, lerpX, lerpY, lerpZ
-    , reverseIfYIsUp, zoomTo
+    , zoomAround
+    , reverseIfYIsUp, screenCoordinatesToCanvasCoordinates, setViewPoint, zoomToFit
     )
 
 {-| A Camera type that is used for rendering objects with correct position and size.
@@ -30,26 +31,29 @@ module Scene2d.Camera exposing
 
 # Get
 
-@docs getViewPoint, getViewportAspectRatio
-@docs getX, getY, getZ
+@docs getViewPoint, getViewportAspectRatio, getVerticalAngleOfView
+@docs getX, getY, getZ, getXY
 @docs left, bottom, right, top
 @docs topAtZ, bottomAtZ, leftAtZ, rightAtZ
 @docs width, height
-@docs getBoundingBoxAtZ
-@docs toGameCoordinates
+@docs getFOVBoundingBoxAtZ
+@docs getZoomFactor
+@docs screenCoordinatesToFOVCoordinates
 
 
 # Modify
 
-@docs setCoordinates, setX, setY, setZ
-@docs mapX, mapY, mapZ
-@docs moveX, moveY, moveZ
-@docs @zoomTo
+@docs setCoordinates, setX, setY, setZ, setXY
+@docs mapX, mapY, mapZ, mapXY
+@docs moveXY, moveX, moveY, moveZ
 @docs lerp, lerpX, lerpY, lerpZ
+@docs zoomAround
 
 -}
 
 
+{-| TODO: This will be replaced by <https://package.elm-lang.org/packages/ianmackenzie/elm-3d-camera/latest/Camera3d> when elm-3d-scene starts to use this.
+-}
 type Camera
     = Camera
         { viewPoint : { x : Float, y : Float, z : Float }
@@ -64,17 +68,23 @@ type Camera
     The only way to create a camera.
     Assume, for example you created a camera by
     ```
-    init { aspectRatio = 2, gameWidth = 10 }
+    init { aspectRatio = 2, fOVWidth = 10 }
     ```
     Then,
     - the aspect ratio of your viewport will be 2 and
     - the full width of the canvas is going to be considered as 10 units.
 
+
+
+    `horizontalAngleOfView` is set to `2 * atan 0.5`
+        so that if the z-coordinate of the camera is the same as screen width,
+        we see the XY plane in screen pixel coordinates!
+
 -}
-init : { aspectRatio : Float, gameWidth : Float, yIsUp : Bool } -> Camera
-init { aspectRatio, gameWidth, yIsUp } =
+init : { aspectRatio : Float, fOVWidth : Float, yIsUp : Bool } -> Camera
+init { aspectRatio, fOVWidth, yIsUp } =
     Camera
-        { viewPoint = { x = 0, y = 0, z = gameWidth }
+        { viewPoint = { x = 0, y = 0, z = fOVWidth }
         , yIsUp = yIsUp
         , horizontalAngleOfView = 2 * Basics.atan 0.5
         , viewportAspectRatio = aspectRatio
@@ -87,15 +97,15 @@ init { aspectRatio, gameWidth, yIsUp } =
 
 {-|
 
-    The argument is canvas coordinates in pixels where
+    The argument is in canvas coordinates where
 
       - the canvas width is considered to be 1
       - the origin is the top left corner and
       - the positive y-axis is directed downwards
 
 -}
-toGameCoordinates : Camera -> { x : Float, y : Float } -> { x : Float, y : Float }
-toGameCoordinates (Camera camera) { x, y } =
+screenCoordinatesToCanvasCoordinates : Camera -> { a | x : Float, y : Float } -> { x : Float, y : Float }
+screenCoordinatesToCanvasCoordinates (Camera camera) { x, y } =
     let
         c =
             camera.viewPoint
@@ -105,9 +115,25 @@ toGameCoordinates (Camera camera) { x, y } =
     }
 
 
+getZoomFactor : Camera -> { canvasWidth : Float } -> Float
+getZoomFactor (Camera camera) { canvasWidth } =
+    let
+        cameraDistanceForZoomFactorEqualOne =
+            (canvasWidth / 2) / tan (camera.horizontalAngleOfView / 2)
+    in
+    cameraDistanceForZoomFactorEqualOne / camera.viewPoint.z
+
+
 getViewPoint : Camera -> { x : Float, y : Float, z : Float }
 getViewPoint (Camera camera) =
     camera.viewPoint
+
+
+getXY : Camera -> { x : Float, y : Float }
+getXY (Camera camera) =
+    { x = camera.viewPoint.x
+    , y = camera.viewPoint.y
+    }
 
 
 getX : Camera -> Float
@@ -125,8 +151,8 @@ getZ =
     getViewPoint >> .z
 
 
-horizontalAngleOfView : Camera -> Float
-horizontalAngleOfView (Camera camera) =
+getHorizontalAngleOfView : Camera -> Float
+getHorizontalAngleOfView (Camera camera) =
     camera.horizontalAngleOfView
 
 
@@ -144,15 +170,18 @@ reverseIfYIsUp (Camera camera) v =
         v
 
 
-getBoundingBoxAtZ : Float -> Camera -> { left : Float, right : Float, top : Float, bottom : Float }
-getBoundingBoxAtZ z camera =
+getFOVBoundingBoxAtZ : Float -> Camera -> { left : Float, right : Float, top : Float, bottom : Float }
+getFOVBoundingBoxAtZ z camera =
     let
+        angle : Float
         angle =
-            horizontalAngleOfView camera
+            getHorizontalAngleOfView camera
 
+        halfWidthAtZ : Float
         halfWidthAtZ =
             (getZ camera - z) * tan (0.5 * angle)
 
+        halfHeightAtZ : Float
         halfHeightAtZ =
             (getZ camera - z) * tan (0.5 * angle) / getViewportAspectRatio camera
     in
@@ -165,7 +194,7 @@ getBoundingBoxAtZ z camera =
 
 topAtZ : Float -> Camera -> Float
 topAtZ z camera =
-    (getBoundingBoxAtZ z camera).top
+    (getFOVBoundingBoxAtZ z camera).top
 
 
 top : Camera -> Float
@@ -175,7 +204,7 @@ top =
 
 bottomAtZ : Float -> Camera -> Float
 bottomAtZ z camera =
-    (getBoundingBoxAtZ z camera).bottom
+    (getFOVBoundingBoxAtZ z camera).bottom
 
 
 bottom : Camera -> Float
@@ -185,7 +214,7 @@ bottom =
 
 leftAtZ : Float -> Camera -> Float
 leftAtZ z camera =
-    (getBoundingBoxAtZ z camera).left
+    (getFOVBoundingBoxAtZ z camera).left
 
 
 left : Camera -> Float
@@ -195,7 +224,7 @@ left =
 
 rightAtZ : Float -> Camera -> Float
 rightAtZ z camera =
-    (getBoundingBoxAtZ z camera).right
+    (getFOVBoundingBoxAtZ z camera).right
 
 
 right : Camera -> Float
@@ -217,8 +246,14 @@ height camera =
 -- MODIFY
 
 
+mapCoordinates : ({ x : Float, y : Float, z : Float } -> { x : Float, y : Float, z : Float }) -> Camera -> Camera
 mapCoordinates up (Camera camera) =
     Camera { camera | viewPoint = up camera.viewPoint }
+
+
+mapXY : ({ x : Float, y : Float } -> { x : Float, y : Float }) -> Camera -> Camera
+mapXY up camera =
+    camera |> setXY (camera |> getXY |> up)
 
 
 mapX : (Float -> Float) -> Camera -> Camera
@@ -236,6 +271,11 @@ mapZ up =
     mapCoordinates (\p -> { p | z = up p.z })
 
 
+moveXY : ( Float, Float ) -> Camera -> Camera
+moveXY ( dx, dy ) =
+    moveX dx >> moveY dy
+
+
 moveX : Float -> Camera -> Camera
 moveX d =
     mapX ((+) d)
@@ -251,7 +291,7 @@ moveZ d =
     mapZ ((+) d)
 
 
-zoomTo :
+zoomAround :
     { target : { x : Float, y : Float, z : Float }
     , dz : Float
     , minZ : Float
@@ -259,39 +299,42 @@ zoomTo :
     }
     -> Camera
     -> Camera
-zoomTo { target, dz, minZ, maxZ } camera =
+zoomAround { target, dz, minZ, maxZ } camera =
     let
+        c : { x : Float, y : Float, z : Float }
         c =
             getViewPoint camera
 
+        newZ : Float
+        newZ =
+            (c.z + dz) |> clamp minZ maxZ
+
+        correctedDz : Float
+        correctedDz =
+            newZ - c.z
+
+        ratio : Float
         ratio =
-            dz / (c.z - target.z)
-
-        ( dx, dy ) =
-            ( ratio * (c.x - target.x)
-            , ratio * (c.y - target.y)
-            )
-
-        zoomed =
-            camera
-                |> moveX dx
-                |> moveY dy
-                |> moveZ dz
+            correctedDz / (c.z - target.z)
     in
-    if getZ zoomed < minZ || getZ zoomed > maxZ then
-        camera
-
-    else
-        zoomed
+    camera
+        |> moveX (ratio * (c.x - target.x))
+        |> moveY (ratio * (c.y - target.y))
+        |> moveZ correctedDz
 
 
 
 --
 
 
-setCoordinates : { x : Float, y : Float, z : Float } -> Camera -> Camera
-setCoordinates p (Camera camera) =
+setViewPoint : { x : Float, y : Float, z : Float } -> Camera -> Camera
+setViewPoint p (Camera camera) =
     Camera { camera | viewPoint = p }
+
+
+setXY : { x : Float, y : Float } -> Camera -> Camera
+setXY { x, y } =
+    setX x >> setY y
 
 
 setX : Float -> Camera -> Camera
@@ -331,3 +374,21 @@ lerpY rate target =
 lerpZ : Float -> Float -> Camera -> Camera
 lerpZ rate target =
     mapZ (lerp rate target)
+
+
+
+--
+
+
+type alias Rectangle =
+    { top : Float
+    , left : Float
+    , width : Float
+    , height : Float
+    }
+
+
+zoomToFit : Rectangle -> Camera -> Camera
+zoomToFit rect camera =
+    -- TODO
+    camera

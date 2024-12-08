@@ -1,14 +1,14 @@
 module Carousel.Main exposing (main)
 
-import Camera exposing (Camera, perspective)
 import Carousel.Carousel as Carousel exposing (Carousel)
 import Color exposing (Color, blue, charcoal, darkBlue, gray, green, lightBlue, lightBrown, orange, purple, red, rgb255)
 import Html exposing (Html, div, text)
 import Html.Attributes exposing (class, style)
 import Play exposing (..)
 import Playground.Tape exposing (Message(..))
-import Scene exposing (..)
 import Scene3d.Material exposing (matte)
+import SceneWebGL exposing (..)
+import SceneWebGL.Camera as Camera exposing (Camera, perspective)
 
 
 main : Playground Model Never
@@ -114,7 +114,7 @@ view computer model =
 
 viewScene : Computer -> Model -> Html Never
 viewScene computer model =
-    Scene.sunny
+    SceneWebGL.sunny
         { devicePixelRatio = computer.devicePixelRatio
         , screen = computer.screen
         , camera =

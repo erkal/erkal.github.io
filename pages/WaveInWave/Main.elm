@@ -1,18 +1,18 @@
 module WaveInWave.Main exposing (main)
 
 import Animation exposing (wave)
-import Camera exposing (Camera, perspective)
 import Color exposing (darkGray, gray, hsl)
 import Html exposing (Html)
 import Illuminance
-import Light
 import LuminousFlux
 import Play exposing (..)
 import Playground.Tape exposing (Message(..))
-import Scene exposing (..)
 import Scene3d
 import Scene3d.Light
 import Scene3d.Material exposing (matte)
+import SceneWebGL exposing (..)
+import SceneWebGL.Camera as Camera exposing (Camera, perspective)
+import SceneWebGL.Light as Light
 import Temperature
 
 
@@ -43,7 +43,6 @@ init computer =
 initialConfigurations : Configurations
 initialConfigurations =
     [ configBlock "Parameters"
-        True
         [ intConfig "number of blocks" ( 10, 60 ) 25
         , floatConfig "frequency" ( 1, 20 ) 10
         , floatConfig "minWidth" ( 0, 45 ) 35
@@ -51,8 +50,8 @@ initialConfigurations =
         , floatConfig "period" ( 0.5, 10 ) 5
         ]
     , configBlock "Colors and light"
-        True
-        [ floatConfig "lux" ( 2, 5 ) 5
+        [ colorConfig "background color" Color.darkBlue
+        , floatConfig "lux" ( 2, 5 ) 5
         , floatConfig "intensity above" ( 0, 300 ) 0
         , floatConfig "intensity below" ( 0, 300 ) 0
         ]
@@ -106,7 +105,7 @@ view computer model =
                 , intensityBelow = Illuminance.lux (getFloat "intensity below" computer)
                 }
     in
-    Scene.custom
+    SceneWebGL.custom
         { devicePixelRatio = computer.devicePixelRatio
         , screen = computer.screen
         , camera = camera computer
@@ -121,7 +120,7 @@ view computer model =
         , toneMapping = Scene3d.hableFilmicToneMapping -- See ExposureAndToneMapping.elm for details
         , whiteBalance = Scene3d.Light.fluorescent
         , antialiasing = Scene3d.multisampling
-        , backgroundColor = darkGray
+        , backgroundColor = getColor "background color" computer
         }
         (shapes computer model)
 

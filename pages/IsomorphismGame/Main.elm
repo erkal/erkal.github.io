@@ -1,6 +1,5 @@
 module IsomorphismGame.Main exposing (main)
 
-import Camera exposing (Camera, perspectiveWithOrbit)
 import Color exposing (blue, green, lightBlue, red, rgb255, white, yellow)
 import Html exposing (Html, button, div, input, p, pre, span, text, textarea)
 import Html.Attributes exposing (checked, class, cols, for, id, name, rows, style, type_, value)
@@ -14,14 +13,15 @@ import IsomorphismGame.Level as Level exposing (BaseGraph, Level, PlayerGraph)
 import IsomorphismGame.Level.Decode
 import IsomorphismGame.Level.Encode
 import Levels exposing (Levels)
-import Light
 import LuminousFlux
 import Play exposing (..)
 import Playground.Tape exposing (Message(..))
-import Scene exposing (..)
 import Scene3d
 import Scene3d.Light
 import Scene3d.Material exposing (matte)
+import SceneWebGL exposing (..)
+import SceneWebGL.Camera as Camera exposing (Camera, perspectiveWithOrbit)
+import SceneWebGL.Light as Light
 import Temperature
 
 
@@ -66,13 +66,11 @@ type EditorState
 initialConfigurations : Configurations
 initialConfigurations =
     [ configBlock "Camera"
-        True
         [ floatConfig "camera distance" ( 3, 40 ) 20
         , floatConfig "camera azimuth" ( 0, 2 * pi ) 0
         , floatConfig "camera elevation" ( -pi / 2, pi / 2 ) 0
         ]
     , configBlock "Light"
-        True
         [ floatConfig "sunlight azimuth" ( -pi, pi ) -0.5
         , floatConfig "sunlight elevation" ( -pi, pi ) -2.7
         , floatConfig "azimuth for third light" ( -pi, pi ) 1
@@ -81,13 +79,11 @@ initialConfigurations =
         , floatConfig "elevation for fourth light" ( -pi, pi ) -2
         ]
     , configBlock "Pointer"
-        True
         [ boolConfig "pointer view on/off" True
         , colorConfig "pointer color" yellow
         , floatConfig "pointer reach" ( 0.5, 2 ) 1
         ]
     , configBlock "Base"
-        True
         [ colorConfig "game background" (rgb255 44 100 200)
         , colorConfig "base" (rgb255 176 69 76)
         , floatConfig "base height" ( 0.01, 5 ) 0.4
@@ -95,7 +91,6 @@ initialConfigurations =
         , floatConfig "base edge width" ( 0.2, 1.5 ) 1
         ]
     , configBlock "Player CodeGraph"
-        True
         [ colorConfig "player" white
         , floatConfig "player vertex radius" ( 0.1, 0.6 ) 0.35
         , floatConfig "player edge width" ( 0.05, 0.6 ) 0.25
@@ -560,7 +555,7 @@ view computer model =
             ]
         , div [ style "touch-action" "none" ]
             [ Html.map never <|
-                Scene.custom
+                SceneWebGL.custom
                     { devicePixelRatio = computer.devicePixelRatio
                     , screen = computer.screen
                     , camera = camera computer

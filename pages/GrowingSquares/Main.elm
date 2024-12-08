@@ -1,14 +1,14 @@
 module GrowingSquares.Main exposing (main)
 
 import Animation exposing (..)
-import Camera exposing (Camera, perspective)
 import Color exposing (Color, blue, gray, green, red, rgb255)
 import Geometry3d exposing (Point)
 import Html exposing (Html)
 import Play exposing (..)
 import Playground.Tape exposing (Message(..))
-import Scene exposing (..)
 import Scene3d.Material as Material exposing (matte)
+import SceneWebGL exposing (..)
+import SceneWebGL.Camera as Camera exposing (Camera, perspective)
 
 
 main : Playground Model Never
@@ -114,7 +114,7 @@ addNew computer model =
 
 view : Computer -> Model -> Html Never
 view computer model =
-    Scene.sunny
+    SceneWebGL.sunny
         { devicePixelRatio = computer.devicePixelRatio
         , screen = computer.screen
         , camera =

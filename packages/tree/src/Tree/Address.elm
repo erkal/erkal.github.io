@@ -99,16 +99,6 @@ firstChild path =
     path ++ [ 0 ]
 
 
-{-| Check if the second path is an ancestor of the first path.
-
-    ancestorOf [ 1, 2, 3 ] [ 1, 2 ] == True
-
--}
-isAncestorOf : Address -> Address -> Bool
-isAncestorOf =
-    List.Extra.isPrefixOf
-
-
 {-| Check if the second path is a descendant of the first path.
 
     descendantOf [ 1, 2 ] [ 1, 2, 3 ] == True
@@ -116,7 +106,17 @@ isAncestorOf =
 -}
 isDescendantOf : Address -> Address -> Bool
 isDescendantOf =
-    flip isAncestorOf
+    List.Extra.isPrefixOf
+
+
+{-| Check if the second path is an ancestor of the first path.
+
+    ancestorOf [ 1, 2, 3 ] [ 1, 2 ] == True
+
+-}
+isAncestorOf : Address -> Address -> Bool
+isAncestorOf =
+    flip isDescendantOf
 
 
 {-| Find a common ancestor path for a list of paths.

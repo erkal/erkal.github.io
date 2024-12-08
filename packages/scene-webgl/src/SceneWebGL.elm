@@ -1,4 +1,4 @@
-module Scene exposing
+module SceneWebGL exposing
     ( Shape, block, cube, cylinder, group, line, sphere, triangle, square
     , move, moveX, moveY, moveZ, rotateX, rotateY, rotateZ, rotateAround, scale, scaleAround
     , custom, sunny, unlit
@@ -26,7 +26,6 @@ module Scene exposing
 import Angle exposing (Angle)
 import Axis3d exposing (Axis3d)
 import Block3d exposing (Block3d)
-import Camera exposing (Camera)
 import Color exposing (Color)
 import Cylinder3d exposing (Cylinder3d)
 import Direction3d exposing (Direction3d)
@@ -34,12 +33,13 @@ import Geometry3d exposing (Point)
 import Html exposing (Html)
 import Length exposing (Length, Meters)
 import LineSegment3d exposing (LineSegment3d)
-import ModifiedFromScene3d.Scenes
 import Pixels
 import Point3d exposing (Point3d)
 import Scene3d exposing (Antialiasing, Exposure, Lights, ToneMapping)
 import Scene3d.Light exposing (Chromaticity, Light)
 import Scene3d.Material as Material exposing (Material, uniform)
+import SceneWebGL.Camera as Camera exposing (Camera)
+import SceneWebGL.ModifiedFromScene3d.Scenes
 import Sphere3d exposing (Sphere3d)
 import Triangle3d exposing (Triangle3d)
 import Vector3d
@@ -56,7 +56,7 @@ sunny :
     -> List Shape
     -> Html Never
 sunny arguments shapes =
-    ModifiedFromScene3d.Scenes.sunnyWithDevicePixelRatio
+    SceneWebGL.ModifiedFromScene3d.Scenes.sunnyWithDevicePixelRatio
         { devicePixelRatio = arguments.devicePixelRatio
         , camera = arguments.camera
         , clipDepth = Length.centimeters 0.5
@@ -85,7 +85,7 @@ unlit :
     -> List Shape
     -> Html Never
 unlit arguments shapes =
-    ModifiedFromScene3d.Scenes.unlitWithDevicePixelRatio
+    SceneWebGL.ModifiedFromScene3d.Scenes.unlitWithDevicePixelRatio
         { devicePixelRatio = arguments.devicePixelRatio
         , dimensions =
             ( Pixels.int (round arguments.screen.width)
@@ -113,7 +113,7 @@ custom :
     -> List Shape
     -> Html Never
 custom arguments shapes =
-    ModifiedFromScene3d.Scenes.customWithDevicePixelRatio
+    SceneWebGL.ModifiedFromScene3d.Scenes.customWithDevicePixelRatio
         { devicePixelRatio = arguments.devicePixelRatio
         , lights = arguments.lights
         , camera = arguments.camera

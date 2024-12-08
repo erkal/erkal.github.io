@@ -36,6 +36,9 @@ const inputs =
       // actions
       deltaX: 0,
       deltaY: 0,
+      pinchDeltaForChrome: 0,
+      // states
+      pinchScaleForSafari: null,
     },
     sensoState: {
       center: { x: 0, y: 0, f: 0 },
@@ -53,6 +56,47 @@ const inputs =
   };
 
 const sendInputsToElmApp = (app) => {
+  /*
+    Prevent default zoom-gestures of the browser
+  */
+  window.addEventListener(
+    "gesturestart",
+    (e) => {
+      e.preventDefault();
+      inputs.wheel.pinchScaleForSafari = e.scale;
+    },
+    { passive: false }
+  );
+
+  window.addEventListener(
+    "gesturechange",
+    (e) => {
+      e.preventDefault();
+      inputs.wheel.pinchScaleForSafari = e.scale;
+    },
+    { passive: false }
+  );
+
+  window.addEventListener(
+    "gestureend",
+    (e) => {
+      e.preventDefault();
+      inputs.wheel.pinchScaleForSafari = null;
+    },
+    { passive: false }
+  );
+
+  // For browsers that don't support gesture events (like Chrome)
+  window.addEventListener(
+    "touchmove",
+    (e) => {
+      if (e.touches.length > 1) {
+        e.preventDefault();
+      }
+    },
+    { passive: false }
+  );
+
   /*
     helper functions for getting information out of events
   */
@@ -81,6 +125,7 @@ const sendInputsToElmApp = (app) => {
     inputs.keyboard.up = false;
     inputs.keyboard.down = false;
     inputs.pointer.isDown = false;
+    inputs.wheel.pinchScaleForSafari = null;
   }
 
   /*
@@ -95,6 +140,7 @@ const sendInputsToElmApp = (app) => {
     inputs.pointer.rightUp = false;
     inputs.wheel.deltaX = 0;
     inputs.wheel.deltaY = 0;
+    inputs.wheel.pinchDeltaForChrome = 0;
   }
 
   function updateBoundingClientRects(inputs) {
@@ -274,10 +320,22 @@ const sendInputsToElmApp = (app) => {
     }
   });
 
-  window.addEventListener("wheel", (e) => {
-    inputs.wheel.deltaX = e.deltaX;
-    inputs.wheel.deltaY = e.deltaY;
-  });
+  window.addEventListener(
+    "wheel",
+    (e) => {
+      // Prevent the default browser back/forward gesture
+      e.preventDefault();
+
+      if (e.ctrlKey && !inputs.keyboard.control) {
+        // CTRL is pressed but not pressed :/ This is the (awkward) way Chrome lets you know about the pinching gesture from trackpad.
+        inputs.wheel.pinchDeltaForChrome = e.deltaY;
+      } else {
+        inputs.wheel.deltaX = e.deltaX;
+        inputs.wheel.deltaY = e.deltaY;
+      }
+    },
+    { passive: false }
+  );
 
   window.addEventListener("blur", (e) => {
     resetStates(inputs);

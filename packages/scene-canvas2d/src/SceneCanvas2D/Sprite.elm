@@ -1,4 +1,4 @@
-module Scene2d.Sprite exposing (circulateWithFrequency, cut, cutFromGrid)
+module SceneCanvas2D.Sprite exposing (circulateWithFrequency, cut, cutFromGrid)
 
 import Canvas.Texture as Texture exposing (Texture)
 

@@ -6,7 +6,6 @@ import BallGame.World.Decode
 import BallGame.World.Encode
 import BallGame.World.Physics.Collision.Primitives.Geometry2d exposing (Point2d, Vector2d, distance, edgesOfPolygon, edgesOfPolyline)
 import BallGame.World.Physics.Tick
-import Camera exposing (Camera, orthographic, perspectiveWithOrbit)
 import Color exposing (Color, black, blue, darkGreen, green, hsl, red, rgb255, white, yellow)
 import Geometry3d exposing (Point, Vector)
 import Html exposing (Html, button, div, p, text)
@@ -15,14 +14,15 @@ import Html.Events exposing (onClick)
 import Icons
 import Illuminance
 import Levels exposing (Levels)
-import Light
 import LuminousFlux
 import Play exposing (..)
 import Playground.Tape exposing (Message(..))
-import Scene exposing (..)
 import Scene3d
 import Scene3d.Light
 import Scene3d.Material as Material
+import SceneWebGL exposing (..)
+import SceneWebGL.Camera as Camera exposing (Camera, orthographic, perspectiveWithOrbit)
+import SceneWebGL.Light as Light
 import Temperature
 
 
@@ -58,20 +58,17 @@ type State
 initialConfigurations : Configurations
 initialConfigurations =
     [ configBlock "View Options"
-        True
         [ boolConfig "draw speed vector" False
         , boolConfig "draw ball trail" True
         , boolConfig "orthographic" False
         , boolConfig "unlit" False
         ]
     , configBlock "Camera"
-        True
         [ floatConfig "camera distance" ( 3, 60 ) 15
         , floatConfig "camera azimuth" ( 0, 2 * pi ) 0
         , floatConfig "camera elevation" ( -pi / 2, pi / 2 ) 0
         ]
     , configBlock "Physics Parameters"
-        True
         [ boolConfig "fix time steps" False
         , floatConfig "gas force" ( 20, 60 ) 40
         , floatConfig "friction" ( 0, 1 ) 0.4
@@ -256,7 +253,7 @@ viewGame computer model =
 
         viewScene =
             if getBool "unlit" computer then
-                Scene.unlit
+                SceneWebGL.unlit
                     { devicePixelRatio = computer.devicePixelRatio
                     , screen = computer.screen
                     , camera = model.camera
@@ -265,7 +262,7 @@ viewGame computer model =
                     }
 
             else
-                Scene.custom
+                SceneWebGL.custom
                     { devicePixelRatio = computer.devicePixelRatio
                     , screen = computer.screen
                     , camera = model.camera

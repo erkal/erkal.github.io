@@ -1,13 +1,13 @@
 module Template.Main exposing (main)
 
 import Animation exposing (..)
-import Camera exposing (Camera, perspectiveWithOrbit)
 import Color exposing (hsl, rgb255)
 import Html exposing (Html)
 import Play exposing (..)
 import Playground.Tape exposing (Message(..))
-import Scene exposing (..)
 import Scene3d.Material exposing (matte)
+import SceneWebGL exposing (..)
+import SceneWebGL.Camera as Camera exposing (Camera, perspectiveWithOrbit)
 
 
 main : Playground Model Never
@@ -32,17 +32,14 @@ type alias Model =
 initialConfigurations : Configurations
 initialConfigurations =
     [ configBlock "Camera"
-        True
         [ floatConfig "camera distance" ( 3, 8 ) 8
         , floatConfig "camera azimuth" ( 0, 2 * pi ) 0
         , floatConfig "camera elevation" ( -pi / 2, pi / 2 ) 0.5
         ]
     , configBlock "Color"
-        True
         [ colorConfig "cube color" (hsl 0 0.36 0.5)
         ]
     , configBlock "Time"
-        True
         [ floatConfig "period" ( 0.1, 5 ) 0.7
         ]
     ]
@@ -78,7 +75,7 @@ camera computer =
 
 view : Computer -> Model -> Html Never
 view computer model =
-    Scene.sunny
+    SceneWebGL.sunny
         { devicePixelRatio = computer.devicePixelRatio
         , screen = computer.screen
         , camera = camera computer

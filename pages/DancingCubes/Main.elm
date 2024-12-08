@@ -1,13 +1,13 @@
 module DancingCubes.Main exposing (main)
 
 import Animation exposing (wave)
-import Camera exposing (Camera, perspective)
 import Color exposing (hsl, rgba, white)
 import Html exposing (Html)
 import Play exposing (..)
 import Playground.Tape exposing (Message(..))
-import Scene exposing (..)
 import Scene3d.Material exposing (matte)
+import SceneWebGL exposing (..)
+import SceneWebGL.Camera as Camera exposing (Camera, perspective)
 
 
 main : Playground Model Never
@@ -49,7 +49,7 @@ update computer message model =
 
 view : Computer -> Model -> Html Never
 view computer model =
-    Scene.sunny
+    SceneWebGL.sunny
         { devicePixelRatio = computer.devicePixelRatio
         , screen = computer.screen
         , camera =
@@ -72,13 +72,11 @@ view computer model =
 initialConfigurations : Configurations
 initialConfigurations =
     [ configBlock "Camera"
-        True
         [ floatConfig "camera x" ( 0, 16 ) 8
         , floatConfig "camera y" ( 0, 10 ) 0
         , floatConfig "camera z" ( 0, 16 ) 6
         ]
     , configBlock "Parameters"
-        True
         [ floatConfig "radius" ( 0, 6 ) 1
         , intConfig "number of cubes" ( 1, 100 ) 19
         , intConfig "number of waves" ( 1, 20 ) 2
@@ -87,7 +85,6 @@ initialConfigurations =
         , floatConfig "wave height" ( 0.5, 6 ) 1.5
         ]
     , configBlock "Colors and light"
-        True
         [ floatConfig "saturation" ( 0, 1 ) 0.8
         , floatConfig "lightness" ( 0, 1 ) 0.7
         ]

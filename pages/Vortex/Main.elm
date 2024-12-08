@@ -1,14 +1,14 @@
 module Vortex.Main exposing (main)
 
 import Animation exposing (..)
-import Camera exposing (Camera, perspectiveWithOrbit)
 import Color exposing (blue, green, hsl, rgb255, white, yellow)
 import Color.Oklch exposing (oklch, toColor)
 import Html exposing (Html)
 import Play exposing (..)
 import Playground.Tape exposing (Message(..))
-import Scene exposing (..)
 import Scene3d.Material exposing (matte)
+import SceneWebGL exposing (..)
+import SceneWebGL.Camera as Camera exposing (Camera, perspectiveWithOrbit)
 
 
 main : Playground () Never
@@ -29,7 +29,6 @@ main =
 initialConfigurations : Configurations
 initialConfigurations =
     [ configBlock "Camera"
-        True
         [ floatConfig "camera distance" ( 3, 100 ) 50
         , floatConfig "camera azimuth" ( 0, 2 * pi ) 0
         , floatConfig "camera elevation" ( -pi / 2, pi / 2 ) 0.5
@@ -53,7 +52,7 @@ camera computer =
 
 scene : Computer -> List Shape -> Html Never
 scene computer =
-    Scene.sunny
+    SceneWebGL.sunny
         { devicePixelRatio = computer.devicePixelRatio
         , screen = computer.screen
         , camera = camera computer

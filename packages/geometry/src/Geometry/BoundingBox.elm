@@ -4,11 +4,7 @@ import Geometry2d exposing (Point2d)
 
 
 type alias BoundingBox =
-    { x : Float
-    , y : Float
-    , width : Float
-    , height : Float
-    , top : Float
+    { top : Float
     , right : Float
     , bottom : Float
     , left : Float
@@ -17,13 +13,9 @@ type alias BoundingBox =
 
 dummyBoundingBox : BoundingBox
 dummyBoundingBox =
-    { x = 0
-    , y = 0
-    , width = 42
-    , height = 42
-    , top = 0
-    , right = 0
-    , bottom = 0
+    { top = 0
+    , right = 42
+    , bottom = 42
     , left = 0
     }
 
@@ -32,11 +24,9 @@ translate : ( Float, Float ) -> BoundingBox -> BoundingBox
 translate ( dx, dy ) bb =
     { bb
         | top = bb.top + dy
-        , bottom = bb.bottom + dy
-        , y = bb.y + dy
-        , left = bb.left + dx
         , right = bb.right + dx
-        , x = bb.x + dx
+        , bottom = bb.bottom + dy
+        , left = bb.left + dx
     }
 
 

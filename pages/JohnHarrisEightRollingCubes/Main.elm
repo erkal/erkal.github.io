@@ -1,6 +1,5 @@
 module JohnHarrisEightRollingCubes.Main exposing (main)
 
-import Camera exposing (Camera, perspective, perspectiveWithOrbit)
 import Color exposing (rgb255, rgba)
 import Html exposing (Html, br, div, p, text)
 import Html.Attributes exposing (class, style)
@@ -8,8 +7,9 @@ import JohnHarrisEightRollingCubes.Cube exposing (Axis(..), Cube(..), RedFaceDir
 import JohnHarrisEightRollingCubes.World as World exposing (RollResult(..), World)
 import Play exposing (..)
 import Playground.Tape exposing (Message(..))
-import Scene exposing (..)
 import Scene3d.Material exposing (matte)
+import SceneWebGL exposing (..)
+import SceneWebGL.Camera as Camera exposing (Camera, perspective, perspectiveWithOrbit)
 
 
 
@@ -54,18 +54,15 @@ type State
 initialConfigurations : Configurations
 initialConfigurations =
     [ configBlock "Camera"
-        True
         [ floatConfig "camera distance" ( 3, 20 ) 10
         , floatConfig "camera azimuth" ( -pi, pi ) 0
         , floatConfig "camera elevation" ( -pi / 2, pi / 2 ) 0
         ]
     , configBlock "Parameters"
-        True
         [ floatConfig "cubes side length" ( 0.5, 1 ) 0.9
         , floatConfig "duration of rolling animation" ( 0.1, 1 ) 0.25
         ]
     , configBlock "Colors and light"
-        True
         [ colorConfig "color 1" (rgb255 244 88 67)
         , colorConfig "color 2" (rgb255 47 41 43)
         , colorConfig "board color" (rgb255 223 224 226)
@@ -204,7 +201,7 @@ camera computer =
 
 viewShapes : Computer -> Model -> Html Never
 viewShapes computer model =
-    Scene.sunny
+    SceneWebGL.sunny
         { devicePixelRatio = computer.devicePixelRatio
         , screen = computer.screen
         , camera = camera computer

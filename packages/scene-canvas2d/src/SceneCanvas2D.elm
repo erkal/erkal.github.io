@@ -1,4 +1,4 @@
-module Scene2d exposing
+module SceneCanvas2D exposing
     ( toHtml
     , Drawable
     , circle, arc, image, line, ngon, path, polyline, rectangle, lineTo, words
@@ -34,16 +34,16 @@ module Scene2d exposing
 
 -}
 
+import Camera exposing (Camera)
 import Canvas exposing (Renderable)
-import Canvas.Settings exposing (stroke)
+import Canvas.Settings exposing (fill, stroke)
 import Canvas.Settings.Advanced exposing (transform, translate)
 import Canvas.Settings.Line exposing (LineCap(..), LineJoin(..))
 import Canvas.Settings.Text exposing (TextAlign(..), TextBaseLine(..), align, baseLine, font)
 import Canvas.Texture as Texture exposing (Texture)
 import Color exposing (Color)
 import Html exposing (Html)
-import Scene2d.Camera as Camera exposing (Camera)
-import Scene2d.Geometry as Geometry exposing (Geometry, defaultGeometry)
+import SceneCanvas2d.Geometry as Geometry exposing (Geometry, defaultGeometry)
 
 
 type Drawable
@@ -318,7 +318,7 @@ isBehindTheCamera camera (Drawable geometry _) =
 
 
 view : Float -> Float -> Camera -> Drawable -> List Renderable
-view gameWidthInPixels gameHeightInPixels camera (Drawable geometry bareDrawable) =
+view fOVWidthInPixels gameHeightInPixels camera (Drawable geometry bareDrawable) =
     let
         rotationAndScale : Geometry -> List Canvas.Settings.Advanced.Transform
         rotationAndScale { rotation, xScale, yScale } =
@@ -331,7 +331,7 @@ view gameWidthInPixels gameHeightInPixels camera (Drawable geometry bareDrawable
             let
                 cameraBoundingBoxAtZ : { left : Float, right : Float, top : Float, bottom : Float }
                 cameraBoundingBoxAtZ =
-                    Camera.getBoundingBoxAtZ z camera
+                    Camera.getFOVBoundingBoxAtZ z camera
 
                 cameraWidthAtZ : Float
                 cameraWidthAtZ =
@@ -339,7 +339,7 @@ view gameWidthInPixels gameHeightInPixels camera (Drawable geometry bareDrawable
 
                 scaleFactor : Float
                 scaleFactor =
-                    gameWidthInPixels / cameraWidthAtZ
+                    fOVWidthInPixels / cameraWidthAtZ
 
                 ( xTranslate, yTranslate ) =
                     -- TODO: Maybe use reverseIfYIsUp here?
@@ -391,7 +391,9 @@ view gameWidthInPixels gameHeightInPixels camera (Drawable geometry bareDrawable
                         [ transform (geometryTransform geometry_)
                         , align Center
                         , baseLine Middle
-                        , font { size = parameters.size, family = "futura-pt-condensed" }
+                        , stroke (Color.rgba 0 0 0 0)
+                        , fill Color.black
+                        , font { size = parameters.size, family = "system-ui" }
                         ]
                         ( 0, 0 )
                         parameters.text

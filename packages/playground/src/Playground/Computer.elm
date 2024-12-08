@@ -71,6 +71,8 @@ type alias Pointer =
 type alias Wheel =
     { deltaX : Float
     , deltaY : Float
+    , pinchDeltaForChrome : Float
+    , pinchScaleForSafari : Maybe Float
     }
 
 

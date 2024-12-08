@@ -1,18 +1,18 @@
 module TurningBlocks.Main exposing (main)
 
 import Animation exposing (wave)
-import Camera exposing (Camera, perspective)
 import Color exposing (gray, hsl, rgba)
 import Html exposing (Html)
 import Illuminance
-import Light
 import LuminousFlux
 import Play exposing (..)
 import Playground.Tape exposing (Message(..))
-import Scene exposing (..)
 import Scene3d
 import Scene3d.Light
 import Scene3d.Material exposing (matte)
+import SceneWebGL exposing (..)
+import SceneWebGL.Camera as Camera exposing (Camera, perspective)
+import SceneWebGL.Light as Light
 import Temperature
 
 
@@ -43,11 +43,9 @@ init computer =
 initialConfigurations : Configurations
 initialConfigurations =
     [ configBlock "Parameters"
-        True
         [ floatConfig "a" ( 0, 3 ) 1
         ]
     , configBlock "Colors and light"
-        True
         [ floatConfig "lux" ( 2, 5 ) 5
         , floatConfig "intensity above" ( 0, 300 ) 60
         , floatConfig "intensity below" ( 0, 300 ) 290
@@ -71,6 +69,7 @@ update computer message model =
 view : Computer -> Model -> Html Never
 view computer model =
     let
+        firstLight : Scene3d.Light.Light coordinates Bool
         firstLight =
             Light.point
                 { position = { x = -45, y = 30, z = 45 }
@@ -78,6 +77,7 @@ view computer model =
                 , intensity = LuminousFlux.lumens 6000
                 }
 
+        secondLight : Scene3d.Light.Light coordinates Bool
         secondLight =
             Light.point
                 { position = { x = -45, y = -30, z = 45 }
@@ -85,6 +85,7 @@ view computer model =
                 , intensity = LuminousFlux.lumens 6000
                 }
 
+        thirdLight : Scene3d.Light.Light coordinates Bool
         thirdLight =
             Light.directional
                 { azimuth = getFloat "azimuth for third light" computer
@@ -93,6 +94,7 @@ view computer model =
                 , intensity = Illuminance.lux (10 ^ getFloat "lux" computer)
                 }
 
+        fourthLight : Scene3d.Light.Light coordinates Never
         fourthLight =
             Light.soft
                 { azimuth = getFloat "azimuth for fourth light" computer
@@ -102,7 +104,7 @@ view computer model =
                 , intensityBelow = Illuminance.lux (getFloat "intensity below" computer)
                 }
     in
-    Scene.custom
+    SceneWebGL.custom
         { devicePixelRatio = computer.devicePixelRatio
         , screen = computer.screen
         , camera = camera computer
@@ -141,14 +143,18 @@ shapes computer model =
     ]
 
 
+yellowBlocks : Computer -> Shape
 yellowBlocks computer =
     let
+        delay : Int -> Float
         delay i =
             0.1 * toFloat i
 
+        wavy : Int -> Float
         wavy i =
             wave 0 1 4 (computer.clock + delay i)
 
+        oneBlock : Int -> Shape
         oneBlock i =
             block (matte (hsl (wavy i) 0.6 0.8)) ( 1, 3, 1 )
                 |> scale (getFloat "a" computer * toFloat i)

@@ -1,13 +1,13 @@
 module RecursiveRotation.Main exposing (main)
 
 import Animation exposing (spin)
-import Camera exposing (Camera, orthographic)
 import Color exposing (rgb255, rgba, white)
 import Html exposing (Html)
 import Play exposing (..)
 import Playground.Tape exposing (Message(..))
-import Scene exposing (..)
 import Scene3d.Material exposing (matte)
+import SceneWebGL exposing (..)
+import SceneWebGL.Camera as Camera exposing (Camera, orthographic)
 
 
 main : Playground Model Never
@@ -32,7 +32,6 @@ type alias Model =
 initialConfigurations : Configurations
 initialConfigurations =
     [ configBlock "Camera"
-        True
         [ floatConfig "camera height" ( 1.4, 1.57 ) 1.57
         ]
     ]
@@ -68,7 +67,7 @@ camera computer =
 
 view : Computer -> Model -> Html Never
 view computer _ =
-    Scene.sunny
+    SceneWebGL.sunny
         { devicePixelRatio = computer.devicePixelRatio
         , screen = computer.screen
         , camera = camera computer

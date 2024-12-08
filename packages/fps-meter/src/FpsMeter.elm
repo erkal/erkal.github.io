@@ -1,12 +1,14 @@
 module FpsMeter exposing
     ( FpsMeter
-    , get
-    , getAll
     , init
     , update
+    , view
     )
 
 import Deque exposing (Deque)
+import Float.Extra
+import Html exposing (Html, div, text)
+import Html.Attributes exposing (class, style)
 
 
 type FpsMeter
@@ -80,3 +82,64 @@ update dt (FpsMeter d) =
                     | deque = poppedDeque |> Deque.pushBack dt
                     , averageDeltaTime = Just (averageDeltaTime + (dt - front) / toFloat d.length)
                 }
+
+
+view : FpsMeter -> Html msg
+view fpsMeter =
+    let
+        fps : Maybe Float
+        fps =
+            fpsMeter
+                |> get
+
+        viewAsNumber : Html msg
+        viewAsNumber =
+            div [ class "text-green-300" ]
+                [ text "Frame Rate: "
+                , text (fps |> Maybe.map (Float.Extra.toFixedDecimalPlaces 0) |> Maybe.withDefault "-")
+                ]
+
+        deltaTimeToPixels : Float -> Float
+        deltaTimeToPixels dt =
+            dt * 1000
+
+        viewBar : Float -> Html msg
+        viewBar dt =
+            div
+                [ class "flex-none bottom-0"
+                , class <|
+                    if dt < 0.01667 then
+                        "bg-green-500"
+
+                    else
+                        "bg-red-400"
+                , class "ring-[1px] ring-black"
+                , style "width" "4px"
+                , style "height" (String.fromFloat (deltaTimeToPixels dt) ++ "px")
+                ]
+                []
+
+        sixtyFpsLine : Html msg
+        sixtyFpsLine =
+            div
+                [ class "absolute w-full h-px -translate-y-1/2 bg-green-300"
+                , style "bottom" (String.fromFloat (deltaTimeToPixels (1 / 60)) ++ "px")
+                ]
+                []
+
+        viewAsBars : Html msg
+        viewAsBars =
+            div
+                [ class "relative h-[50px] bg-neutral-900"
+                ]
+                [ sixtyFpsLine
+                , div [ class "h-full", class "flex flex-row items-end" ]
+                    (fpsMeter |> getAll |> List.map viewBar)
+                ]
+    in
+    div
+        [ class "flex flex-col gap-2"
+        ]
+        [ viewAsBars
+        , viewAsNumber
+        ]

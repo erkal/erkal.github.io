@@ -1,12 +1,12 @@
 module CubeAndCube.Main exposing (main)
 
 import Animation exposing (..)
-import Camera exposing (Camera, perspective)
 import Color exposing (blue, gray, green, red, rgb255)
 import Html exposing (Html)
 import Play exposing (..)
-import Scene exposing (..)
 import Scene3d.Material exposing (matte)
+import SceneWebGL exposing (..)
+import SceneWebGL.Camera as Camera exposing (Camera, perspective)
 
 
 main : Playground {} Never
@@ -32,7 +32,7 @@ colors =
 
 view : Computer -> {} -> Html Never
 view computer model =
-    Scene.sunny
+    SceneWebGL.sunny
         { devicePixelRatio = computer.devicePixelRatio
         , screen = computer.screen
         , camera =

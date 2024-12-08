@@ -1,8 +1,8 @@
-module Scene2d.Camera.Helpers exposing (coordinatesGrid, limitToDown, limitToLeft, limitToRight)
+module SceneCanvas2D.Camera.Helpers exposing (coordinatesGrid, limitToDown, limitToLeft, limitToRight)
 
+import Camera exposing (Camera)
 import Color exposing (Color)
-import Scene2d exposing (Drawable, group, lineTo, moveX, moveY, path, words)
-import Scene2d.Camera as Camera exposing (Camera)
+import SceneCanvas2D exposing (Drawable, group, lineTo, moveX, moveY, path, words)
 
 
 coordinatesGrid :
@@ -16,7 +16,7 @@ coordinatesGrid :
 coordinatesGrid camera { unitSize, lineWidth, color } =
     let
         cameraBB =
-            Camera.getBoundingBoxAtZ 0 camera
+            Camera.getFOVBoundingBoxAtZ 0 camera
 
         lineProps =
             { stroke = Just color
@@ -61,7 +61,7 @@ limitToLeft : Float -> Camera -> Camera
 limitToLeft leftLimit camera =
     let
         cameraBB =
-            Camera.getBoundingBoxAtZ 0 camera
+            Camera.getFOVBoundingBoxAtZ 0 camera
 
         excess =
             leftLimit - cameraBB.left
@@ -77,7 +77,7 @@ limitToRight : Float -> Camera -> Camera
 limitToRight rightLimit camera =
     let
         cameraBB =
-            Camera.getBoundingBoxAtZ 0 camera
+            Camera.getFOVBoundingBoxAtZ 0 camera
 
         excess =
             cameraBB.right - rightLimit
@@ -93,7 +93,7 @@ limitToDown : Float -> Camera -> Camera
 limitToDown bottomLimit camera =
     let
         cameraBB =
-            Camera.getBoundingBoxAtZ 0 camera
+            Camera.getFOVBoundingBoxAtZ 0 camera
 
         excess =
             bottomLimit - cameraBB.bottom

@@ -1,7 +1,6 @@
 module RedFacedCube.Main exposing (main)
 
 import Animation exposing (wave)
-import Camera exposing (Camera, perspectiveWithOrbit)
 import Color exposing (darkRed, hsl, lightRed, rgb255, white)
 import Ease
 import Geometry3d exposing (Point, Vector)
@@ -11,7 +10,6 @@ import Html.Events exposing (onClick)
 import Icons
 import Illuminance
 import Levels exposing (Levels)
-import Light
 import LuminousFlux
 import Play exposing (..)
 import Playground.Tape exposing (Message(..))
@@ -25,10 +23,12 @@ import RedFacedCube.Wall exposing (Wall(..), WallDirection(..))
 import RedFacedCube.World as World exposing (RollResultForLevelEditing(..), Rule(..), StepResult(..), World)
 import RedFacedCube.World.Decode
 import RedFacedCube.World.Encode
-import Scene exposing (..)
 import Scene3d
 import Scene3d.Light
 import Scene3d.Material exposing (matte)
+import SceneWebGL exposing (..)
+import SceneWebGL.Camera as Camera exposing (Camera, perspectiveWithOrbit)
+import SceneWebGL.Light as Light
 import Temperature
 
 
@@ -85,20 +85,17 @@ type State
 initialConfigurations : Configurations
 initialConfigurations =
     [ configBlock "Camera"
-        True
         [ floatConfig "camera distance" ( 3, 60 ) 20
         , floatConfig "camera azimuth" ( -pi, pi ) 0
         , floatConfig "camera elevation" ( -pi / 2, pi / 2 ) -0.15
         ]
     , configBlock "Parameters"
-        True
         [ floatConfig "cubes side length" ( 0.5, 1 ) 0.95
         , floatConfig "height of following lights" ( 0.1, 8 ) 5
         , floatConfig "duration of step animation" ( 0.1, 1 ) 0.23
         , floatConfig "duration of mistake animation" ( 0.1, 1 ) 0.5
         ]
     , configBlock "Colors and light"
-        True
         [ floatConfig "lumens of following lights" ( 40000, 120000 ) 100000
         , colorConfig "background color" (rgb255 150 150 150)
         , colorConfig "color 1" (rgb255 244 88 67)
@@ -503,7 +500,7 @@ viewShapes computer model =
                 , intensityBelow = Illuminance.lux 40
                 }
     in
-    Scene.custom
+    SceneWebGL.custom
         { devicePixelRatio = computer.devicePixelRatio
         , screen = computer.screen
         , camera = camera computer model

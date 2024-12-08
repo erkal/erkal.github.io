@@ -1,4 +1,4 @@
-module Light exposing
+module SceneWebGL.Light exposing
     ( directional
     , point
     , soft

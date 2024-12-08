@@ -1,19 +1,19 @@
 module HappyBirthdayAndrey.Main exposing (main)
 
 import Animation exposing (wave)
-import Camera exposing (Camera, perspective)
 import Color exposing (Color, black, yellow)
 import Html exposing (Html, div, text)
 import Html.Attributes exposing (class)
 import Illuminance
-import Light
 import LuminousFlux
 import Play exposing (..)
 import Playground.Tape exposing (Message(..))
-import Scene exposing (..)
 import Scene3d
 import Scene3d.Light
 import Scene3d.Material exposing (matte)
+import SceneWebGL exposing (..)
+import SceneWebGL.Camera as Camera exposing (Camera, perspective)
+import SceneWebGL.Light as Light
 import Set exposing (Set)
 import Temperature
 
@@ -141,7 +141,7 @@ view computer model =
             [ div [] [ text "Press mouse to add new cube" ]
             , div [] [ text "Shift + Press to remove" ]
             ]
-        , Scene.custom
+        , SceneWebGL.custom
             { devicePixelRatio = computer.devicePixelRatio
             , screen = computer.screen
             , camera = camera computer

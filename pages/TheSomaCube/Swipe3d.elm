@@ -9,9 +9,9 @@ module TheSomaCube.Swipe3d exposing
     , swipedToZPositive
     )
 
-import Camera exposing (Camera)
 import Dict
 import Play as Playground exposing (Computer)
+import SceneWebGL.Camera as Camera exposing (Camera)
 
 
 type SwipeState
@@ -72,31 +72,3 @@ swipedToZPositive =
 swipedToZNegative : SwipeState -> Bool
 swipedToZNegative =
     (==) (Swiped Z_Negative)
-
-
-
--- CHANGE
-
-
-startSwipingAt : Computer -> SwipeState -> SwipeState
-startSwipingAt computer swipe =
-    case swipe of
-        SwipingStartedAt _ ->
-            swipe
-
-        _ ->
-            case Dict.values computer.touches of
-                firstTouch :: _ ->
-                    SwipingStartedAt firstTouch
-
-                _ ->
-                    Idle
-
-
-maybeSwipeTo : Camera -> Float -> PixelCoordinates -> PixelCoordinates -> Maybe SwipeDirection
-maybeSwipeTo camera thresholdInWorldUnits startInPixelCoordinates currentInPixelCoordinates =
-    let
-        ( s, c ) =
-            ( startInPixelCoordinates, currentInPixelCoordinates )
-    in
-    Nothing

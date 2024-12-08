@@ -1,9 +1,9 @@
 port module Play exposing
-    ( application
-    , boolConfig, colorConfig, configBlock, floatConfig, intConfig, optionsConfig
-    , getBool, getColor, getFloat, getInt, getOption
+    ( application, simpleApplication
+    , boolConfig, colorConfig, configBlock, stringConfig, floatConfig, intConfig, optionsConfig
+    , getBool, getColor, getFloat, getInt, getOption, getString
     , Computer, Keyboard, Pointer, Screen
-    , Configurations, Playground, getString, simpleApplication, stringConfig
+    , Configurations, Playground
     )
 
 {-|
@@ -11,17 +11,17 @@ port module Play exposing
 
 # Create
 
-@docs application
+@docs application, simpleApplication, Configurations. Playground
 
 
 # Declaring Configurations
 
-@docs boolConfig, colorConfig, configBlock, floatConfig, intConfig, optionsConfig
+@docs boolConfig, colorConfig, configBlock, stringConfig, floatConfig, intConfig, optionsConfig
 
 
 # Getting Configurations
 
-@docs getBool, getColor, getFloat, getInt, getOption
+@docs getBool, getColor, getFloat, getInt, getOption, getString
 
 
 # Getting Inputs
@@ -225,7 +225,12 @@ init app flags =
                 (Computer.init app.initialConfigurations flags.inputs)
                 app.init
       , distractionFree = flags.inputs.screen.width < 500
-      , leftBarState = ShowingNothing
+      , leftBarState =
+            if flags.inputs.screen.width < 1000 then
+                ShowingNothing
+
+            else
+                ShowingConfigurations
       }
     , Cmd.none
     )
@@ -422,7 +427,17 @@ stopPropagationOfInputs =
     [ stopPropagationOn "mousedown" (Decode.succeed ( NoOp, True ))
     , stopPropagationOn "pointerdown" (Decode.succeed ( NoOp, True ))
     , stopPropagationOn "wheel" (Decode.succeed ( NoOp, True ))
-    , stopPropagationOn "keydown" (Decode.succeed ( NoOp, True ))
+    , stopPropagationOn "keydown"
+        (Decode.andThen
+            (\key ->
+                if List.member key [ "Meta", "Control", "Shift", "Alt", " " ] then
+                    Decode.fail "allow these keys"
+
+                else
+                    Decode.succeed ( NoOp, True )
+            )
+            (Decode.field "key" Decode.string)
+        )
     ]
 
 
@@ -462,7 +477,7 @@ viewHUD computer model =
         viewConfigurations : Html (Msg appMsg)
         viewConfigurations =
             div
-                [ class "overflow-y-auto left-12 bg-black"
+                [ class "overflow-y-auto left-12 bg-black/40"
                 , style "width" "260px"
                 , style "height" <| String.fromFloat computer.screen.height ++ "px"
                 , hiddenIf (model.leftBarState /= ShowingConfigurations)
@@ -576,10 +591,22 @@ viewComputer model =
                 ]
             , div [] [ Html.text ("pointer.x: " ++ Round.round 2 computer.pointer.x) ]
             , div [] [ Html.text ("pointer.y: " ++ Round.round 2 computer.pointer.y) ]
-            , div [] [ Html.text ("wheel deltaX: " ++ String.fromFloat computer.wheel.deltaX) ]
-            , div [] [ Html.text ("wheel deltaY: " ++ String.fromFloat computer.wheel.deltaY) ]
+            , div [] [ Html.text ("wheel.deltaX: " ++ String.fromFloat computer.wheel.deltaX) ]
+            , div [] [ Html.text ("wheel.deltaY: " ++ String.fromFloat computer.wheel.deltaY) ]
+            , div [] [ Html.text ("wheel.pinchDeltaForChrome: " ++ String.fromFloat computer.wheel.pinchDeltaForChrome) ]
+            , div [] [ Html.text ("pinchScaleForSafari: " ++ maybeFloatToString computer.wheel.pinchScaleForSafari) ]
             ]
         ]
+
+
+maybeFloatToString : Maybe Float -> String
+maybeFloatToString maybeFloat =
+    case maybeFloat of
+        Nothing ->
+            "Nothing"
+
+        Just f ->
+            String.fromFloat f
 
 
 hiddenIf : Bool -> Attribute msg

@@ -1,13 +1,13 @@
 module RecursiveTree.Main exposing (main)
 
 import Animation exposing (spin, wave)
-import Camera exposing (Camera, perspective)
 import Color exposing (blue, gray, hsl, lightBlue)
 import Html exposing (Html)
 import Play exposing (..)
 import Playground.Tape exposing (Message(..))
-import Scene exposing (..)
 import Scene3d.Material exposing (matte)
+import SceneWebGL exposing (..)
+import SceneWebGL.Camera as Camera exposing (Camera, perspective)
 
 
 main : Playground Model Never
@@ -32,7 +32,6 @@ type alias Model =
 initialConfigurations : Configurations
 initialConfigurations =
     [ configBlock "Parameters"
-        True
         [ floatConfig "s" ( 1, 2 ) 1.5
         , floatConfig "t" ( 1, 2 ) 1.5
         ]
@@ -59,7 +58,7 @@ update computer message model =
 
 view : Computer -> Model -> Html Never
 view computer model =
-    Scene.sunny
+    SceneWebGL.sunny
         { devicePixelRatio = computer.devicePixelRatio
         , screen = computer.screen
         , camera =

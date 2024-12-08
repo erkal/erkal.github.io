@@ -1,4 +1,4 @@
-module Camera exposing
+module SceneWebGL.Camera exposing
     ( Camera
     , mouseOverXY
     , mouseOverXYAtZ
@@ -31,6 +31,13 @@ type alias Camera =
     Camera3d Meters ()
 
 
+{-|
+
+    `verticalFieldOfView` is set to `2 * atan 0.5`
+        so that if the z-coordinate of the camera is the same as screen height,
+        we see the XY plane in screen pixel coordinates!
+
+-}
 perspective :
     { focalPoint : Point
     , eyePoint : Point
@@ -45,9 +52,7 @@ perspective { focalPoint, eyePoint, upDirection } =
                 , eyePoint = Point3d.fromMeters eyePoint
                 , upDirection = Direction3d.from Point3d.origin (Point3d.fromMeters upDirection) |> Maybe.withDefault Direction3d.positiveY
                 }
-        , verticalFieldOfView =
-            -- so that if the z-coordinate of the camera is the same as screen width, we see the XY plane in screen pixel coordinates!
-            Angle.radians (2 * atan 0.5)
+        , verticalFieldOfView = Angle.radians (2 * atan 0.5)
         }
 
 
