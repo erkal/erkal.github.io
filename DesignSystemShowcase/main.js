@@ -7656,6 +7656,13 @@ var $rtfeldman$elm_css$Html$Styled$Internal$css = function (styles) {
 	return A3($rtfeldman$elm_css$VirtualDom$Styled$Attribute, classProperty, true, cssTemplate);
 };
 var $rtfeldman$elm_css$Html$Styled$Attributes$css = $rtfeldman$elm_css$Html$Styled$Internal$css;
+var $rtfeldman$elm_css$VirtualDom$Styled$Node = F3(
+	function (a, b, c) {
+		return {$: 0, a: a, b: b, c: c};
+	});
+var $rtfeldman$elm_css$VirtualDom$Styled$node = $rtfeldman$elm_css$VirtualDom$Styled$Node;
+var $rtfeldman$elm_css$Html$Styled$node = $rtfeldman$elm_css$VirtualDom$Styled$node;
+var $rtfeldman$elm_css$Html$Styled$div = $rtfeldman$elm_css$Html$Styled$node('div');
 var $avh4$elm_color$Color$RgbaSpace = F4(
 	function (a, b, c, d) {
 		return {$: 0, a: a, b: b, c: c, d: d};
@@ -7664,14 +7671,7 @@ var $avh4$elm_color$Color$rgba = F4(
 	function (r, g, b, a) {
 		return A4($avh4$elm_color$Color$RgbaSpace, r, g, b, a);
 	});
-var $author$project$DesignSystem$Color$cyan600 = A4($avh4$elm_color$Color$rgba, 0.15, 0.7, 0.85, 1);
-var $rtfeldman$elm_css$VirtualDom$Styled$Node = F3(
-	function (a, b, c) {
-		return {$: 0, a: a, b: b, c: c};
-	});
-var $rtfeldman$elm_css$VirtualDom$Styled$node = $rtfeldman$elm_css$VirtualDom$Styled$Node;
-var $rtfeldman$elm_css$Html$Styled$node = $rtfeldman$elm_css$VirtualDom$Styled$node;
-var $rtfeldman$elm_css$Html$Styled$div = $rtfeldman$elm_css$Html$Styled$node('div');
+var $author$project$DesignSystem$Color$gray900 = A4($avh4$elm_color$Color$rgba, 0.19, 0.21, 0.23, 1);
 var $rtfeldman$elm_css$Css$prop1 = F2(
 	function (key, arg) {
 		return A2($rtfeldman$elm_css$Css$property, key, arg.bi);
@@ -7834,7 +7834,7 @@ var $rtfeldman$elm_css$Css$pseudoElement = function (element) {
 	return $rtfeldman$elm_css$Css$Preprocess$WithPseudoElement(element);
 };
 var $rtfeldman$elm_css$Css$before = $rtfeldman$elm_css$Css$pseudoElement('before');
-var $author$project$DesignSystem$Color$black = A4($avh4$elm_color$Color$rgba, 0.08, 0.08, 0.12, 1);
+var $author$project$DesignSystem$Color$black = A4($avh4$elm_color$Color$rgba, 0, 0, 0, 1);
 var $author$project$DesignSystem$Color$blackAlpha100 = A4($avh4$elm_color$Color$rgba, 0.08, 0.08, 0.12, 0.04);
 var $author$project$DesignSystem$Color$blackAlpha200 = A4($avh4$elm_color$Color$rgba, 0.08, 0.08, 0.12, 0.08);
 var $author$project$DesignSystem$Color$blackAlpha300 = A4($avh4$elm_color$Color$rgba, 0.08, 0.08, 0.12, 0.16);
@@ -7844,33 +7844,39 @@ var $author$project$DesignSystem$Color$blackAlpha600 = A4($avh4$elm_color$Color$
 var $author$project$DesignSystem$Color$blackAlpha700 = A4($avh4$elm_color$Color$rgba, 0.08, 0.08, 0.12, 0.64);
 var $author$project$DesignSystem$Color$blackAlpha800 = A4($avh4$elm_color$Color$rgba, 0.08, 0.08, 0.12, 0.8);
 var $author$project$DesignSystem$Color$blackAlpha900 = A4($avh4$elm_color$Color$rgba, 0.08, 0.08, 0.12, 0.92);
-var $author$project$DesignSystem$Color$blue500 = A4($avh4$elm_color$Color$rgba, 0.15, 0.45, 0.9, 1);
+var $author$project$DesignSystem$Color$blue500 = A4($avh4$elm_color$Color$rgba, 0.03, 0.44, 0.75, 1);
 var $author$project$DesignSystem$Color$blue = $author$project$DesignSystem$Color$blue500;
-var $author$project$DesignSystem$Color$blue100 = A4($avh4$elm_color$Color$rgba, 0.75, 0.9, 1.0, 1);
-var $author$project$DesignSystem$Color$blue200 = A4($avh4$elm_color$Color$rgba, 0.6, 0.8, 1.0, 1);
-var $author$project$DesignSystem$Color$blue300 = A4($avh4$elm_color$Color$rgba, 0.45, 0.7, 1.0, 1);
-var $author$project$DesignSystem$Color$blue400 = A4($avh4$elm_color$Color$rgba, 0.3, 0.6, 1.0, 1);
-var $author$project$DesignSystem$Color$blue600 = A4($avh4$elm_color$Color$rgba, 0.1, 0.35, 0.8, 1);
-var $author$project$DesignSystem$Color$blue700 = A4($avh4$elm_color$Color$rgba, 0.05, 0.25, 0.7, 1);
-var $author$project$DesignSystem$Color$blue800 = A4($avh4$elm_color$Color$rgba, 0.02, 0.15, 0.6, 1);
-var $author$project$DesignSystem$Color$blue900 = A4($avh4$elm_color$Color$rgba, 0.0, 0.08, 0.45, 1);
+var $author$project$DesignSystem$Color$blue100 = A4($avh4$elm_color$Color$rgba, 0.63, 0.84, 0.95, 1);
+var $author$project$DesignSystem$Color$blue200 = A4($avh4$elm_color$Color$rgba, 0.43, 0.74, 0.9, 1);
+var $author$project$DesignSystem$Color$blue300 = A4($avh4$elm_color$Color$rgba, 0.33, 0.64, 0.85, 1);
+var $author$project$DesignSystem$Color$blue400 = A4($avh4$elm_color$Color$rgba, 0.23, 0.54, 0.8, 1);
+var $author$project$DesignSystem$Color$blue600 = A4($avh4$elm_color$Color$rgba, 0.03, 0.39, 0.65, 1);
+var $author$project$DesignSystem$Color$blue700 = A4($avh4$elm_color$Color$rgba, 0.03, 0.34, 0.55, 1);
+var $author$project$DesignSystem$Color$blue800 = A4($avh4$elm_color$Color$rgba, 0.03, 0.29, 0.45, 1);
+var $author$project$DesignSystem$Color$blue900 = A4($avh4$elm_color$Color$rgba, 0.03, 0.24, 0.35, 1);
 var $rtfeldman$elm_css$Css$borderRadius = $rtfeldman$elm_css$Css$prop1('border-radius');
 var $rtfeldman$elm_css$Css$prop5 = F6(
 	function (key, argA, argB, argC, argD, argE) {
 		return A2($rtfeldman$elm_css$Css$property, key, argA.bi + (' ' + (argB.bi + (' ' + (argC.bi + (' ' + (argD.bi + (' ' + argE.bi))))))));
 	});
 var $rtfeldman$elm_css$Css$boxShadow5 = $rtfeldman$elm_css$Css$prop5('box-shadow');
+var $rtfeldman$elm_css$Css$row = {fF: 0, dk: 0, bi: 'row'};
+var $rtfeldman$elm_css$Css$column = _Utils_update(
+	$rtfeldman$elm_css$Css$row,
+	{bi: 'column'});
 var $rtfeldman$elm_css$Css$cursor = $rtfeldman$elm_css$Css$prop1('cursor');
-var $author$project$DesignSystem$Color$cyan500 = A4($avh4$elm_color$Color$rgba, 0.2, 0.8, 0.95, 1);
+var $author$project$DesignSystem$Color$cyan500 = A4($avh4$elm_color$Color$rgba, 0.12, 0.73, 0.69, 1);
 var $author$project$DesignSystem$Color$cyan = $author$project$DesignSystem$Color$cyan500;
-var $author$project$DesignSystem$Color$cyan100 = A4($avh4$elm_color$Color$rgba, 0.8, 1.0, 1.0, 1);
-var $author$project$DesignSystem$Color$cyan200 = A4($avh4$elm_color$Color$rgba, 0.65, 0.95, 1.0, 1);
-var $author$project$DesignSystem$Color$cyan300 = A4($avh4$elm_color$Color$rgba, 0.5, 0.9, 1.0, 1);
-var $author$project$DesignSystem$Color$cyan400 = A4($avh4$elm_color$Color$rgba, 0.35, 0.85, 1.0, 1);
-var $author$project$DesignSystem$Color$cyan700 = A4($avh4$elm_color$Color$rgba, 0.1, 0.6, 0.75, 1);
-var $author$project$DesignSystem$Color$cyan800 = A4($avh4$elm_color$Color$rgba, 0.05, 0.5, 0.65, 1);
-var $author$project$DesignSystem$Color$cyan900 = A4($avh4$elm_color$Color$rgba, 0.0, 0.4, 0.55, 1);
+var $author$project$DesignSystem$Color$cyan100 = A4($avh4$elm_color$Color$rgba, 0.52, 0.93, 0.89, 1);
+var $author$project$DesignSystem$Color$cyan200 = A4($avh4$elm_color$Color$rgba, 0.42, 0.88, 0.84, 1);
+var $author$project$DesignSystem$Color$cyan300 = A4($avh4$elm_color$Color$rgba, 0.32, 0.83, 0.79, 1);
+var $author$project$DesignSystem$Color$cyan400 = A4($avh4$elm_color$Color$rgba, 0.22, 0.78, 0.74, 1);
+var $author$project$DesignSystem$Color$cyan600 = A4($avh4$elm_color$Color$rgba, 0.11, 0.63, 0.59, 1);
+var $author$project$DesignSystem$Color$cyan700 = A4($avh4$elm_color$Color$rgba, 0.1, 0.53, 0.49, 1);
+var $author$project$DesignSystem$Color$cyan800 = A4($avh4$elm_color$Color$rgba, 0.09, 0.43, 0.39, 1);
+var $author$project$DesignSystem$Color$cyan900 = A4($avh4$elm_color$Color$rgba, 0.08, 0.33, 0.29, 1);
 var $rtfeldman$elm_css$Css$displayFlex = A2($rtfeldman$elm_css$Css$property, 'display', 'flex');
+var $rtfeldman$elm_css$Css$flexDirection = $rtfeldman$elm_css$Css$prop1('flex-direction');
 var $rtfeldman$elm_css$Css$flexStart = $rtfeldman$elm_css$Css$prop1('flex-start');
 var $rtfeldman$elm_css$Css$flexWrap = $rtfeldman$elm_css$Css$prop1('flex-wrap');
 var $rtfeldman$elm_css$Css$stringsToValue = function (list) {
@@ -7887,26 +7893,25 @@ var $rtfeldman$elm_css$Css$fontWeight = function (_v0) {
 	var value = _v0.bi;
 	return A2($rtfeldman$elm_css$Css$property, 'font-weight', value);
 };
-var $author$project$DesignSystem$Color$gray500 = A4($avh4$elm_color$Color$rgba, 0.6, 0.6, 0.6, 1);
+var $author$project$DesignSystem$Color$gray500 = A4($avh4$elm_color$Color$rgba, 0.47, 0.5, 0.52, 1);
 var $author$project$DesignSystem$Color$gray = $author$project$DesignSystem$Color$gray500;
-var $author$project$DesignSystem$Color$gray100 = A4($avh4$elm_color$Color$rgba, 0.98, 0.98, 0.98, 1);
-var $author$project$DesignSystem$Color$gray200 = A4($avh4$elm_color$Color$rgba, 0.9, 0.9, 0.9, 1);
-var $author$project$DesignSystem$Color$gray300 = A4($avh4$elm_color$Color$rgba, 0.8, 0.8, 0.8, 1);
-var $author$project$DesignSystem$Color$gray400 = A4($avh4$elm_color$Color$rgba, 0.7, 0.7, 0.7, 1);
-var $author$project$DesignSystem$Color$gray600 = A4($avh4$elm_color$Color$rgba, 0.5, 0.5, 0.5, 1);
-var $author$project$DesignSystem$Color$gray700 = A4($avh4$elm_color$Color$rgba, 0.4, 0.4, 0.4, 1);
-var $author$project$DesignSystem$Color$gray800 = A4($avh4$elm_color$Color$rgba, 0.3, 0.3, 0.3, 1);
-var $author$project$DesignSystem$Color$gray900 = A4($avh4$elm_color$Color$rgba, 0.2, 0.2, 0.2, 1);
-var $author$project$DesignSystem$Color$green500 = A4($avh4$elm_color$Color$rgba, 0.25, 0.75, 0.25, 1);
+var $author$project$DesignSystem$Color$gray100 = A4($avh4$elm_color$Color$rgba, 0.96, 0.96, 0.96, 1);
+var $author$project$DesignSystem$Color$gray200 = A4($avh4$elm_color$Color$rgba, 0.89, 0.89, 0.89, 1);
+var $author$project$DesignSystem$Color$gray300 = A4($avh4$elm_color$Color$rgba, 0.82, 0.82, 0.82, 1);
+var $author$project$DesignSystem$Color$gray400 = A4($avh4$elm_color$Color$rgba, 0.65, 0.65, 0.65, 1);
+var $author$project$DesignSystem$Color$gray600 = A4($avh4$elm_color$Color$rgba, 0.4, 0.42, 0.44, 1);
+var $author$project$DesignSystem$Color$gray700 = A4($avh4$elm_color$Color$rgba, 0.33, 0.35, 0.37, 1);
+var $author$project$DesignSystem$Color$gray800 = A4($avh4$elm_color$Color$rgba, 0.26, 0.28, 0.3, 1);
+var $author$project$DesignSystem$Color$green500 = A4($avh4$elm_color$Color$rgba, 0, 0.66, 0.54, 1);
 var $author$project$DesignSystem$Color$green = $author$project$DesignSystem$Color$green500;
-var $author$project$DesignSystem$Color$green100 = A4($avh4$elm_color$Color$rgba, 0.85, 1.0, 0.85, 1);
-var $author$project$DesignSystem$Color$green200 = A4($avh4$elm_color$Color$rgba, 0.7, 0.95, 0.7, 1);
-var $author$project$DesignSystem$Color$green300 = A4($avh4$elm_color$Color$rgba, 0.55, 0.9, 0.55, 1);
-var $author$project$DesignSystem$Color$green400 = A4($avh4$elm_color$Color$rgba, 0.4, 0.85, 0.4, 1);
-var $author$project$DesignSystem$Color$green600 = A4($avh4$elm_color$Color$rgba, 0.2, 0.65, 0.2, 1);
-var $author$project$DesignSystem$Color$green700 = A4($avh4$elm_color$Color$rgba, 0.15, 0.55, 0.15, 1);
-var $author$project$DesignSystem$Color$green800 = A4($avh4$elm_color$Color$rgba, 0.1, 0.45, 0.1, 1);
-var $author$project$DesignSystem$Color$green900 = A4($avh4$elm_color$Color$rgba, 0.05, 0.35, 0.05, 1);
+var $author$project$DesignSystem$Color$green100 = A4($avh4$elm_color$Color$rgba, 0.4, 0.94, 0.86, 1);
+var $author$project$DesignSystem$Color$green200 = A4($avh4$elm_color$Color$rgba, 0.3, 0.87, 0.78, 1);
+var $author$project$DesignSystem$Color$green300 = A4($avh4$elm_color$Color$rgba, 0.2, 0.8, 0.7, 1);
+var $author$project$DesignSystem$Color$green400 = A4($avh4$elm_color$Color$rgba, 0.1, 0.73, 0.62, 1);
+var $author$project$DesignSystem$Color$green600 = A4($avh4$elm_color$Color$rgba, 0, 0.59, 0.46, 1);
+var $author$project$DesignSystem$Color$green700 = A4($avh4$elm_color$Color$rgba, 0, 0.52, 0.38, 1);
+var $author$project$DesignSystem$Color$green800 = A4($avh4$elm_color$Color$rgba, 0, 0.45, 0.3, 1);
+var $author$project$DesignSystem$Color$green900 = A4($avh4$elm_color$Color$rgba, 0, 0.38, 0.22, 1);
 var $rtfeldman$elm_css$Css$Preprocess$ExtendSelector = F2(
 	function (a, b) {
 		return {$: 1, a: a, b: b};
@@ -7942,53 +7947,52 @@ var $rtfeldman$elm_css$Css$prop2 = F3(
 var $rtfeldman$elm_css$Css$margin2 = $rtfeldman$elm_css$Css$prop2('margin');
 var $rtfeldman$elm_css$Css$marginBottom = $rtfeldman$elm_css$Css$prop1('margin-bottom');
 var $rtfeldman$elm_css$Css$maxWidth = $rtfeldman$elm_css$Css$prop1('max-width');
-var $author$project$DesignSystem$Color$orange500 = A4($avh4$elm_color$Color$rgba, 1.0, 0.5, 0.2, 1);
-var $author$project$DesignSystem$Color$orange = $author$project$DesignSystem$Color$orange500;
-var $author$project$DesignSystem$Color$orange100 = A4($avh4$elm_color$Color$rgba, 1.0, 0.9, 0.8, 1);
-var $author$project$DesignSystem$Color$orange200 = A4($avh4$elm_color$Color$rgba, 1.0, 0.8, 0.65, 1);
-var $author$project$DesignSystem$Color$orange300 = A4($avh4$elm_color$Color$rgba, 1.0, 0.7, 0.5, 1);
-var $author$project$DesignSystem$Color$orange400 = A4($avh4$elm_color$Color$rgba, 1.0, 0.6, 0.35, 1);
-var $author$project$DesignSystem$Color$orange600 = A4($avh4$elm_color$Color$rgba, 0.9, 0.4, 0.15, 1);
-var $author$project$DesignSystem$Color$orange700 = A4($avh4$elm_color$Color$rgba, 0.8, 0.3, 0.1, 1);
-var $author$project$DesignSystem$Color$orange800 = A4($avh4$elm_color$Color$rgba, 0.7, 0.2, 0.05, 1);
-var $author$project$DesignSystem$Color$orange900 = A4($avh4$elm_color$Color$rgba, 0.6, 0.1, 0.0, 1);
+var $author$project$DesignSystem$Color$orange100 = A4($avh4$elm_color$Color$rgba, 1.0, 0.82, 0.77, 1);
+var $author$project$DesignSystem$Color$orange200 = A4($avh4$elm_color$Color$rgba, 1.0, 0.72, 0.65, 1);
+var $author$project$DesignSystem$Color$orange300 = A4($avh4$elm_color$Color$rgba, 1.0, 0.62, 0.53, 1);
+var $author$project$DesignSystem$Color$orange400 = A4($avh4$elm_color$Color$rgba, 1.0, 0.52, 0.43, 1);
+var $author$project$DesignSystem$Color$orange500 = A4($avh4$elm_color$Color$rgba, 1.0, 0.42, 0.33, 1);
+var $author$project$DesignSystem$Color$orange600 = A4($avh4$elm_color$Color$rgba, 0.9, 0.37, 0.28, 1);
+var $author$project$DesignSystem$Color$orange700 = A4($avh4$elm_color$Color$rgba, 0.8, 0.32, 0.23, 1);
+var $author$project$DesignSystem$Color$orange800 = A4($avh4$elm_color$Color$rgba, 0.7, 0.27, 0.18, 1);
+var $author$project$DesignSystem$Color$orange900 = A4($avh4$elm_color$Color$rgba, 0.6, 0.22, 0.13, 1);
 var $rtfeldman$elm_css$Css$padding = $rtfeldman$elm_css$Css$prop1('padding');
 var $rtfeldman$elm_css$Css$padding2 = $rtfeldman$elm_css$Css$prop2('padding');
 var $rtfeldman$elm_css$Css$paddingTop = $rtfeldman$elm_css$Css$prop1('padding-top');
 var $rtfeldman$elm_css$Css$pointer = {w: 0, bi: 'pointer'};
-var $author$project$DesignSystem$Color$purple500 = A4($avh4$elm_color$Color$rgba, 0.8, 0.25, 0.95, 1);
+var $author$project$DesignSystem$Color$purple500 = A4($avh4$elm_color$Color$rgba, 0.45, 0.2, 0.8, 1);
 var $author$project$DesignSystem$Color$purple = $author$project$DesignSystem$Color$purple500;
-var $author$project$DesignSystem$Color$purple100 = A4($avh4$elm_color$Color$rgba, 1.0, 0.85, 1.0, 1);
-var $author$project$DesignSystem$Color$purple200 = A4($avh4$elm_color$Color$rgba, 0.95, 0.7, 1.0, 1);
-var $author$project$DesignSystem$Color$purple300 = A4($avh4$elm_color$Color$rgba, 0.9, 0.55, 1.0, 1);
-var $author$project$DesignSystem$Color$purple400 = A4($avh4$elm_color$Color$rgba, 0.85, 0.4, 1.0, 1);
-var $author$project$DesignSystem$Color$purple600 = A4($avh4$elm_color$Color$rgba, 0.7, 0.2, 0.85, 1);
-var $author$project$DesignSystem$Color$purple700 = A4($avh4$elm_color$Color$rgba, 0.6, 0.15, 0.75, 1);
-var $author$project$DesignSystem$Color$purple800 = A4($avh4$elm_color$Color$rgba, 0.5, 0.1, 0.65, 1);
-var $author$project$DesignSystem$Color$purple900 = A4($avh4$elm_color$Color$rgba, 0.4, 0.05, 0.55, 1);
+var $author$project$DesignSystem$Color$purple100 = A4($avh4$elm_color$Color$rgba, 0.85, 0.6, 1.0, 1);
+var $author$project$DesignSystem$Color$purple200 = A4($avh4$elm_color$Color$rgba, 0.75, 0.5, 0.95, 1);
+var $author$project$DesignSystem$Color$purple300 = A4($avh4$elm_color$Color$rgba, 0.65, 0.4, 0.9, 1);
+var $author$project$DesignSystem$Color$purple400 = A4($avh4$elm_color$Color$rgba, 0.55, 0.3, 0.85, 1);
+var $author$project$DesignSystem$Color$purple600 = A4($avh4$elm_color$Color$rgba, 0.35, 0.15, 0.7, 1);
+var $author$project$DesignSystem$Color$purple700 = A4($avh4$elm_color$Color$rgba, 0.25, 0.1, 0.6, 1);
+var $author$project$DesignSystem$Color$purple800 = A4($avh4$elm_color$Color$rgba, 0.15, 0.05, 0.5, 1);
+var $author$project$DesignSystem$Color$purple900 = A4($avh4$elm_color$Color$rgba, 0.1, 0, 0.4, 1);
 var $rtfeldman$elm_css$Css$PxUnits = 0;
 var $rtfeldman$elm_css$Css$px = A2($rtfeldman$elm_css$Css$Internal$lengthConverter, 0, 'px');
-var $author$project$DesignSystem$Color$red500 = A4($avh4$elm_color$Color$rgba, 0.95, 0.2, 0.2, 1);
+var $author$project$DesignSystem$Color$red500 = A4($avh4$elm_color$Color$rgba, 1.0, 0, 0.3, 1);
 var $author$project$DesignSystem$Color$red = $author$project$DesignSystem$Color$red500;
-var $author$project$DesignSystem$Color$red100 = A4($avh4$elm_color$Color$rgba, 1.0, 0.85, 0.85, 1);
-var $author$project$DesignSystem$Color$red200 = A4($avh4$elm_color$Color$rgba, 1.0, 0.7, 0.7, 1);
-var $author$project$DesignSystem$Color$red300 = A4($avh4$elm_color$Color$rgba, 1.0, 0.55, 0.55, 1);
-var $author$project$DesignSystem$Color$red400 = A4($avh4$elm_color$Color$rgba, 1.0, 0.4, 0.4, 1);
-var $author$project$DesignSystem$Color$red600 = A4($avh4$elm_color$Color$rgba, 0.85, 0.15, 0.15, 1);
-var $author$project$DesignSystem$Color$red700 = A4($avh4$elm_color$Color$rgba, 0.75, 0.1, 0.1, 1);
-var $author$project$DesignSystem$Color$red800 = A4($avh4$elm_color$Color$rgba, 0.65, 0.05, 0.05, 1);
-var $author$project$DesignSystem$Color$red900 = A4($avh4$elm_color$Color$rgba, 0.55, 0.0, 0.0, 1);
+var $author$project$DesignSystem$Color$red100 = A4($avh4$elm_color$Color$rgba, 1.0, 0.6, 0.7, 1);
+var $author$project$DesignSystem$Color$red200 = A4($avh4$elm_color$Color$rgba, 1.0, 0.45, 0.6, 1);
+var $author$project$DesignSystem$Color$red300 = A4($avh4$elm_color$Color$rgba, 1.0, 0.3, 0.5, 1);
+var $author$project$DesignSystem$Color$red400 = A4($avh4$elm_color$Color$rgba, 1.0, 0.15, 0.4, 1);
+var $author$project$DesignSystem$Color$red600 = A4($avh4$elm_color$Color$rgba, 0.9, 0, 0.27, 1);
+var $author$project$DesignSystem$Color$red700 = A4($avh4$elm_color$Color$rgba, 0.8, 0, 0.24, 1);
+var $author$project$DesignSystem$Color$red800 = A4($avh4$elm_color$Color$rgba, 0.7, 0, 0.21, 1);
+var $author$project$DesignSystem$Color$red900 = A4($avh4$elm_color$Color$rgba, 0.6, 0, 0.18, 1);
 var $rtfeldman$elm_css$Css$relative = {eO: 0, bi: 'relative'};
-var $author$project$DesignSystem$Color$rose500 = A4($avh4$elm_color$Color$rgba, 1.0, 0.25, 0.5, 1);
+var $author$project$DesignSystem$Color$rose500 = A4($avh4$elm_color$Color$rgba, 0.8, 0.35, 0.45, 1);
 var $author$project$DesignSystem$Color$rose = $author$project$DesignSystem$Color$rose500;
-var $author$project$DesignSystem$Color$rose100 = A4($avh4$elm_color$Color$rgba, 1.0, 0.85, 0.9, 1);
-var $author$project$DesignSystem$Color$rose200 = A4($avh4$elm_color$Color$rgba, 1.0, 0.7, 0.8, 1);
-var $author$project$DesignSystem$Color$rose300 = A4($avh4$elm_color$Color$rgba, 1.0, 0.55, 0.7, 1);
-var $author$project$DesignSystem$Color$rose400 = A4($avh4$elm_color$Color$rgba, 1.0, 0.4, 0.6, 1);
-var $author$project$DesignSystem$Color$rose600 = A4($avh4$elm_color$Color$rgba, 0.9, 0.2, 0.4, 1);
-var $author$project$DesignSystem$Color$rose700 = A4($avh4$elm_color$Color$rgba, 0.8, 0.15, 0.3, 1);
-var $author$project$DesignSystem$Color$rose800 = A4($avh4$elm_color$Color$rgba, 0.7, 0.1, 0.2, 1);
-var $author$project$DesignSystem$Color$rose900 = A4($avh4$elm_color$Color$rgba, 0.6, 0.05, 0.1, 1);
+var $author$project$DesignSystem$Color$rose100 = A4($avh4$elm_color$Color$rgba, 1.0, 0.75, 0.85, 1);
+var $author$project$DesignSystem$Color$rose200 = A4($avh4$elm_color$Color$rgba, 0.95, 0.65, 0.75, 1);
+var $author$project$DesignSystem$Color$rose300 = A4($avh4$elm_color$Color$rgba, 0.9, 0.55, 0.65, 1);
+var $author$project$DesignSystem$Color$rose400 = A4($avh4$elm_color$Color$rgba, 0.85, 0.45, 0.55, 1);
+var $author$project$DesignSystem$Color$rose600 = A4($avh4$elm_color$Color$rgba, 0.7, 0.25, 0.35, 1);
+var $author$project$DesignSystem$Color$rose700 = A4($avh4$elm_color$Color$rgba, 0.6, 0.15, 0.25, 1);
+var $author$project$DesignSystem$Color$rose800 = A4($avh4$elm_color$Color$rgba, 0.5, 0.1, 0.15, 1);
+var $author$project$DesignSystem$Color$rose900 = A4($avh4$elm_color$Color$rgba, 0.4, 0.05, 0.1, 1);
 var $rtfeldman$elm_css$VirtualDom$Styled$Unstyled = function (a) {
 	return {$: 4, a: a};
 };
@@ -8029,7 +8033,7 @@ var $rtfeldman$elm_css$Css$translate2 = F2(
 					[tx.bi, ty.bi]))
 		};
 	});
-var $author$project$DesignSystem$Color$white = A4($avh4$elm_color$Color$rgba, 0.98, 0.96, 0.9, 1);
+var $author$project$DesignSystem$Color$white = A4($avh4$elm_color$Color$rgba, 1, 1, 1, 1);
 var $author$project$DesignSystem$Color$whiteAlpha100 = A4($avh4$elm_color$Color$rgba, 0.98, 0.96, 0.9, 0.04);
 var $author$project$DesignSystem$Color$whiteAlpha200 = A4($avh4$elm_color$Color$rgba, 0.98, 0.96, 0.9, 0.08);
 var $author$project$DesignSystem$Color$whiteAlpha300 = A4($avh4$elm_color$Color$rgba, 0.98, 0.96, 0.9, 0.16);
@@ -8041,16 +8045,16 @@ var $author$project$DesignSystem$Color$whiteAlpha800 = A4($avh4$elm_color$Color$
 var $author$project$DesignSystem$Color$whiteAlpha900 = A4($avh4$elm_color$Color$rgba, 0.98, 0.96, 0.9, 0.92);
 var $rtfeldman$elm_css$Css$width = $rtfeldman$elm_css$Css$prop1('width');
 var $rtfeldman$elm_css$Css$wrap = {dk: 0, ej: 0, bi: 'wrap'};
-var $author$project$DesignSystem$Color$yellow500 = A4($avh4$elm_color$Color$rgba, 1.0, 0.8, 0.2, 1);
+var $author$project$DesignSystem$Color$yellow500 = A4($avh4$elm_color$Color$rgba, 0.9, 0.71, 0, 1);
 var $author$project$DesignSystem$Color$yellow = $author$project$DesignSystem$Color$yellow500;
-var $author$project$DesignSystem$Color$yellow100 = A4($avh4$elm_color$Color$rgba, 1.0, 1.0, 0.8, 1);
-var $author$project$DesignSystem$Color$yellow200 = A4($avh4$elm_color$Color$rgba, 1.0, 0.95, 0.65, 1);
-var $author$project$DesignSystem$Color$yellow300 = A4($avh4$elm_color$Color$rgba, 1.0, 0.9, 0.5, 1);
-var $author$project$DesignSystem$Color$yellow400 = A4($avh4$elm_color$Color$rgba, 1.0, 0.85, 0.35, 1);
-var $author$project$DesignSystem$Color$yellow600 = A4($avh4$elm_color$Color$rgba, 0.9, 0.7, 0.15, 1);
-var $author$project$DesignSystem$Color$yellow700 = A4($avh4$elm_color$Color$rgba, 0.8, 0.6, 0.1, 1);
-var $author$project$DesignSystem$Color$yellow800 = A4($avh4$elm_color$Color$rgba, 0.7, 0.5, 0.05, 1);
-var $author$project$DesignSystem$Color$yellow900 = A4($avh4$elm_color$Color$rgba, 0.6, 0.4, 0.0, 1);
+var $author$project$DesignSystem$Color$yellow100 = A4($avh4$elm_color$Color$rgba, 1.0, 0.95, 0.4, 1);
+var $author$project$DesignSystem$Color$yellow200 = A4($avh4$elm_color$Color$rgba, 1.0, 0.9, 0.3, 1);
+var $author$project$DesignSystem$Color$yellow300 = A4($avh4$elm_color$Color$rgba, 1.0, 0.85, 0.15, 1);
+var $author$project$DesignSystem$Color$yellow400 = A4($avh4$elm_color$Color$rgba, 1.0, 0.79, 0, 1);
+var $author$project$DesignSystem$Color$yellow600 = A4($avh4$elm_color$Color$rgba, 0.8, 0.63, 0, 1);
+var $author$project$DesignSystem$Color$yellow700 = A4($avh4$elm_color$Color$rgba, 0.7, 0.55, 0, 1);
+var $author$project$DesignSystem$Color$yellow800 = A4($avh4$elm_color$Color$rgba, 0.6, 0.47, 0, 1);
+var $author$project$DesignSystem$Color$yellow900 = A4($avh4$elm_color$Color$rgba, 0.5, 0.39, 0, 1);
 var $rtfeldman$elm_css$Css$zIndex = $rtfeldman$elm_css$Css$prop1('z-index');
 var $rtfeldman$elm_css$Css$zero = {A: 0, cG: 0, bA: 0, cH: 0, cI: 0, b2: 0, b3: 0, lw: 0, bE: 0, eL: 0, c0: '', dQ: 0, bi: '0'};
 var $author$project$DesignSystem$Color$viewColorPalette = function () {
@@ -8223,7 +8227,10 @@ var $author$project$DesignSystem$Color$viewColorPalette = function () {
 						$rtfeldman$elm_css$Css$px(16)),
 						$rtfeldman$elm_css$Css$fontFamilies(
 						_List_fromArray(
-							['-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'Helvetica', 'Arial', 'sans-serif']))
+							['-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'Helvetica', 'Arial', 'sans-serif'])),
+						$rtfeldman$elm_css$Css$displayFlex,
+						$rtfeldman$elm_css$Css$flexDirection($rtfeldman$elm_css$Css$column),
+						A2($rtfeldman$elm_css$Css$property, 'gap', '32px')
 					]))
 			]),
 		_List_fromArray(
@@ -8235,104 +8242,133 @@ var $author$project$DesignSystem$Color$viewColorPalette = function () {
 					[
 						_Utils_Tuple2('white', $author$project$DesignSystem$Color$white),
 						_Utils_Tuple2('black', $author$project$DesignSystem$Color$black),
-						_Utils_Tuple2('blue', $author$project$DesignSystem$Color$blue),
-						_Utils_Tuple2('red', $author$project$DesignSystem$Color$red),
+						_Utils_Tuple2('gray', $author$project$DesignSystem$Color$gray),
+						_Utils_Tuple2('yellow', $author$project$DesignSystem$Color$yellow),
 						_Utils_Tuple2('green', $author$project$DesignSystem$Color$green),
 						_Utils_Tuple2('purple', $author$project$DesignSystem$Color$purple),
-						_Utils_Tuple2('orange', $author$project$DesignSystem$Color$orange),
-						_Utils_Tuple2('cyan', $author$project$DesignSystem$Color$cyan),
-						_Utils_Tuple2('yellow', $author$project$DesignSystem$Color$yellow),
+						_Utils_Tuple2('red', $author$project$DesignSystem$Color$red),
 						_Utils_Tuple2('rose', $author$project$DesignSystem$Color$rose),
-						_Utils_Tuple2('gray', $author$project$DesignSystem$Color$gray)
+						_Utils_Tuple2('blue', $author$project$DesignSystem$Color$blue),
+						_Utils_Tuple2('cyan', $author$project$DesignSystem$Color$cyan)
 					])),
 				A2(
-				colorFamily,
-				'Blues',
+				$rtfeldman$elm_css$Html$Styled$div,
+				_List_fromArray(
+					[
+						$rtfeldman$elm_css$Html$Styled$Attributes$css(
+						_List_fromArray(
+							[
+								$rtfeldman$elm_css$Css$displayFlex,
+								$rtfeldman$elm_css$Css$flexDirection($rtfeldman$elm_css$Css$column),
+								A2($rtfeldman$elm_css$Css$property, 'gap', '2px')
+							]))
+					]),
+				_List_fromArray(
+					[
+						A2(
+						colorFamily,
+						'Gray',
+						A2(
+							colorRange,
+							'gray',
+							_List_fromArray(
+								[$author$project$DesignSystem$Color$gray100, $author$project$DesignSystem$Color$gray200, $author$project$DesignSystem$Color$gray300, $author$project$DesignSystem$Color$gray400, $author$project$DesignSystem$Color$gray500, $author$project$DesignSystem$Color$gray600, $author$project$DesignSystem$Color$gray700, $author$project$DesignSystem$Color$gray800, $author$project$DesignSystem$Color$gray900]))),
+						A2(
+						colorFamily,
+						'Yellow',
+						A2(
+							colorRange,
+							'yellow',
+							_List_fromArray(
+								[$author$project$DesignSystem$Color$yellow100, $author$project$DesignSystem$Color$yellow200, $author$project$DesignSystem$Color$yellow300, $author$project$DesignSystem$Color$yellow400, $author$project$DesignSystem$Color$yellow500, $author$project$DesignSystem$Color$yellow600, $author$project$DesignSystem$Color$yellow700, $author$project$DesignSystem$Color$yellow800, $author$project$DesignSystem$Color$yellow900]))),
+						A2(
+						colorFamily,
+						'Green',
+						A2(
+							colorRange,
+							'green',
+							_List_fromArray(
+								[$author$project$DesignSystem$Color$green100, $author$project$DesignSystem$Color$green200, $author$project$DesignSystem$Color$green300, $author$project$DesignSystem$Color$green400, $author$project$DesignSystem$Color$green500, $author$project$DesignSystem$Color$green600, $author$project$DesignSystem$Color$green700, $author$project$DesignSystem$Color$green800, $author$project$DesignSystem$Color$green900]))),
+						A2(
+						colorFamily,
+						'Purple',
+						A2(
+							colorRange,
+							'purple',
+							_List_fromArray(
+								[$author$project$DesignSystem$Color$purple100, $author$project$DesignSystem$Color$purple200, $author$project$DesignSystem$Color$purple300, $author$project$DesignSystem$Color$purple400, $author$project$DesignSystem$Color$purple500, $author$project$DesignSystem$Color$purple600, $author$project$DesignSystem$Color$purple700, $author$project$DesignSystem$Color$purple800, $author$project$DesignSystem$Color$purple900]))),
+						A2(
+						colorFamily,
+						'Orange',
+						A2(
+							colorRange,
+							'orange',
+							_List_fromArray(
+								[$author$project$DesignSystem$Color$orange100, $author$project$DesignSystem$Color$orange200, $author$project$DesignSystem$Color$orange300, $author$project$DesignSystem$Color$orange400, $author$project$DesignSystem$Color$orange500, $author$project$DesignSystem$Color$orange600, $author$project$DesignSystem$Color$orange700, $author$project$DesignSystem$Color$orange800, $author$project$DesignSystem$Color$orange900]))),
+						A2(
+						colorFamily,
+						'Red',
+						A2(
+							colorRange,
+							'red',
+							_List_fromArray(
+								[$author$project$DesignSystem$Color$red100, $author$project$DesignSystem$Color$red200, $author$project$DesignSystem$Color$red300, $author$project$DesignSystem$Color$red400, $author$project$DesignSystem$Color$red500, $author$project$DesignSystem$Color$red600, $author$project$DesignSystem$Color$red700, $author$project$DesignSystem$Color$red800, $author$project$DesignSystem$Color$red900]))),
+						A2(
+						colorFamily,
+						'Rose',
+						A2(
+							colorRange,
+							'rose',
+							_List_fromArray(
+								[$author$project$DesignSystem$Color$rose100, $author$project$DesignSystem$Color$rose200, $author$project$DesignSystem$Color$rose300, $author$project$DesignSystem$Color$rose400, $author$project$DesignSystem$Color$rose500, $author$project$DesignSystem$Color$rose600, $author$project$DesignSystem$Color$rose700, $author$project$DesignSystem$Color$rose800, $author$project$DesignSystem$Color$rose900]))),
+						A2(
+						colorFamily,
+						'Blue',
+						A2(
+							colorRange,
+							'blue',
+							_List_fromArray(
+								[$author$project$DesignSystem$Color$blue100, $author$project$DesignSystem$Color$blue200, $author$project$DesignSystem$Color$blue300, $author$project$DesignSystem$Color$blue400, $author$project$DesignSystem$Color$blue500, $author$project$DesignSystem$Color$blue600, $author$project$DesignSystem$Color$blue700, $author$project$DesignSystem$Color$blue800, $author$project$DesignSystem$Color$blue900]))),
+						A2(
+						colorFamily,
+						'Cyan',
+						A2(
+							colorRange,
+							'cyan',
+							_List_fromArray(
+								[$author$project$DesignSystem$Color$cyan100, $author$project$DesignSystem$Color$cyan200, $author$project$DesignSystem$Color$cyan300, $author$project$DesignSystem$Color$cyan400, $author$project$DesignSystem$Color$cyan500, $author$project$DesignSystem$Color$cyan600, $author$project$DesignSystem$Color$cyan700, $author$project$DesignSystem$Color$cyan800, $author$project$DesignSystem$Color$cyan900])))
+					])),
 				A2(
-					colorRange,
-					'blue',
-					_List_fromArray(
-						[$author$project$DesignSystem$Color$blue100, $author$project$DesignSystem$Color$blue200, $author$project$DesignSystem$Color$blue300, $author$project$DesignSystem$Color$blue400, $author$project$DesignSystem$Color$blue500, $author$project$DesignSystem$Color$blue600, $author$project$DesignSystem$Color$blue700, $author$project$DesignSystem$Color$blue800, $author$project$DesignSystem$Color$blue900]))),
-				A2(
-				colorFamily,
-				'Reds',
-				A2(
-					colorRange,
-					'red',
-					_List_fromArray(
-						[$author$project$DesignSystem$Color$red100, $author$project$DesignSystem$Color$red200, $author$project$DesignSystem$Color$red300, $author$project$DesignSystem$Color$red400, $author$project$DesignSystem$Color$red500, $author$project$DesignSystem$Color$red600, $author$project$DesignSystem$Color$red700, $author$project$DesignSystem$Color$red800, $author$project$DesignSystem$Color$red900]))),
-				A2(
-				colorFamily,
-				'Greens',
-				A2(
-					colorRange,
-					'green',
-					_List_fromArray(
-						[$author$project$DesignSystem$Color$green100, $author$project$DesignSystem$Color$green200, $author$project$DesignSystem$Color$green300, $author$project$DesignSystem$Color$green400, $author$project$DesignSystem$Color$green500, $author$project$DesignSystem$Color$green600, $author$project$DesignSystem$Color$green700, $author$project$DesignSystem$Color$green800, $author$project$DesignSystem$Color$green900]))),
-				A2(
-				colorFamily,
-				'Purples',
-				A2(
-					colorRange,
-					'purple',
-					_List_fromArray(
-						[$author$project$DesignSystem$Color$purple100, $author$project$DesignSystem$Color$purple200, $author$project$DesignSystem$Color$purple300, $author$project$DesignSystem$Color$purple400, $author$project$DesignSystem$Color$purple500, $author$project$DesignSystem$Color$purple600, $author$project$DesignSystem$Color$purple700, $author$project$DesignSystem$Color$purple800, $author$project$DesignSystem$Color$purple900]))),
-				A2(
-				colorFamily,
-				'Oranges',
-				A2(
-					colorRange,
-					'orange',
-					_List_fromArray(
-						[$author$project$DesignSystem$Color$orange100, $author$project$DesignSystem$Color$orange200, $author$project$DesignSystem$Color$orange300, $author$project$DesignSystem$Color$orange400, $author$project$DesignSystem$Color$orange500, $author$project$DesignSystem$Color$orange600, $author$project$DesignSystem$Color$orange700, $author$project$DesignSystem$Color$orange800, $author$project$DesignSystem$Color$orange900]))),
-				A2(
-				colorFamily,
-				'Cyans',
-				A2(
-					colorRange,
-					'cyan',
-					_List_fromArray(
-						[$author$project$DesignSystem$Color$cyan100, $author$project$DesignSystem$Color$cyan200, $author$project$DesignSystem$Color$cyan300, $author$project$DesignSystem$Color$cyan400, $author$project$DesignSystem$Color$cyan500, $author$project$DesignSystem$Color$cyan600, $author$project$DesignSystem$Color$cyan700, $author$project$DesignSystem$Color$cyan800, $author$project$DesignSystem$Color$cyan900]))),
-				A2(
-				colorFamily,
-				'Golds',
-				A2(
-					colorRange,
-					'yellow',
-					_List_fromArray(
-						[$author$project$DesignSystem$Color$yellow100, $author$project$DesignSystem$Color$yellow200, $author$project$DesignSystem$Color$yellow300, $author$project$DesignSystem$Color$yellow400, $author$project$DesignSystem$Color$yellow500, $author$project$DesignSystem$Color$yellow600, $author$project$DesignSystem$Color$yellow700, $author$project$DesignSystem$Color$yellow800, $author$project$DesignSystem$Color$yellow900]))),
-				A2(
-				colorFamily,
-				'Roses',
-				A2(
-					colorRange,
-					'rose',
-					_List_fromArray(
-						[$author$project$DesignSystem$Color$rose100, $author$project$DesignSystem$Color$rose200, $author$project$DesignSystem$Color$rose300, $author$project$DesignSystem$Color$rose400, $author$project$DesignSystem$Color$rose500, $author$project$DesignSystem$Color$rose600, $author$project$DesignSystem$Color$rose700, $author$project$DesignSystem$Color$rose800, $author$project$DesignSystem$Color$rose900]))),
-				A2(
-				colorFamily,
-				'Grays',
-				A2(
-					colorRange,
-					'gray',
-					_List_fromArray(
-						[$author$project$DesignSystem$Color$gray100, $author$project$DesignSystem$Color$gray200, $author$project$DesignSystem$Color$gray300, $author$project$DesignSystem$Color$gray400, $author$project$DesignSystem$Color$gray500, $author$project$DesignSystem$Color$gray600, $author$project$DesignSystem$Color$gray700, $author$project$DesignSystem$Color$gray800, $author$project$DesignSystem$Color$gray900]))),
-				A2(
-				colorFamily,
-				'White Alpha',
-				A2(
-					alphaRange,
-					'white',
-					_List_fromArray(
-						[$author$project$DesignSystem$Color$whiteAlpha100, $author$project$DesignSystem$Color$whiteAlpha200, $author$project$DesignSystem$Color$whiteAlpha300, $author$project$DesignSystem$Color$whiteAlpha400, $author$project$DesignSystem$Color$whiteAlpha500, $author$project$DesignSystem$Color$whiteAlpha600, $author$project$DesignSystem$Color$whiteAlpha700, $author$project$DesignSystem$Color$whiteAlpha800, $author$project$DesignSystem$Color$whiteAlpha900]))),
-				A2(
-				colorFamily,
-				'Black Alpha',
-				A2(
-					alphaRange,
-					'black',
-					_List_fromArray(
-						[$author$project$DesignSystem$Color$blackAlpha100, $author$project$DesignSystem$Color$blackAlpha200, $author$project$DesignSystem$Color$blackAlpha300, $author$project$DesignSystem$Color$blackAlpha400, $author$project$DesignSystem$Color$blackAlpha500, $author$project$DesignSystem$Color$blackAlpha600, $author$project$DesignSystem$Color$blackAlpha700, $author$project$DesignSystem$Color$blackAlpha800, $author$project$DesignSystem$Color$blackAlpha900])))
+				$rtfeldman$elm_css$Html$Styled$div,
+				_List_fromArray(
+					[
+						$rtfeldman$elm_css$Html$Styled$Attributes$css(
+						_List_fromArray(
+							[
+								$rtfeldman$elm_css$Css$displayFlex,
+								$rtfeldman$elm_css$Css$flexDirection($rtfeldman$elm_css$Css$column),
+								A2($rtfeldman$elm_css$Css$property, 'gap', '2px')
+							]))
+					]),
+				_List_fromArray(
+					[
+						A2(
+						colorFamily,
+						'White Alpha',
+						A2(
+							alphaRange,
+							'white',
+							_List_fromArray(
+								[$author$project$DesignSystem$Color$whiteAlpha100, $author$project$DesignSystem$Color$whiteAlpha200, $author$project$DesignSystem$Color$whiteAlpha300, $author$project$DesignSystem$Color$whiteAlpha400, $author$project$DesignSystem$Color$whiteAlpha500, $author$project$DesignSystem$Color$whiteAlpha600, $author$project$DesignSystem$Color$whiteAlpha700, $author$project$DesignSystem$Color$whiteAlpha800, $author$project$DesignSystem$Color$whiteAlpha900]))),
+						A2(
+						colorFamily,
+						'Black Alpha',
+						A2(
+							alphaRange,
+							'black',
+							_List_fromArray(
+								[$author$project$DesignSystem$Color$blackAlpha100, $author$project$DesignSystem$Color$blackAlpha200, $author$project$DesignSystem$Color$blackAlpha300, $author$project$DesignSystem$Color$blackAlpha400, $author$project$DesignSystem$Color$blackAlpha500, $author$project$DesignSystem$Color$blackAlpha600, $author$project$DesignSystem$Color$blackAlpha700, $author$project$DesignSystem$Color$blackAlpha800, $author$project$DesignSystem$Color$blackAlpha900])))
+					]))
 			]));
 }();
 var $author$project$DesignSystemShowcase$Main$view = function (model) {
@@ -8350,7 +8386,7 @@ var $author$project$DesignSystemShowcase$Main$view = function (model) {
 						$rtfeldman$elm_css$Css$pct(100)),
 						$rtfeldman$elm_css$Css$overflow($rtfeldman$elm_css$Css$scroll),
 						$rtfeldman$elm_css$Css$backgroundColor(
-						$author$project$DesignSystem$Color$toCssColor($author$project$DesignSystem$Color$cyan600)),
+						$author$project$DesignSystem$Color$toCssColor($author$project$DesignSystem$Color$gray900)),
 						$rtfeldman$elm_css$Css$color(
 						$author$project$DesignSystem$Color$toCssColor($author$project$DesignSystem$Color$white))
 					]))
