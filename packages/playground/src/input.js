@@ -5,6 +5,34 @@ const inputs =
     initial inputs
   */
   {
+    operatingSystem: (() => {
+      // Try modern userAgentData first (more reliable but not supported in all browsers)
+      if (navigator.userAgentData) {
+        const platform = navigator.userAgentData.platform.toLowerCase();
+
+        if (platform.includes("win")) return "windows";
+        if (platform.includes("mac")) return "mac";
+        if (platform.includes("linux")) return "linux";
+        if (platform.includes("android")) return "android";
+        if (platform.includes("ios")) return "ios";
+      }
+
+      // Fallback to userAgent string
+      const userAgent = navigator.userAgent.toLowerCase();
+
+      if (userAgent.includes("windows")) return "windows";
+      if (userAgent.includes("mac")) return "mac";
+      if (userAgent.includes("linux")) return "linux";
+      if (userAgent.includes("android")) return "android";
+      if (
+        userAgent.includes("iphone") ||
+        userAgent.includes("ipad") ||
+        userAgent.includes("ipod")
+      )
+        return "ios";
+
+      return "unknown";
+    })(),
     dt: 0,
     clock: 0,
     keyboard: {
@@ -25,6 +53,7 @@ const inputs =
       x: 0,
       y: 0,
       isDown: false,
+      elementIdsForLastDown: [],
       // actions
       down: false,
       move: false,
@@ -56,6 +85,13 @@ const inputs =
   };
 
 const sendInputsToElmApp = (app) => {
+  /*
+    Prevent default right-click-menu of the browser
+  */
+  document.addEventListener("contextmenu", (event) => {
+    event.preventDefault();
+  });
+
   /*
     Prevent default zoom-gestures of the browser
   */
@@ -288,6 +324,15 @@ const sendInputsToElmApp = (app) => {
     if (isLeftMouseButton(e)) {
       inputs.pointer.down = true;
       inputs.pointer.isDown = true;
+      inputs.pointer.elementIdsForLastDown = (() => {
+        let ids = [];
+        let element = e.target;
+        while (element && element !== document.body) {
+          ids.push(element.id || ""); // Push empty string if element has no id
+          element = element.parentElement;
+        }
+        return ids;
+      })();
     }
     if (isRightMouseButton(e)) {
       inputs.pointer.rightDown = true;

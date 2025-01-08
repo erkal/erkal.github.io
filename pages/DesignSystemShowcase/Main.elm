@@ -73,7 +73,7 @@ view model =
             , width (pct 100)
             , height (pct 100)
             , overflow scroll
-            , backgroundColor (toCssColor cyan600)
+            , backgroundColor (toCssColor gray900)
             , color (toCssColor white)
             ]
         ]

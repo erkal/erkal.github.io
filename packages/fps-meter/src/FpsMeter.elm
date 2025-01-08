@@ -108,7 +108,7 @@ view fpsMeter =
             div
                 [ class "flex-none bottom-0"
                 , class <|
-                    if dt < 0.01667 then
+                    if dt < 1 / 60 + 0.0001 then
                         "bg-green-500"
 
                     else

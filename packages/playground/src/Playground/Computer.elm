@@ -7,7 +7,8 @@ import Playground.Senso as Senso exposing (Senso, SensoState)
 
 
 type alias Inputs =
-    { dt : Float
+    { operatingSystem : String
+    , dt : Float
     , clock : Float
     , keyboard : Keyboard
     , pointer : Pointer
@@ -24,7 +25,8 @@ type alias Inputs =
 
 
 type alias Computer =
-    { dt : Float
+    { operatingSystem : OperatingSystem
+    , dt : Float
     , clock : Float
     , keyboard : Keyboard
     , pointer : Pointer
@@ -37,6 +39,15 @@ type alias Computer =
     --
     , configurations : Configurations
     }
+
+
+type OperatingSystem
+    = Windows
+    | Mac
+    | Linux
+    | Android
+    | Ios
+    | UnknownOperatingSystem
 
 
 type alias Keyboard =
@@ -61,6 +72,11 @@ type alias Pointer =
     , isDown : Bool
     , -- actions
       down : Bool
+    , elementIdsForLastDown :
+        -- The list of the ids of the ancestors starting with self id
+        -- This is useful for detecting if pointer down happened outside of an element
+        -- Use this in combination with `down` or `isDown` because this doesn't get cleaned up
+        List String
     , move : Bool
     , up : Bool
     , rightDown : Bool
@@ -82,9 +98,32 @@ type alias Screen =
     }
 
 
+operatingSystemFromString : String -> OperatingSystem
+operatingSystemFromString str =
+    case str of
+        "windows" ->
+            Windows
+
+        "mac" ->
+            Mac
+
+        "linux" ->
+            Linux
+
+        "android" ->
+            Android
+
+        "ios" ->
+            Ios
+
+        _ ->
+            UnknownOperatingSystem
+
+
 init : Configurations -> Inputs -> Computer
 init initialConfigurations inputs =
-    { dt = inputs.dt
+    { operatingSystem = operatingSystemFromString inputs.operatingSystem
+    , dt = inputs.dt
     , clock = inputs.clock
     , keyboard = inputs.keyboard
     , pointer = inputs.pointer

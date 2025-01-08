@@ -51,6 +51,8 @@ module Camera exposing
 
 -}
 
+import Geometry.BoundingBox as BoundingBox exposing (BoundingBox)
+
 
 {-| TODO: This will be replaced by <https://package.elm-lang.org/packages/ianmackenzie/elm-3d-camera/latest/Camera3d> when elm-3d-scene starts to use this.
 -}
@@ -376,19 +378,25 @@ lerpZ rate target =
     mapZ (lerp rate target)
 
 
+zoomToFit : BoundingBox -> Camera -> Camera
+zoomToFit bb camera =
+    let
+        ( w, h ) =
+            ( BoundingBox.width bb
+            , BoundingBox.height bb
+            )
 
---
-
-
-type alias Rectangle =
-    { top : Float
-    , left : Float
-    , width : Float
-    , height : Float
-    }
-
-
-zoomToFit : Rectangle -> Camera -> Camera
-zoomToFit rect camera =
-    -- TODO
+        setZThatFitsTheWidth : Float -> Camera -> Camera
+        setZThatFitsTheWidth w_ =
+            setZ (w_ / 2 / tan (getHorizontalAngleOfView camera / 2))
+    in
     camera
+        |> setXY (BoundingBox.center bb)
+        |> (if (w / h) > getViewportAspectRatio camera then
+                -- fit the width
+                setZThatFitsTheWidth w
+
+            else
+                -- fit the height
+                setZThatFitsTheWidth (h * getViewportAspectRatio camera)
+           )

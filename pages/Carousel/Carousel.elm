@@ -12,7 +12,7 @@ module Carousel.Carousel exposing
     )
 
 import Array exposing (Array)
-import Play as Playground exposing (Computer)
+import Play exposing (Computer)
 
 
 
@@ -89,6 +89,7 @@ getSelectedCardData (Carousel carousel) =
 getCardAt : Int -> Carousel card -> { card : card, index : Int, normalizedXToDraw : Float }
 getCardAt unsafeIndex (Carousel carousel) =
     let
+        i : Int
         i =
             unsafeIndex |> modBy (numberOfCards (Carousel carousel))
     in
@@ -207,15 +208,18 @@ startFloating (Carousel carousel) =
             , carousel.lastPointerDeltas |> List.reverse |> List.head |> Maybe.map .pointerX |> Maybe.withDefault 0
             )
 
+        totalPointerDeltaX : Float
         totalPointerDeltaX =
             lastPointerX - firstPointerX
 
+        totalDeltaTime : Float
         totalDeltaTime =
             carousel.lastPointerDeltas
                 |> List.map .deltaTime
                 |> {- drop the first deltaTime -} List.take (List.length carousel.lastPointerDeltas - 1)
                 |> List.sum
 
+        pointerVx : Float
         pointerVx =
             if totalDeltaTime == 0 then
                 -- prevent possible run time error by preventing division by zero

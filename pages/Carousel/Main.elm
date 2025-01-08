@@ -76,6 +76,7 @@ tickCarousel ({ pointer } as computer) model =
                 |> Camera.mouseOverXY camera computer.screen
                 |> Maybe.withDefault { x = 0, y = 0, z = 0 }
 
+        computerWithCorrectedPointerPosition : Computer
         computerWithCorrectedPointerPosition =
             { computer | pointer = { pointer | x = x, y = y } }
     in
@@ -141,18 +142,23 @@ axes =
 drawCarousel : Computer -> Carousel Color -> Shape
 drawCarousel computer carousel =
     let
+        selectedCardWithDataForEfficientDrawing : { card : Color, index : Int, normalizedXToDraw : Float }
         selectedCardWithDataForEfficientDrawing =
             Carousel.getSelectedCardData carousel
 
+        middleCardX : Float
         middleCardX =
             selectedCardWithDataForEfficientDrawing.normalizedXToDraw
 
+        i : Int
         i =
             selectedCardWithDataForEfficientDrawing.index
 
+        centerXOf : Int -> Float
         centerXOf j =
             middleCardX + (toFloat (j - i) * Carousel.constants.distanceBetweenCardCenters)
 
+        drawCardAtIndex : Int -> Shape
         drawCardAtIndex j =
             drawCard computer (Carousel.getCardAt j carousel).card
                 |> scale (1 - 0.7 * abs (centerXOf j))

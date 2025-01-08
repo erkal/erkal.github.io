@@ -4,19 +4,36 @@ import Geometry2d exposing (Point2d)
 
 
 type alias BoundingBox =
-    { top : Float
+    { left : Float
     , right : Float
+    , top : Float
     , bottom : Float
-    , left : Float
     }
+
+
+width : BoundingBox -> Float
+width bb =
+    bb.right - bb.left
+
+
+height : BoundingBox -> Float
+height bb =
+    abs (bb.bottom - bb.top)
+
+
+center : BoundingBox -> Point2d
+center bb =
+    Point2d
+        (0.5 * (bb.left + bb.right))
+        (0.5 * (bb.top + bb.bottom))
 
 
 dummyBoundingBox : BoundingBox
 dummyBoundingBox =
-    { top = 0
+    { left = 0
     , right = 42
+    , top = 0
     , bottom = 42
-    , left = 0
     }
 
 
@@ -48,3 +65,22 @@ intersect rect1 rect2 =
         , rect1.top < rect2.bottom
         , rect1.bottom > rect2.top
         ]
+
+
+union : List BoundingBox -> BoundingBox
+union bbs =
+    case bbs of
+        [] ->
+            dummyBoundingBox
+
+        first :: rest ->
+            List.foldl
+                (\bb acc ->
+                    { left = min bb.left acc.left
+                    , right = max bb.right acc.right
+                    , top = min bb.top acc.top
+                    , bottom = max bb.bottom acc.bottom
+                    }
+                )
+                first
+                rest
