@@ -784,11 +784,11 @@ function _Debug_crash_UNUSED(identifier, fact1, fact2, fact3, fact4)
 
 function _Debug_regionToString(region)
 {
-	if (region.gy.ds === region.ho.ds)
+	if (region.gN.dC === region.hC.dC)
 	{
-		return 'on line ' + region.gy.ds;
+		return 'on line ' + region.gN.dC;
 	}
-	return 'on lines ' + region.gy.ds + ' through ' + region.ho.ds;
+	return 'on lines ' + region.gN.dC + ' through ' + region.hC.dC;
 }
 
 
@@ -1857,9 +1857,9 @@ var _Platform_worker = F4(function(impl, flagDecoder, debugMetadata, args)
 	return _Platform_initialize(
 		flagDecoder,
 		args,
-		impl.kY,
-		impl.mM,
-		impl.mk,
+		impl.le,
+		impl.m0,
+		impl.mB,
 		function() { return function() {} }
 	);
 });
@@ -2618,16 +2618,33 @@ var _VirtualDom_attributeNS = F3(function(namespace, key, value)
 
 
 // XSS ATTACK VECTOR CHECKS
+//
+// For some reason, tabs can appear in href protocols and it still works.
+// So '\tjava\tSCRIPT:alert("!!!")' and 'javascript:alert("!!!")' are the same
+// in practice. That is why _VirtualDom_RE_js and _VirtualDom_RE_js_html look
+// so freaky.
+//
+// Pulling the regular expressions out to the top level gives a slight speed
+// boost in small benchmarks (4-10%) but hoisting values to reduce allocation
+// can be unpredictable in large programs where JIT may have a harder time with
+// functions are not fully self-contained. The benefit is more that the js and
+// js_html ones are so weird that I prefer to see them near each other.
+
+
+var _VirtualDom_RE_script = /^script$/i;
+var _VirtualDom_RE_on_formAction = /^(on|formAction$)/i;
+var _VirtualDom_RE_js = /^\s*j\s*a\s*v\s*a\s*s\s*c\s*r\s*i\s*p\s*t\s*:/i;
+var _VirtualDom_RE_js_html = /^\s*(j\s*a\s*v\s*a\s*s\s*c\s*r\s*i\s*p\s*t\s*:|d\s*a\s*t\s*a\s*:\s*t\s*e\s*x\s*t\s*\/\s*h\s*t\s*m\s*l\s*(,|;))/i;
 
 
 function _VirtualDom_noScript(tag)
 {
-	return tag == 'script' ? 'p' : tag;
+	return _VirtualDom_RE_script.test(tag) ? 'p' : tag;
 }
 
 function _VirtualDom_noOnOrFormAction(key)
 {
-	return /^(on|formAction$)/i.test(key) ? 'data-' + key : key;
+	return _VirtualDom_RE_on_formAction.test(key) ? 'data-' + key : key;
 }
 
 function _VirtualDom_noInnerHtmlOrFormAction(key)
@@ -2637,26 +2654,24 @@ function _VirtualDom_noInnerHtmlOrFormAction(key)
 
 function _VirtualDom_noJavaScriptUri(value)
 {
-	return /^javascript:/i.test(value.replace(/\s/g,'')) ? '' : value;
-}
-
-function _VirtualDom_noJavaScriptUri_UNUSED(value)
-{
-	return /^javascript:/i.test(value.replace(/\s/g,''))
-		? 'javascript:alert("This is an XSS vector. Please use ports or web components instead.")'
+	return _VirtualDom_RE_js.test(value)
+		? /**/''//*//**_UNUSED/'javascript:alert("This is an XSS vector. Please use ports or web components instead.")'//*/
 		: value;
 }
 
 function _VirtualDom_noJavaScriptOrHtmlUri(value)
 {
-	return /^\s*(javascript:|data:text\/html)/i.test(value) ? '' : value;
+	return _VirtualDom_RE_js_html.test(value)
+		? /**/''//*//**_UNUSED/'javascript:alert("This is an XSS vector. Please use ports or web components instead.")'//*/
+		: value;
 }
 
-function _VirtualDom_noJavaScriptOrHtmlUri_UNUSED(value)
+function _VirtualDom_noJavaScriptOrHtmlJson(value)
 {
-	return /^\s*(javascript:|data:text\/html)/i.test(value)
-		? 'javascript:alert("This is an XSS vector. Please use ports or web components instead.")'
-		: value;
+	return (typeof _Json_unwrap(value) === 'string' && _VirtualDom_RE_js_html.test(_Json_unwrap(value)))
+		? _Json_wrap(
+			/**/''//*//**_UNUSED/'javascript:alert("This is an XSS vector. Please use ports or web components instead.")'//*/
+		) : value;
 }
 
 
@@ -2704,9 +2719,9 @@ var _VirtualDom_mapEventTuple = F2(function(func, tuple)
 var _VirtualDom_mapEventRecord = F2(function(func, record)
 {
 	return {
-		bC: func(record.bC),
-		gz: record.gz,
-		gi: record.gi
+		bG: func(record.bG),
+		gO: record.gO,
+		gw: record.gw
 	}
 });
 
@@ -2974,11 +2989,11 @@ function _VirtualDom_makeCallback(eventNode, initialHandler)
 		// 3 = Custom
 
 		var value = result.a;
-		var message = !tag ? value : tag < 3 ? value.a : value.bC;
-		var stopPropagation = tag == 1 ? value.b : tag == 3 && value.gz;
+		var message = !tag ? value : tag < 3 ? value.a : value.bG;
+		var stopPropagation = tag == 1 ? value.b : tag == 3 && value.gO;
 		var currentEventNode = (
 			stopPropagation && event.stopPropagation(),
-			(tag == 2 ? value.b : tag == 3 && value.gi) && event.preventDefault(),
+			(tag == 2 ? value.b : tag == 3 && value.gw) && event.preventDefault(),
 			eventNode
 		);
 		var tagger;
@@ -3928,11 +3943,11 @@ var _Browser_element = _Debugger_element || F4(function(impl, flagDecoder, debug
 	return _Platform_initialize(
 		flagDecoder,
 		args,
-		impl.kY,
-		impl.mM,
-		impl.mk,
+		impl.le,
+		impl.m0,
+		impl.mB,
 		function(sendToApp, initialModel) {
-			var view = impl.mR;
+			var view = impl.m6;
 			/**/
 			var domNode = args['node'];
 			//*/
@@ -3964,12 +3979,12 @@ var _Browser_document = _Debugger_document || F4(function(impl, flagDecoder, deb
 	return _Platform_initialize(
 		flagDecoder,
 		args,
-		impl.kY,
-		impl.mM,
-		impl.mk,
+		impl.le,
+		impl.m0,
+		impl.mB,
 		function(sendToApp, initialModel) {
-			var divertHrefToApp = impl.gu && impl.gu(sendToApp)
-			var view = impl.mR;
+			var divertHrefToApp = impl.gJ && impl.gJ(sendToApp)
+			var view = impl.m6;
 			var title = _VirtualDom_doc.title;
 			var bodyNode = _VirtualDom_doc.body;
 			var currNode = _VirtualDom_virtualize(bodyNode);
@@ -3977,12 +3992,12 @@ var _Browser_document = _Debugger_document || F4(function(impl, flagDecoder, deb
 			{
 				_VirtualDom_divertHrefToApp = divertHrefToApp;
 				var doc = view(model);
-				var nextNode = _VirtualDom_node('body')(_List_Nil)(doc.jM);
+				var nextNode = _VirtualDom_node('body')(_List_Nil)(doc.j1);
 				var patches = _VirtualDom_diff(currNode, nextNode);
 				bodyNode = _VirtualDom_applyPatches(bodyNode, currNode, patches, sendToApp);
 				currNode = nextNode;
 				_VirtualDom_divertHrefToApp = 0;
-				(title !== doc.mG) && (_VirtualDom_doc.title = title = doc.mG);
+				(title !== doc.mX) && (_VirtualDom_doc.title = title = doc.mX);
 			});
 		}
 	);
@@ -4038,12 +4053,12 @@ function _Browser_makeAnimator(model, draw)
 
 function _Browser_application(impl)
 {
-	var onUrlChange = impl.lB;
-	var onUrlRequest = impl.lC;
+	var onUrlChange = impl.lS;
+	var onUrlRequest = impl.lT;
 	var key = function() { key.a(onUrlChange(_Browser_getUrl())); };
 
 	return _Browser_document({
-		gu: function(sendToApp)
+		gJ: function(sendToApp)
 		{
 			key.a = sendToApp;
 			_Browser_window.addEventListener('popstate', key);
@@ -4059,9 +4074,9 @@ function _Browser_application(impl)
 					var next = $elm$url$Url$fromString(href).a;
 					sendToApp(onUrlRequest(
 						(next
-							&& curr.iM === next.iM
-							&& curr.hE === next.hE
-							&& curr.iH.a === next.iH.a
+							&& curr.i$ === next.i$
+							&& curr.hR === next.hR
+							&& curr.iW.a === next.iW.a
 						)
 							? $elm$browser$Browser$Internal(next)
 							: $elm$browser$Browser$External(href)
@@ -4069,13 +4084,13 @@ function _Browser_application(impl)
 				}
 			});
 		},
-		kY: function(flags)
+		le: function(flags)
 		{
-			return A3(impl.kY, flags, _Browser_getUrl(), key);
+			return A3(impl.le, flags, _Browser_getUrl(), key);
 		},
-		mR: impl.mR,
-		mM: impl.mM,
-		mk: impl.mk
+		m6: impl.m6,
+		m0: impl.m0,
+		mB: impl.mB
 	});
 }
 
@@ -4141,17 +4156,17 @@ var _Browser_decodeEvent = F2(function(decoder, event)
 function _Browser_visibilityInfo()
 {
 	return (typeof _VirtualDom_doc.hidden !== 'undefined')
-		? { kO: 'hidden', j_: 'visibilitychange' }
+		? { k4: 'hidden', kg: 'visibilitychange' }
 		:
 	(typeof _VirtualDom_doc.mozHidden !== 'undefined')
-		? { kO: 'mozHidden', j_: 'mozvisibilitychange' }
+		? { k4: 'mozHidden', kg: 'mozvisibilitychange' }
 		:
 	(typeof _VirtualDom_doc.msHidden !== 'undefined')
-		? { kO: 'msHidden', j_: 'msvisibilitychange' }
+		? { k4: 'msHidden', kg: 'msvisibilitychange' }
 		:
 	(typeof _VirtualDom_doc.webkitHidden !== 'undefined')
-		? { kO: 'webkitHidden', j_: 'webkitvisibilitychange' }
-		: { kO: 'hidden', j_: 'visibilitychange' };
+		? { k4: 'webkitHidden', kg: 'webkitvisibilitychange' }
+		: { k4: 'hidden', kg: 'visibilitychange' };
 }
 
 
@@ -4232,12 +4247,12 @@ var _Browser_call = F2(function(functionName, id)
 function _Browser_getViewport()
 {
 	return {
-		iV: _Browser_getScene(),
-		jg: {
-			jl: _Browser_window.pageXOffset,
-			jn: _Browser_window.pageYOffset,
-			ji: _Browser_doc.documentElement.clientWidth,
-			hB: _Browser_doc.documentElement.clientHeight
+		i8: _Browser_getScene(),
+		jx: {
+			jC: _Browser_window.pageXOffset,
+			jE: _Browser_window.pageYOffset,
+			jz: _Browser_doc.documentElement.clientWidth,
+			hO: _Browser_doc.documentElement.clientHeight
 		}
 	};
 }
@@ -4247,8 +4262,8 @@ function _Browser_getScene()
 	var body = _Browser_doc.body;
 	var elem = _Browser_doc.documentElement;
 	return {
-		ji: Math.max(body.scrollWidth, body.offsetWidth, elem.scrollWidth, elem.offsetWidth, elem.clientWidth),
-		hB: Math.max(body.scrollHeight, body.offsetHeight, elem.scrollHeight, elem.offsetHeight, elem.clientHeight)
+		jz: Math.max(body.scrollWidth, body.offsetWidth, elem.scrollWidth, elem.offsetWidth, elem.clientWidth),
+		hO: Math.max(body.scrollHeight, body.offsetHeight, elem.scrollHeight, elem.offsetHeight, elem.clientHeight)
 	};
 }
 
@@ -4271,15 +4286,15 @@ function _Browser_getViewportOf(id)
 	return _Browser_withNode(id, function(node)
 	{
 		return {
-			iV: {
-				ji: node.scrollWidth,
-				hB: node.scrollHeight
+			i8: {
+				jz: node.scrollWidth,
+				hO: node.scrollHeight
 			},
-			jg: {
-				jl: node.scrollLeft,
-				jn: node.scrollTop,
-				ji: node.clientWidth,
-				hB: node.clientHeight
+			jx: {
+				jC: node.scrollLeft,
+				jE: node.scrollTop,
+				jz: node.clientWidth,
+				hO: node.clientHeight
 			}
 		};
 	});
@@ -4309,18 +4324,18 @@ function _Browser_getElement(id)
 		var x = _Browser_window.pageXOffset;
 		var y = _Browser_window.pageYOffset;
 		return {
-			iV: _Browser_getScene(),
-			jg: {
-				jl: x,
-				jn: y,
-				ji: _Browser_doc.documentElement.clientWidth,
-				hB: _Browser_doc.documentElement.clientHeight
+			i8: _Browser_getScene(),
+			jx: {
+				jC: x,
+				jE: y,
+				jz: _Browser_doc.documentElement.clientWidth,
+				hO: _Browser_doc.documentElement.clientHeight
 			},
-			ku: {
-				jl: x + rect.left,
-				jn: y + rect.top,
-				ji: rect.width,
-				hB: rect.height
+			kM: {
+				jC: x + rect.left,
+				jE: y + rect.top,
+				jz: rect.width,
+				hO: rect.height
 			}
 		};
 	});
@@ -4803,25 +4818,25 @@ var $elm$core$Array$treeFromBuilder = F2(
 	});
 var $elm$core$Array$builderToArray = F2(
 	function (reverseNodeList, builder) {
-		if (!builder.E) {
+		if (!builder.G) {
 			return A4(
 				$elm$core$Array$Array_elm_builtin,
-				$elm$core$Elm$JsArray$length(builder.J),
+				$elm$core$Elm$JsArray$length(builder.L),
 				$elm$core$Array$shiftStep,
 				$elm$core$Elm$JsArray$empty,
-				builder.J);
+				builder.L);
 		} else {
-			var treeLen = builder.E * $elm$core$Array$branchFactor;
+			var treeLen = builder.G * $elm$core$Array$branchFactor;
 			var depth = $elm$core$Basics$floor(
 				A2($elm$core$Basics$logBase, $elm$core$Array$branchFactor, treeLen - 1));
-			var correctNodeList = reverseNodeList ? $elm$core$List$reverse(builder.T) : builder.T;
-			var tree = A2($elm$core$Array$treeFromBuilder, correctNodeList, builder.E);
+			var correctNodeList = reverseNodeList ? $elm$core$List$reverse(builder.V) : builder.V;
+			var tree = A2($elm$core$Array$treeFromBuilder, correctNodeList, builder.G);
 			return A4(
 				$elm$core$Array$Array_elm_builtin,
-				$elm$core$Elm$JsArray$length(builder.J) + treeLen,
+				$elm$core$Elm$JsArray$length(builder.L) + treeLen,
 				A2($elm$core$Basics$max, 5, depth * $elm$core$Array$shiftStep),
 				tree,
-				builder.J);
+				builder.L);
 		}
 	});
 var $elm$core$Basics$idiv = _Basics_idiv;
@@ -4834,7 +4849,7 @@ var $elm$core$Array$initializeHelp = F5(
 				return A2(
 					$elm$core$Array$builderToArray,
 					false,
-					{T: nodeList, E: (len / $elm$core$Array$branchFactor) | 0, J: tail});
+					{V: nodeList, G: (len / $elm$core$Array$branchFactor) | 0, L: tail});
 			} else {
 				var leaf = $elm$core$Array$Leaf(
 					A3($elm$core$Elm$JsArray$initialize, $elm$core$Array$branchFactor, fromIndex, fn));
@@ -4901,7 +4916,7 @@ var $elm$url$Url$Http = 0;
 var $elm$url$Url$Https = 1;
 var $elm$url$Url$Url = F6(
 	function (protocol, host, port_, path, query, fragment) {
-		return {hw: fragment, hE: host, iD: path, iH: port_, iM: protocol, iN: query};
+		return {hL: fragment, hR: host, iS: path, iW: port_, i$: protocol, i0: query};
 	});
 var $elm$core$String$contains = _String_contains;
 var $elm$core$String$length = _String_length;
@@ -5198,7 +5213,7 @@ var $rtfeldman$elm_css$VirtualDom$Styled$UnscopedStyles = function (a) {
 var $elm$core$String$cons = _String_cons;
 var $robinheghan$murmur3$Murmur3$HashData = F4(
 	function (shift, seed, hash, charsProcessed) {
-		return {cq: charsProcessed, cC: hash, cb: seed, gv: shift};
+		return {cv: charsProcessed, cH: hash, ch: seed, gK: shift};
 	});
 var $robinheghan$murmur3$Murmur3$c1 = 3432918353;
 var $robinheghan$murmur3$Murmur3$c2 = 461845907;
@@ -5217,14 +5232,14 @@ var $robinheghan$murmur3$Murmur3$rotlBy = F2(
 	});
 var $elm$core$Bitwise$xor = _Bitwise_xor;
 var $robinheghan$murmur3$Murmur3$finalize = function (data) {
-	var acc = (!(!data.cC)) ? (data.cb ^ A2(
+	var acc = (!(!data.cH)) ? (data.ch ^ A2(
 		$robinheghan$murmur3$Murmur3$multiplyBy,
 		$robinheghan$murmur3$Murmur3$c2,
 		A2(
 			$robinheghan$murmur3$Murmur3$rotlBy,
 			15,
-			A2($robinheghan$murmur3$Murmur3$multiplyBy, $robinheghan$murmur3$Murmur3$c1, data.cC)))) : data.cb;
-	var h0 = acc ^ data.cq;
+			A2($robinheghan$murmur3$Murmur3$multiplyBy, $robinheghan$murmur3$Murmur3$c1, data.cH)))) : data.ch;
+	var h0 = acc ^ data.cv;
 	var h1 = A2($robinheghan$murmur3$Murmur3$multiplyBy, 2246822507, h0 ^ (h0 >>> 16));
 	var h2 = A2($robinheghan$murmur3$Murmur3$multiplyBy, 3266489909, h1 ^ (h1 >>> 13));
 	return (h2 ^ (h2 >>> 16)) >>> 0;
@@ -5248,17 +5263,17 @@ var $robinheghan$murmur3$Murmur3$mix = F2(
 	});
 var $robinheghan$murmur3$Murmur3$hashFold = F2(
 	function (c, data) {
-		var res = data.cC | ((255 & $elm$core$Char$toCode(c)) << data.gv);
-		var _v0 = data.gv;
+		var res = data.cH | ((255 & $elm$core$Char$toCode(c)) << data.gK);
+		var _v0 = data.gK;
 		if (_v0 === 24) {
 			return {
-				cq: data.cq + 1,
-				cC: 0,
-				cb: A2($robinheghan$murmur3$Murmur3$mix, data.cb, res),
-				gv: 0
+				cv: data.cv + 1,
+				cH: 0,
+				ch: A2($robinheghan$murmur3$Murmur3$mix, data.ch, res),
+				gK: 0
 			};
 		} else {
-			return {cq: data.cq + 1, cC: res, cb: data.cb, gv: data.gv + 8};
+			return {cv: data.cv + 1, cH: res, ch: data.ch, gK: data.gK + 8};
 		}
 	});
 var $robinheghan$murmur3$Murmur3$hashString = F2(
@@ -5520,7 +5535,7 @@ var $elm$virtual_dom$VirtualDom$property = F2(
 		return A2(
 			_VirtualDom_property,
 			_VirtualDom_noInnerHtmlOrFormAction(key),
-			_VirtualDom_noJavaScriptOrHtmlUri(value));
+			_VirtualDom_noJavaScriptOrHtmlJson(value));
 	});
 var $elm$json$Json$Encode$string = _Json_wrap;
 var $rtfeldman$elm_css$VirtualDom$Styled$extractUnstyledAttribute = F2(
@@ -5585,10 +5600,13 @@ var $elm$virtual_dom$VirtualDom$node = function (tag) {
 	return _VirtualDom_node(
 		_VirtualDom_noScript(tag));
 };
-var $elm$virtual_dom$VirtualDom$nodeNS = function (tag) {
-	return _VirtualDom_nodeNS(
-		_VirtualDom_noScript(tag));
-};
+var $elm$virtual_dom$VirtualDom$nodeNS = F2(
+	function (namespace, tag) {
+		return A2(
+			_VirtualDom_nodeNS,
+			namespace,
+			_VirtualDom_noScript(tag));
+	});
 var $rtfeldman$elm_css$VirtualDom$Styled$accumulateKeyedStyledHtml = F2(
 	function (_v6, _v7) {
 		var key = _v6.a;
@@ -6120,7 +6138,7 @@ var $author$project$DesignSystemShowcase$Main$update = F2(
 			$elm$core$Platform$Cmd$none);
 	});
 var $rtfeldman$elm_css$Css$Structure$Compatible = 0;
-var $rtfeldman$elm_css$Css$absolute = {eO: 0, bi: 'absolute'};
+var $rtfeldman$elm_css$Css$absolute = {eY: 0, bk: 'absolute'};
 var $rtfeldman$elm_css$Css$Preprocess$AppendProperty = function (a) {
 	return {$: 0, a: a};
 };
@@ -6130,10 +6148,10 @@ var $rtfeldman$elm_css$Css$property = F2(
 		return $rtfeldman$elm_css$Css$Preprocess$AppendProperty(key + (':' + value));
 	});
 var $rtfeldman$elm_css$Css$backgroundColor = function (c) {
-	return A2($rtfeldman$elm_css$Css$property, 'background-color', c.bi);
+	return A2($rtfeldman$elm_css$Css$property, 'background-color', c.bk);
 };
 var $rtfeldman$elm_css$Css$color = function (c) {
-	return A2($rtfeldman$elm_css$Css$property, 'color', c.bi);
+	return A2($rtfeldman$elm_css$Css$property, 'color', c.bk);
 };
 var $rtfeldman$elm_css$VirtualDom$Styled$Attribute = F3(
 	function (a, b, c) {
@@ -6223,8 +6241,8 @@ var $rtfeldman$elm_css$Css$Structure$compactHelp = F2(
 					A2($elm$core$List$cons, declaration, declarations));
 			case 6:
 				var record = declaration.a;
-				return $elm$core$String$isEmpty(record.kf) ? _Utils_Tuple2(keyframesByName, declarations) : _Utils_Tuple2(
-					A3($elm$core$Dict$insert, record.ls, record.kf, keyframesByName),
+				return $elm$core$String$isEmpty(record.ky) ? _Utils_Tuple2(keyframesByName, declarations) : _Utils_Tuple2(
+					A3($elm$core$Dict$insert, record.lJ, record.ky, keyframesByName),
 					declarations);
 			case 7:
 				var properties = declaration.a;
@@ -6270,7 +6288,7 @@ var $rtfeldman$elm_css$Css$Structure$withKeyframeDeclarations = F2(
 					var name = _v0.a;
 					var decl = _v0.b;
 					return $rtfeldman$elm_css$Css$Structure$Keyframes(
-						{kf: decl, ls: name});
+						{ky: decl, lJ: name});
 				},
 				$elm$core$Dict$toList(keyframesByName)),
 			compactedDeclarations);
@@ -6286,15 +6304,15 @@ var $rtfeldman$elm_css$Css$Structure$compactDeclarations = function (declaration
 	return A2($rtfeldman$elm_css$Css$Structure$withKeyframeDeclarations, keyframesByName, compactedDeclarations);
 };
 var $rtfeldman$elm_css$Css$Structure$compactStylesheet = function (_v0) {
-	var charset = _v0.g9;
-	var imports = _v0.hH;
-	var namespaces = _v0.ip;
-	var declarations = _v0.kg;
+	var charset = _v0.hn;
+	var imports = _v0.hU;
+	var namespaces = _v0.iD;
+	var declarations = _v0.kz;
 	return {
-		g9: charset,
-		kg: $rtfeldman$elm_css$Css$Structure$compactDeclarations(declarations),
-		hH: imports,
-		ip: namespaces
+		hn: charset,
+		kz: $rtfeldman$elm_css$Css$Structure$compactDeclarations(declarations),
+		hU: imports,
+		iD: namespaces
 	};
 };
 var $elm$core$Maybe$map = F2(
@@ -6358,13 +6376,13 @@ var $rtfeldman$elm_css$Css$String$mapJoin = F3(
 		return A4($rtfeldman$elm_css$Css$String$mapJoinHelp, map, sep, strs, '');
 	});
 var $rtfeldman$elm_css$Css$Structure$Output$mediaExpressionToString = function (expression) {
-	return '(' + (expression.hs + (A2(
+	return '(' + (expression.hG + (A2(
 		$elm$core$Maybe$withDefault,
 		'',
 		A2(
 			$elm$core$Maybe$map,
 			$elm$core$Basics$append(': '),
-			expression.bi)) + ')'));
+			expression.bk)) + ')'));
 };
 var $rtfeldman$elm_css$Css$Structure$Output$mediaTypeToString = function (mediaType) {
 	switch (mediaType) {
@@ -6537,8 +6555,8 @@ var $rtfeldman$elm_css$Css$Structure$Output$prettyPrintDeclaration = function (d
 		case 5:
 			return 'TODO';
 		case 6:
-			var name = decl.a.ls;
-			var declaration = decl.a.kf;
+			var name = decl.a.lJ;
+			var declaration = decl.a.ky;
 			return '@keyframes ' + (name + ('{' + (declaration + '}')));
 		case 7:
 			return 'TODO';
@@ -6549,10 +6567,10 @@ var $rtfeldman$elm_css$Css$Structure$Output$prettyPrintDeclaration = function (d
 	}
 };
 var $rtfeldman$elm_css$Css$Structure$Output$prettyPrint = function (_v0) {
-	var charset = _v0.g9;
-	var imports = _v0.hH;
-	var namespaces = _v0.ip;
-	var declarations = _v0.kg;
+	var charset = _v0.hn;
+	var imports = _v0.hU;
+	var namespaces = _v0.iD;
+	var declarations = _v0.kz;
 	return $rtfeldman$elm_css$Css$Structure$Output$charsetToString(charset) + (A3($rtfeldman$elm_css$Css$String$mapJoin, $rtfeldman$elm_css$Css$Structure$Output$importToString, '\n', imports) + (A3($rtfeldman$elm_css$Css$String$mapJoin, $rtfeldman$elm_css$Css$Structure$Output$namespaceToString, '\n', namespaces) + (A3($rtfeldman$elm_css$Css$String$mapJoin, $rtfeldman$elm_css$Css$Structure$Output$prettyPrintDeclaration, '\n', declarations) + '')));
 };
 var $elm$core$List$concat = function (lists) {
@@ -7462,7 +7480,7 @@ var $rtfeldman$elm_css$Css$Preprocess$Resolve$applyStyles = F2(
 						_List_fromArray(
 							[
 								$rtfeldman$elm_css$Css$Structure$Keyframes(
-								{kf: str, ls: name})
+								{ky: str, lJ: name})
 							]));
 				case 4:
 					var _v12 = styles.a;
@@ -7596,13 +7614,13 @@ var $rtfeldman$elm_css$Css$Preprocess$Resolve$toDeclarations = function (snippet
 	}
 };
 var $rtfeldman$elm_css$Css$Preprocess$Resolve$toStructure = function (_v0) {
-	var charset = _v0.g9;
-	var imports = _v0.hH;
-	var namespaces = _v0.ip;
-	var snippets = _v0.i_;
+	var charset = _v0.hn;
+	var imports = _v0.hU;
+	var namespaces = _v0.iD;
+	var snippets = _v0.jd;
 	var declarations = $rtfeldman$elm_css$Css$Preprocess$Resolve$extract(
 		A2($elm$core$List$concatMap, $rtfeldman$elm_css$Css$Preprocess$unwrapSnippet, snippets));
-	return {g9: charset, kg: declarations, hH: imports, ip: namespaces};
+	return {hn: charset, kz: declarations, hU: imports, iD: namespaces};
 };
 var $rtfeldman$elm_css$Css$Preprocess$Resolve$compile = function (sheet) {
 	return $rtfeldman$elm_css$Css$Structure$Output$prettyPrint(
@@ -7627,7 +7645,7 @@ var $rtfeldman$elm_css$VirtualDom$Styled$makeSnippet = F2(
 			]);
 	});
 var $rtfeldman$elm_css$Css$Preprocess$stylesheet = function (snippets) {
-	return {g9: $elm$core$Maybe$Nothing, hH: _List_Nil, ip: _List_Nil, i_: snippets};
+	return {hn: $elm$core$Maybe$Nothing, hU: _List_Nil, iD: _List_Nil, jd: snippets};
 };
 var $rtfeldman$elm_css$Css$Structure$ClassSelector = function (a) {
 	return {$: 0, a: a};
@@ -7674,7 +7692,7 @@ var $avh4$elm_color$Color$rgba = F4(
 var $author$project$DesignSystem$Color$gray900 = A4($avh4$elm_color$Color$rgba, 0.19, 0.21, 0.23, 1);
 var $rtfeldman$elm_css$Css$prop1 = F2(
 	function (key, arg) {
-		return A2($rtfeldman$elm_css$Css$property, key, arg.bi);
+		return A2($rtfeldman$elm_css$Css$property, key, arg.bk);
 	});
 var $rtfeldman$elm_css$Css$height = $rtfeldman$elm_css$Css$prop1('height');
 var $rtfeldman$elm_css$Css$overflow = $rtfeldman$elm_css$Css$prop1('overflow');
@@ -7683,31 +7701,31 @@ var $elm$core$String$fromFloat = _String_fromNumber;
 var $rtfeldman$elm_css$Css$Internal$lengthConverter = F3(
 	function (units, unitLabel, numericValue) {
 		return {
-			gS: 0,
-			g6: 0,
-			cw: 0,
-			cy: 0,
-			A: 0,
-			cG: 0,
-			bA: 0,
-			cH: 0,
-			cI: 0,
-			b2: 0,
-			b3: 0,
-			bd: 0,
-			cJ: 0,
-			bE: numericValue,
-			cX: 0,
-			c0: unitLabel,
-			dQ: units,
-			bi: _Utils_ap(
+			g5: 0,
+			hl: 0,
+			cB: 0,
+			cD: 0,
+			D: 0,
+			cN: 0,
+			bE: 0,
+			cO: 0,
+			cP: 0,
+			b8: 0,
+			b9: 0,
+			bf: 0,
+			cQ: 0,
+			bI: numericValue,
+			c4: 0,
+			da: unitLabel,
+			dW: units,
+			bk: _Utils_ap(
 				$elm$core$String$fromFloat(numericValue),
 				unitLabel)
 		};
 	});
 var $rtfeldman$elm_css$Css$pct = A2($rtfeldman$elm_css$Css$Internal$lengthConverter, 0, '%');
 var $rtfeldman$elm_css$Css$position = $rtfeldman$elm_css$Css$prop1('position');
-var $rtfeldman$elm_css$Css$scroll = {c6: 0, g3: 0, hJ: 0, cP: 0, l0: 0, bi: 'scroll'};
+var $rtfeldman$elm_css$Css$scroll = {dg: 0, hi: 0, hW: 0, cW: 0, mh: 0, bk: 'scroll'};
 var $rtfeldman$elm_css$Css$cssFunction = F2(
 	function (funcName, args) {
 		return funcName + ('(' + (A2($elm$core$String$join, ',', args) + ')'));
@@ -7715,12 +7733,12 @@ var $rtfeldman$elm_css$Css$cssFunction = F2(
 var $rtfeldman$elm_css$Css$rgba = F4(
 	function (r, g, b, alpha) {
 		return {
-			gY: alpha,
-			fp: b,
-			d4: 0,
-			fI: g,
-			gm: r,
-			bi: A2(
+			hb: alpha,
+			fD: b,
+			ea: 0,
+			fW: g,
+			gA: r,
+			bk: A2(
 				$rtfeldman$elm_css$Css$cssFunction,
 				'rgba',
 				_Utils_ap(
@@ -7741,16 +7759,16 @@ var $avh4$elm_color$Color$toRgba = function (_v0) {
 	var g = _v0.b;
 	var b = _v0.c;
 	var a = _v0.d;
-	return {gY: a, fp: b, fI: g, gm: r};
+	return {hb: a, fD: b, fW: g, gA: r};
 };
 var $author$project$DesignSystem$Color$toCssColor = function (color) {
 	var c = $avh4$elm_color$Color$toRgba(color);
 	return A4(
 		$rtfeldman$elm_css$Css$rgba,
-		$elm$core$Basics$round(c.gm * 255),
-		$elm$core$Basics$round(c.fI * 255),
-		$elm$core$Basics$round(c.fp * 255),
-		c.gY);
+		$elm$core$Basics$round(c.gA * 255),
+		$elm$core$Basics$round(c.fW * 255),
+		$elm$core$Basics$round(c.fD * 255),
+		c.hb);
 };
 var $rtfeldman$elm_css$Css$Preprocess$ApplyStyles = function (a) {
 	return {$: 6, a: a};
@@ -7824,7 +7842,7 @@ var $rtfeldman$elm_css$Css$alignItems = function (fn) {
 		'align-items',
 		fn($rtfeldman$elm_css$Css$Internal$lengthForOverloadedProperty));
 };
-var $rtfeldman$elm_css$Css$auto = {jy: 0, w: 0, cw: 0, eq: 0, k9: 0, cG: 0, bA: 0, bd: 0, cP: 0, aX: 0, e$: 0, cY: 0, aJ: 0, bi: 'auto'};
+var $rtfeldman$elm_css$Css$auto = {jP: 0, y: 0, cB: 0, ey: 0, lr: 0, cN: 0, bE: 0, bf: 0, cW: 0, aY: 0, fc: 0, c5: 0, aL: 0, bk: 'auto'};
 var $rtfeldman$elm_css$Css$Structure$PseudoElement = $elm$core$Basics$identity;
 var $rtfeldman$elm_css$Css$Preprocess$WithPseudoElement = F2(
 	function (a, b) {
@@ -7857,13 +7875,13 @@ var $author$project$DesignSystem$Color$blue900 = A4($avh4$elm_color$Color$rgba, 
 var $rtfeldman$elm_css$Css$borderRadius = $rtfeldman$elm_css$Css$prop1('border-radius');
 var $rtfeldman$elm_css$Css$prop5 = F6(
 	function (key, argA, argB, argC, argD, argE) {
-		return A2($rtfeldman$elm_css$Css$property, key, argA.bi + (' ' + (argB.bi + (' ' + (argC.bi + (' ' + (argD.bi + (' ' + argE.bi))))))));
+		return A2($rtfeldman$elm_css$Css$property, key, argA.bk + (' ' + (argB.bk + (' ' + (argC.bk + (' ' + (argD.bk + (' ' + argE.bk))))))));
 	});
 var $rtfeldman$elm_css$Css$boxShadow5 = $rtfeldman$elm_css$Css$prop5('box-shadow');
-var $rtfeldman$elm_css$Css$row = {fF: 0, dk: 0, bi: 'row'};
+var $rtfeldman$elm_css$Css$row = {fT: 0, du: 0, bk: 'row'};
 var $rtfeldman$elm_css$Css$column = _Utils_update(
 	$rtfeldman$elm_css$Css$row,
-	{bi: 'column'});
+	{bk: 'column'});
 var $rtfeldman$elm_css$Css$cursor = $rtfeldman$elm_css$Css$prop1('cursor');
 var $author$project$DesignSystem$Color$cyan500 = A4($avh4$elm_color$Color$rgba, 0.12, 0.73, 0.69, 1);
 var $author$project$DesignSystem$Color$cyan = $author$project$DesignSystem$Color$cyan500;
@@ -7880,8 +7898,8 @@ var $rtfeldman$elm_css$Css$flexDirection = $rtfeldman$elm_css$Css$prop1('flex-di
 var $rtfeldman$elm_css$Css$flexStart = $rtfeldman$elm_css$Css$prop1('flex-start');
 var $rtfeldman$elm_css$Css$flexWrap = $rtfeldman$elm_css$Css$prop1('flex-wrap');
 var $rtfeldman$elm_css$Css$stringsToValue = function (list) {
-	return $elm$core$List$isEmpty(list) ? {bi: 'none'} : {
-		bi: A2($elm$core$String$join, ', ', list)
+	return $elm$core$List$isEmpty(list) ? {bk: 'none'} : {
+		bk: A2($elm$core$String$join, ', ', list)
 	};
 };
 var $rtfeldman$elm_css$Css$fontFamilies = A2(
@@ -7890,7 +7908,7 @@ var $rtfeldman$elm_css$Css$fontFamilies = A2(
 	$rtfeldman$elm_css$Css$stringsToValue);
 var $rtfeldman$elm_css$Css$fontSize = $rtfeldman$elm_css$Css$prop1('font-size');
 var $rtfeldman$elm_css$Css$fontWeight = function (_v0) {
-	var value = _v0.bi;
+	var value = _v0.bk;
 	return A2($rtfeldman$elm_css$Css$property, 'font-weight', value);
 };
 var $author$project$DesignSystem$Color$gray500 = A4($avh4$elm_color$Color$rgba, 0.47, 0.5, 0.52, 1);
@@ -7927,22 +7945,22 @@ var $rtfeldman$elm_css$Css$hover = $rtfeldman$elm_css$Css$pseudoClass('hover');
 var $rtfeldman$elm_css$Css$UnitlessInteger = 0;
 var $rtfeldman$elm_css$Css$int = function (val) {
 	return {
-		bZ: 0,
-		eq: 0,
-		b3: 0,
-		bd: 0,
-		lw: 0,
-		eD: 0,
-		bE: val,
-		c0: '',
-		dQ: 0,
-		bi: $elm$core$String$fromInt(val)
+		b4: 0,
+		ey: 0,
+		b9: 0,
+		bf: 0,
+		lN: 0,
+		eN: 0,
+		bI: val,
+		da: '',
+		dW: 0,
+		bk: $elm$core$String$fromInt(val)
 	};
 };
 var $rtfeldman$elm_css$Css$left = $rtfeldman$elm_css$Css$prop1('left');
 var $rtfeldman$elm_css$Css$prop2 = F3(
 	function (key, argA, argB) {
-		return A2($rtfeldman$elm_css$Css$property, key, argA.bi + (' ' + argB.bi));
+		return A2($rtfeldman$elm_css$Css$property, key, argA.bk + (' ' + argB.bk));
 	});
 var $rtfeldman$elm_css$Css$margin2 = $rtfeldman$elm_css$Css$prop2('margin');
 var $rtfeldman$elm_css$Css$marginBottom = $rtfeldman$elm_css$Css$prop1('margin-bottom');
@@ -7959,7 +7977,7 @@ var $author$project$DesignSystem$Color$orange900 = A4($avh4$elm_color$Color$rgba
 var $rtfeldman$elm_css$Css$padding = $rtfeldman$elm_css$Css$prop1('padding');
 var $rtfeldman$elm_css$Css$padding2 = $rtfeldman$elm_css$Css$prop2('padding');
 var $rtfeldman$elm_css$Css$paddingTop = $rtfeldman$elm_css$Css$prop1('padding-top');
-var $rtfeldman$elm_css$Css$pointer = {w: 0, bi: 'pointer'};
+var $rtfeldman$elm_css$Css$pointer = {y: 0, bk: 'pointer'};
 var $author$project$DesignSystem$Color$purple500 = A4($avh4$elm_color$Color$rgba, 0.45, 0.2, 0.8, 1);
 var $author$project$DesignSystem$Color$purple = $author$project$DesignSystem$Color$purple500;
 var $author$project$DesignSystem$Color$purple100 = A4($avh4$elm_color$Color$rgba, 0.85, 0.6, 1.0, 1);
@@ -7982,7 +8000,7 @@ var $author$project$DesignSystem$Color$red600 = A4($avh4$elm_color$Color$rgba, 0
 var $author$project$DesignSystem$Color$red700 = A4($avh4$elm_color$Color$rgba, 0.8, 0, 0.24, 1);
 var $author$project$DesignSystem$Color$red800 = A4($avh4$elm_color$Color$rgba, 0.7, 0, 0.21, 1);
 var $author$project$DesignSystem$Color$red900 = A4($avh4$elm_color$Color$rgba, 0.6, 0, 0.18, 1);
-var $rtfeldman$elm_css$Css$relative = {eO: 0, bi: 'relative'};
+var $rtfeldman$elm_css$Css$relative = {eY: 0, bk: 'relative'};
 var $author$project$DesignSystem$Color$rose500 = A4($avh4$elm_color$Color$rgba, 0.8, 0.35, 0.45, 1);
 var $author$project$DesignSystem$Color$rose = $author$project$DesignSystem$Color$rose500;
 var $author$project$DesignSystem$Color$rose100 = A4($avh4$elm_color$Color$rgba, 1.0, 0.75, 0.85, 1);
@@ -8003,11 +8021,11 @@ var $rtfeldman$elm_css$VirtualDom$Styled$text = function (str) {
 var $rtfeldman$elm_css$Html$Styled$text = $rtfeldman$elm_css$VirtualDom$Styled$text;
 var $rtfeldman$elm_css$Css$top = $rtfeldman$elm_css$Css$prop1('top');
 var $rtfeldman$elm_css$Css$valuesOrNone = function (list) {
-	return $elm$core$List$isEmpty(list) ? {bi: 'none'} : {
-		bi: A3(
+	return $elm$core$List$isEmpty(list) ? {bk: 'none'} : {
+		bk: A3(
 			$rtfeldman$elm_css$Css$String$mapJoin,
 			function ($) {
-				return $.bi;
+				return $.bk;
 			},
 			' ',
 			list)
@@ -8025,12 +8043,12 @@ var $rtfeldman$elm_css$Css$transform = function (only) {
 var $rtfeldman$elm_css$Css$translate2 = F2(
 	function (tx, ty) {
 		return {
-			y: 0,
-			bi: A2(
+			A: 0,
+			bk: A2(
 				$rtfeldman$elm_css$Css$cssFunction,
 				'translate',
 				_List_fromArray(
-					[tx.bi, ty.bi]))
+					[tx.bk, ty.bk]))
 		};
 	});
 var $author$project$DesignSystem$Color$white = A4($avh4$elm_color$Color$rgba, 1, 1, 1, 1);
@@ -8044,7 +8062,7 @@ var $author$project$DesignSystem$Color$whiteAlpha700 = A4($avh4$elm_color$Color$
 var $author$project$DesignSystem$Color$whiteAlpha800 = A4($avh4$elm_color$Color$rgba, 0.98, 0.96, 0.9, 0.8);
 var $author$project$DesignSystem$Color$whiteAlpha900 = A4($avh4$elm_color$Color$rgba, 0.98, 0.96, 0.9, 0.92);
 var $rtfeldman$elm_css$Css$width = $rtfeldman$elm_css$Css$prop1('width');
-var $rtfeldman$elm_css$Css$wrap = {dk: 0, ej: 0, bi: 'wrap'};
+var $rtfeldman$elm_css$Css$wrap = {du: 0, eq: 0, bk: 'wrap'};
 var $author$project$DesignSystem$Color$yellow500 = A4($avh4$elm_color$Color$rgba, 0.9, 0.71, 0, 1);
 var $author$project$DesignSystem$Color$yellow = $author$project$DesignSystem$Color$yellow500;
 var $author$project$DesignSystem$Color$yellow100 = A4($avh4$elm_color$Color$rgba, 1.0, 0.95, 0.4, 1);
@@ -8056,7 +8074,7 @@ var $author$project$DesignSystem$Color$yellow700 = A4($avh4$elm_color$Color$rgba
 var $author$project$DesignSystem$Color$yellow800 = A4($avh4$elm_color$Color$rgba, 0.6, 0.47, 0, 1);
 var $author$project$DesignSystem$Color$yellow900 = A4($avh4$elm_color$Color$rgba, 0.5, 0.39, 0, 1);
 var $rtfeldman$elm_css$Css$zIndex = $rtfeldman$elm_css$Css$prop1('z-index');
-var $rtfeldman$elm_css$Css$zero = {A: 0, cG: 0, bA: 0, cH: 0, cI: 0, b2: 0, b3: 0, lw: 0, bE: 0, eL: 0, c0: '', dQ: 0, bi: '0'};
+var $rtfeldman$elm_css$Css$zero = {D: 0, cN: 0, bE: 0, cO: 0, cP: 0, b8: 0, b9: 0, lN: 0, bI: 0, eV: 0, da: '', dW: 0, bk: '0'};
 var $author$project$DesignSystem$Color$viewColorPalette = function () {
 	var colorRange = F2(
 		function (name, colors) {
@@ -8396,10 +8414,10 @@ var $author$project$DesignSystemShowcase$Main$view = function (model) {
 };
 var $author$project$DesignSystemShowcase$Main$main = $elm$browser$Browser$element(
 	{
-		kY: $author$project$DesignSystemShowcase$Main$init,
-		mk: $author$project$DesignSystemShowcase$Main$subscriptions,
-		mM: $author$project$DesignSystemShowcase$Main$update,
-		mR: A2($elm$core$Basics$composeR, $author$project$DesignSystemShowcase$Main$view, $rtfeldman$elm_css$Html$Styled$toUnstyled)
+		le: $author$project$DesignSystemShowcase$Main$init,
+		mB: $author$project$DesignSystemShowcase$Main$subscriptions,
+		m0: $author$project$DesignSystemShowcase$Main$update,
+		m6: A2($elm$core$Basics$composeR, $author$project$DesignSystemShowcase$Main$view, $rtfeldman$elm_css$Html$Styled$toUnstyled)
 	});
 _Platform_export({'DesignSystemShowcase':{'Main':{'init':$author$project$DesignSystemShowcase$Main$main(
 	$elm$json$Json$Decode$succeed(0))(0)}}});}(this));
