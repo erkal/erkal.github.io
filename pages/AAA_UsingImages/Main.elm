@@ -51,7 +51,9 @@ update computer message model =
 view : Computer -> Model -> Html Never
 view computer model =
     div
-        [ class "fixed w-full h-full"
+        [ style "position" "fixed"
+        , style "width" "100%"
+        , style "height" "100%"
         , style "background-image" "url('./assets/canvas-background.jpg')"
 
         -- repeat the background image:
