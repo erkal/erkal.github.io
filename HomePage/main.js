@@ -11986,9 +11986,9 @@ var $rtfeldman$elm_css$Css$Transitions$durationTransition = F2(
 			{animation: animation, delay: $elm$core$Maybe$Nothing, duration: duration, timing: $elm$core$Maybe$Nothing});
 	});
 var $rtfeldman$elm_css$Css$Transitions$backgroundColor = $rtfeldman$elm_css$Css$Transitions$durationTransition($rtfeldman$elm_css$Css$Transitions$BackgroundColor);
+var $author$project$DesignSystem$Color$black = A4($avh4$elm_color$Color$rgba, 0, 0, 0, 1);
 var $author$project$DesignSystem$Color$blackAlpha500 = A4($avh4$elm_color$Color$rgba, 0.08, 0.08, 0.12, 0.36);
-var $author$project$DesignSystem$Color$blackAlpha700 = A4($avh4$elm_color$Color$rgba, 0.08, 0.08, 0.12, 0.64);
-var $author$project$DesignSystem$Color$blackAlpha800 = A4($avh4$elm_color$Color$rgba, 0.08, 0.08, 0.12, 0.8);
+var $author$project$DesignSystem$Color$blackAlpha900 = A4($avh4$elm_color$Color$rgba, 0.08, 0.08, 0.12, 0.92);
 var $rtfeldman$elm_css$Css$Transitions$BoxShadow = {$: 'BoxShadow'};
 var $rtfeldman$elm_css$Css$Transitions$boxShadow = $rtfeldman$elm_css$Css$Transitions$durationTransition($rtfeldman$elm_css$Css$Transitions$BoxShadow);
 var $rtfeldman$elm_css$Css$prop5 = F6(
@@ -11996,29 +11996,14 @@ var $rtfeldman$elm_css$Css$prop5 = F6(
 		return A2($rtfeldman$elm_css$Css$property, key, argA.value + (' ' + (argB.value + (' ' + (argC.value + (' ' + (argD.value + (' ' + argE.value))))))));
 	});
 var $rtfeldman$elm_css$Css$boxShadow5 = $rtfeldman$elm_css$Css$prop5('box-shadow');
-var $rtfeldman$elm_css$Html$Styled$Attributes$class = $rtfeldman$elm_css$Html$Styled$Attributes$stringProperty('className');
-var $rtfeldman$elm_css$Css$Structure$Descendant = {$: 'Descendant'};
-var $rtfeldman$elm_css$Css$Preprocess$NestSnippet = F2(
-	function (a, b) {
-		return {$: 'NestSnippet', a: a, b: b};
-	});
-var $rtfeldman$elm_css$Css$Global$descendants = $rtfeldman$elm_css$Css$Preprocess$NestSnippet($rtfeldman$elm_css$Css$Structure$Descendant);
 var $rtfeldman$elm_css$Css$flexGrow = $rtfeldman$elm_css$Css$prop1('flex-grow');
 var $rtfeldman$elm_css$Html$Styled$img = $rtfeldman$elm_css$Html$Styled$node('img');
-var $rtfeldman$elm_css$Css$Transitions$Opacity = {$: 'Opacity'};
-var $rtfeldman$elm_css$Css$Transitions$opacity = $rtfeldman$elm_css$Css$Transitions$durationTransition($rtfeldman$elm_css$Css$Transitions$Opacity);
 var $rtfeldman$elm_css$Css$paddingBottom = $rtfeldman$elm_css$Css$prop1('padding-bottom');
 var $rtfeldman$elm_css$Css$paddingTop = $rtfeldman$elm_css$Css$prop1('padding-top');
-var $rtfeldman$elm_css$Css$Global$selector = F2(
-	function (selectorStr, styles) {
-		return A2(
-			$rtfeldman$elm_css$VirtualDom$Styled$makeSnippet,
-			styles,
-			A2($rtfeldman$elm_css$Css$Structure$CustomSelector, selectorStr, _List_Nil));
-	});
 var $rtfeldman$elm_css$Html$Styled$Attributes$src = function (url) {
 	return A2($rtfeldman$elm_css$Html$Styled$Attributes$stringProperty, 'src', url);
 };
+var $rtfeldman$elm_css$Css$textDecoration = $rtfeldman$elm_css$Css$prop1('text-decoration');
 var $rtfeldman$elm_css$Css$Transitions$propToString = function (prop) {
 	switch (prop.$) {
 		case 'Background':
@@ -12267,7 +12252,9 @@ var $rtfeldman$elm_css$Css$Transitions$transition = function (options) {
 			options));
 	return A2($rtfeldman$elm_css$Css$property, 'transition', v);
 };
-var $author$project$DesignSystem$Color$whiteAlpha300 = A4($avh4$elm_color$Color$rgba, 0.98, 0.96, 0.9, 0.16);
+var $author$project$DesignSystem$Color$yellow500 = A4($avh4$elm_color$Color$rgba, 0.9, 0.71, 0, 1);
+var $author$project$DesignSystem$Color$yellow = $author$project$DesignSystem$Color$yellow500;
+var $author$project$DesignSystem$Color$yellow100 = A4($avh4$elm_color$Color$rgba, 1.0, 0.95, 0.4, 1);
 var $author$project$HomePage$Main$card = F2(
 	function (_v0, descriptionText) {
 		var exampleLink = _v0.exampleLink;
@@ -12289,7 +12276,7 @@ var $author$project$HomePage$Main$card = F2(
 							$rtfeldman$elm_css$Css$border3,
 							$rtfeldman$elm_css$Css$px(1),
 							$rtfeldman$elm_css$Css$solid,
-							$author$project$DesignSystem$Color$toCssColor($author$project$DesignSystem$Color$blackAlpha700)),
+							$author$project$DesignSystem$Color$toCssColor($author$project$DesignSystem$Color$black)),
 							A5(
 							$rtfeldman$elm_css$Css$boxShadow5,
 							$rtfeldman$elm_css$Css$zero,
@@ -12301,6 +12288,7 @@ var $author$project$HomePage$Main$card = F2(
 							$author$project$DesignSystem$Color$toCssColor($author$project$DesignSystem$Color$blackAlpha600)),
 							$rtfeldman$elm_css$Css$color(
 							$author$project$DesignSystem$Color$toCssColor($author$project$DesignSystem$Color$whiteAlpha800)),
+							$rtfeldman$elm_css$Css$textDecoration($rtfeldman$elm_css$Css$none),
 							$rtfeldman$elm_css$Css$displayFlex,
 							$rtfeldman$elm_css$Css$flexDirection($rtfeldman$elm_css$Css$column),
 							$rtfeldman$elm_css$Css$alignItems($rtfeldman$elm_css$Css$center),
@@ -12324,27 +12312,7 @@ var $author$project$HomePage$Main$card = F2(
 									$rtfeldman$elm_css$Css$px(12),
 									$rtfeldman$elm_css$Css$px(16),
 									$rtfeldman$elm_css$Css$px(-3),
-									A4($rtfeldman$elm_css$Css$rgba, 0, 0, 0, 0.4)),
-									$rtfeldman$elm_css$Css$Global$descendants(
-									_List_fromArray(
-										[
-											A2(
-											$rtfeldman$elm_css$Css$Global$selector,
-											'img',
-											_List_fromArray(
-												[
-													$rtfeldman$elm_css$Css$opacity(
-													$rtfeldman$elm_css$Css$num(0.75))
-												])),
-											A2(
-											$rtfeldman$elm_css$Css$Global$selector,
-											'.zoom-overlay',
-											_List_fromArray(
-												[
-													$rtfeldman$elm_css$Css$opacity(
-													$rtfeldman$elm_css$Css$num(1))
-												]))
-										]))
+									A4($rtfeldman$elm_css$Css$rgba, 0, 0, 0, 0.4))
 								]))
 						]))
 				]),
@@ -12371,65 +12339,12 @@ var $author$project$HomePage$Main$card = F2(
 									_List_fromArray(
 										[
 											$rtfeldman$elm_css$Css$borderRadius(
-											$rtfeldman$elm_css$Css$rem(0.75))
+											$rtfeldman$elm_css$Css$rem(0.75)),
+											$rtfeldman$elm_css$Css$maxWidth(
+											$rtfeldman$elm_css$Css$pct(100))
 										]))
 								]),
-							_List_Nil),
-							A2(
-							$rtfeldman$elm_css$Html$Styled$div,
-							_List_fromArray(
-								[
-									$rtfeldman$elm_css$Html$Styled$Attributes$css(
-									_List_fromArray(
-										[
-											$rtfeldman$elm_css$Css$displayFlex,
-											$rtfeldman$elm_css$Css$opacity($rtfeldman$elm_css$Css$zero),
-											$rtfeldman$elm_css$Css$justifyContent($rtfeldman$elm_css$Css$center),
-											$rtfeldman$elm_css$Css$alignItems($rtfeldman$elm_css$Css$center),
-											$rtfeldman$elm_css$Css$position($rtfeldman$elm_css$Css$absolute),
-											$rtfeldman$elm_css$Css$top($rtfeldman$elm_css$Css$zero),
-											$rtfeldman$elm_css$Css$right($rtfeldman$elm_css$Css$zero),
-											$rtfeldman$elm_css$Css$bottom($rtfeldman$elm_css$Css$zero),
-											$rtfeldman$elm_css$Css$left($rtfeldman$elm_css$Css$zero),
-											$rtfeldman$elm_css$Css$width(
-											$rtfeldman$elm_css$Css$pct(100)),
-											$rtfeldman$elm_css$Css$height(
-											$rtfeldman$elm_css$Css$pct(100)),
-											$rtfeldman$elm_css$Css$fontSize(
-											$rtfeldman$elm_css$Css$rem(1.5)),
-											$rtfeldman$elm_css$Css$fontWeight($rtfeldman$elm_css$Css$bold),
-											$rtfeldman$elm_css$Css$color(
-											$author$project$DesignSystem$Color$toCssColor($author$project$DesignSystem$Color$whiteAlpha900)),
-											$rtfeldman$elm_css$Css$backgroundColor(
-											A4($rtfeldman$elm_css$Css$rgba, 0, 0, 0, 0.75)),
-											$rtfeldman$elm_css$Css$borderRadius(
-											$rtfeldman$elm_css$Css$rem(0.75)),
-											$rtfeldman$elm_css$Css$Transitions$transition(
-											_List_fromArray(
-												[
-													$rtfeldman$elm_css$Css$Transitions$opacity(300)
-												]))
-										])),
-									$rtfeldman$elm_css$Html$Styled$Attributes$class('zoom-overlay')
-								]),
-							_List_fromArray(
-								[
-									A2(
-									$rtfeldman$elm_css$Html$Styled$div,
-									_List_fromArray(
-										[
-											$rtfeldman$elm_css$Html$Styled$Attributes$css(
-											_List_fromArray(
-												[
-													$rtfeldman$elm_css$Css$width(
-													$rtfeldman$elm_css$Css$rem(5)),
-													$rtfeldman$elm_css$Css$height(
-													$rtfeldman$elm_css$Css$rem(5))
-												]))
-										]),
-									_List_fromArray(
-										[$author$project$Icons$icons.zoomToFit]))
-								]))
+							_List_Nil)
 						])),
 					A2(
 					$rtfeldman$elm_css$Html$Styled$div,
@@ -12462,28 +12377,36 @@ var $author$project$HomePage$Main$card = F2(
 									$rtfeldman$elm_css$Css$rem(0.5)),
 									$rtfeldman$elm_css$Css$paddingBottom(
 									$rtfeldman$elm_css$Css$rem(0.5)),
-									$rtfeldman$elm_css$Css$color(
-									$author$project$DesignSystem$Color$toCssColor($author$project$DesignSystem$Color$whiteAlpha900)),
-									$rtfeldman$elm_css$Css$backgroundColor(
-									$author$project$DesignSystem$Color$toCssColor($author$project$DesignSystem$Color$blackAlpha800)),
-									A3(
-									$rtfeldman$elm_css$Css$border3,
-									$rtfeldman$elm_css$Css$px(1),
-									$rtfeldman$elm_css$Css$solid,
-									$author$project$DesignSystem$Color$toCssColor($author$project$DesignSystem$Color$whiteAlpha300)),
 									$rtfeldman$elm_css$Css$borderRadius(
 									$rtfeldman$elm_css$Css$rem(0.5)),
 									$rtfeldman$elm_css$Css$Transitions$transition(
 									_List_fromArray(
 										[
-											$rtfeldman$elm_css$Css$Transitions$backgroundColor(200)
+											$rtfeldman$elm_css$Css$Transitions$backgroundColor(100)
 										])),
+									$rtfeldman$elm_css$Css$backgroundColor(
+									$author$project$DesignSystem$Color$toCssColor($author$project$DesignSystem$Color$blackAlpha900)),
+									$rtfeldman$elm_css$Css$color(
+									$author$project$DesignSystem$Color$toCssColor($author$project$DesignSystem$Color$yellow)),
+									A3(
+									$rtfeldman$elm_css$Css$border3,
+									$rtfeldman$elm_css$Css$px(1),
+									$rtfeldman$elm_css$Css$solid,
+									$author$project$DesignSystem$Color$toCssColor($author$project$DesignSystem$Color$black)),
 									$rtfeldman$elm_css$Css$hover(
 									_List_fromArray(
 										[
 											$rtfeldman$elm_css$Css$backgroundColor(
-											$author$project$DesignSystem$Color$toCssColor($author$project$DesignSystem$Color$blackAlpha600))
-										]))
+											$author$project$DesignSystem$Color$toCssColor($author$project$DesignSystem$Color$black)),
+											$rtfeldman$elm_css$Css$color(
+											$author$project$DesignSystem$Color$toCssColor($author$project$DesignSystem$Color$yellow100)),
+											A3(
+											$rtfeldman$elm_css$Css$border3,
+											$rtfeldman$elm_css$Css$px(1),
+											$rtfeldman$elm_css$Css$solid,
+											$author$project$DesignSystem$Color$toCssColor($author$project$DesignSystem$Color$yellow100))
+										])),
+									$rtfeldman$elm_css$Css$textDecoration($rtfeldman$elm_css$Css$none)
 								])),
 							$rtfeldman$elm_css$Html$Styled$Attributes$href(sourceCodeLink)
 						]),

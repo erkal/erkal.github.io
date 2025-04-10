@@ -12809,25 +12809,28 @@ var $author$project$UndoRedo$Main$PressedResetInteractiveButton = function (a) {
 var $author$project$UndoRedo$Main$SelectedInteractive = function (a) {
 	return {$: 'SelectedInteractive', a: a};
 };
+var $author$project$DesignSystem$Color$blue900 = A4($avh4$elm_color$Color$rgba, 0.03, 0.24, 0.35, 1);
+var $author$project$DesignSystem$Color$cyan900 = A4($avh4$elm_color$Color$rgba, 0.08, 0.33, 0.29, 1);
+var $author$project$DesignSystem$Color$green900 = A4($avh4$elm_color$Color$rgba, 0, 0.38, 0.22, 1);
 var $author$project$UndoRedo$Main$bgColorForInteractive = function (interactiveID) {
 	switch (interactiveID.$) {
 		case 'UndoRedoUsual':
 			return _List_fromArray(
 				[
 					$rtfeldman$elm_css$Css$backgroundColor(
-					A4($rtfeldman$elm_css$Css$rgba, 236, 72, 153, 0.2))
+					$author$project$DesignSystem$Color$toCssColor($author$project$DesignSystem$Color$blue900))
 				]);
 		case 'UndoRedoSafe':
 			return _List_fromArray(
 				[
 					$rtfeldman$elm_css$Css$backgroundColor(
-					A4($rtfeldman$elm_css$Css$rgba, 74, 222, 128, 0.2))
+					$author$project$DesignSystem$Color$toCssColor($author$project$DesignSystem$Color$cyan900))
 				]);
 		default:
 			return _List_fromArray(
 				[
 					$rtfeldman$elm_css$Css$backgroundColor(
-					A4($rtfeldman$elm_css$Css$rgba, 96, 165, 250, 0.2))
+					$author$project$DesignSystem$Color$toCssColor($author$project$DesignSystem$Color$green900))
 				]);
 	}
 };
@@ -13011,7 +13014,6 @@ var $rtfeldman$elm_css$Css$int = function (val) {
 };
 var $rtfeldman$elm_css$Css$outline3 = $rtfeldman$elm_css$Css$prop3('outline');
 var $rtfeldman$elm_css$Css$fontFamily = $rtfeldman$elm_css$Css$prop1('font-family');
-var $rtfeldman$elm_css$Css$margin2 = $rtfeldman$elm_css$Css$prop2('margin');
 var $rtfeldman$elm_css$Css$monospace = {fontFamily: $rtfeldman$elm_css$Css$Structure$Compatible, value: 'monospace'};
 var $rtfeldman$elm_css$Css$pre = {value: 'pre', whiteSpace: $rtfeldman$elm_css$Css$Structure$Compatible};
 var $rtfeldman$elm_css$Css$whiteSpace = $rtfeldman$elm_css$Css$prop1('white-space');
@@ -13023,18 +13025,10 @@ var $author$project$UndoRedo$Main$viewUndoItem = function (str) {
 				$rtfeldman$elm_css$Html$Styled$Attributes$css(
 				_List_fromArray(
 					[
-						$rtfeldman$elm_css$Css$height(
-						$rtfeldman$elm_css$Css$px(32)),
 						A2(
 						$rtfeldman$elm_css$Css$padding2,
 						$rtfeldman$elm_css$Css$px(4),
 						$rtfeldman$elm_css$Css$px(8)),
-						A2(
-						$rtfeldman$elm_css$Css$margin2,
-						$rtfeldman$elm_css$Css$px(2),
-						$rtfeldman$elm_css$Css$zero),
-						$rtfeldman$elm_css$Css$fontSize(
-						$rtfeldman$elm_css$Css$px(16)),
 						$rtfeldman$elm_css$Css$backgroundColor(
 						$author$project$DesignSystem$Color$toCssColor($author$project$DesignSystem$Color$blackAlpha700)),
 						$rtfeldman$elm_css$Css$color(
@@ -13049,6 +13043,8 @@ var $author$project$UndoRedo$Main$viewUndoItem = function (str) {
 				$rtfeldman$elm_css$Html$Styled$text(str)
 			]));
 };
+var $author$project$DesignSystem$Color$yellow500 = A4($avh4$elm_color$Color$rgba, 0.9, 0.71, 0, 1);
+var $author$project$DesignSystem$Color$yellow = $author$project$DesignSystem$Color$yellow500;
 var $rtfeldman$elm_css$Css$zIndex = $rtfeldman$elm_css$Css$prop1('z-index');
 var $author$project$UndoRedo$Main$viewUndoList = F2(
 	function (model, interactiveID) {
@@ -13114,15 +13110,13 @@ var $author$project$UndoRedo$Main$viewUndoList = F2(
 							$rtfeldman$elm_css$Html$Styled$Attributes$css(
 							_List_fromArray(
 								[
-									$rtfeldman$elm_css$Css$displayFlex,
-									$rtfeldman$elm_css$Css$flexDirection($rtfeldman$elm_css$Css$column),
 									$rtfeldman$elm_css$Css$zIndex(
 									$rtfeldman$elm_css$Css$int(10)),
 									A3(
 									$rtfeldman$elm_css$Css$outline3,
 									$rtfeldman$elm_css$Css$px(8),
 									$rtfeldman$elm_css$Css$solid,
-									$author$project$DesignSystem$Color$toCssColor($author$project$DesignSystem$Color$cyan700))
+									$author$project$DesignSystem$Color$toCssColor($author$project$DesignSystem$Color$yellow))
 								]))
 						]),
 					_List_fromArray(
@@ -13319,6 +13313,7 @@ var $author$project$UndoRedo$Main$viewUndoListInteractive = F2(
 	});
 var $rtfeldman$elm_css$Css$flexEnd = $rtfeldman$elm_css$Css$prop1('flex-end');
 var $author$project$DesignSystem$Color$gray900 = A4($avh4$elm_color$Color$rgba, 0.19, 0.21, 0.23, 1);
+var $rtfeldman$elm_css$Css$margin2 = $rtfeldman$elm_css$Css$prop2('margin');
 var $rtfeldman$elm_css$Css$padding4 = $rtfeldman$elm_css$Css$prop4('padding');
 var $rtfeldman$elm_css$Html$Styled$Attributes$target = $rtfeldman$elm_css$Html$Styled$Attributes$stringProperty('target');
 var $author$project$DesignSystem$Color$whiteAlpha600 = A4($avh4$elm_color$Color$rgba, 0.98, 0.96, 0.9, 0.48);
