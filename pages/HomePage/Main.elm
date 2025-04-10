@@ -120,11 +120,7 @@ card { exampleLink, imageLink, sourceCodeLink } descriptionText =
                 ]
                 []
             ]
-        , div
-            [ css
-                [ flexGrow (num 1)
-                ]
-            ]
+        , div [ css [ flexGrow (num 1) ] ]
             [ text descriptionText ]
         , a
             [ css

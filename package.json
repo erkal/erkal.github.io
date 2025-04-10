@@ -9,11 +9,8 @@
     },
     "scripts": {
         "postinstall": "elm-tooling install",
-        "prebuild": "elm-tooling install",
-        "watch-elm": "npx elm-watch hot",
-        "dev": "node ./scripts/prebuild.js && npx run-pty % npm run watch-elm % node ./scripts/generate-index-for-dev.js % open http://localhost:8000/",
-        "build-elm": "npx elm-watch make",
-        "build": "node ./scripts/prebuild.js && npm run build-elm && node ./scripts/generate-index-for-build.js",
+        "dev": "node ./scripts/prebuild.js && node ./scripts/generate-index-for-dev.js && npx elm-watch hot",
+        "build": "node ./scripts/prebuild.js && npx elm-watch make && node ./scripts/generate-index-for-build.js",
         "deploy": "npm run build && gh-pages -d build"
     },
     "devDependencies": {
@@ -27,7 +24,6 @@
         "http-proxy-middleware": "^3.0.3",
         "inquirer": "^12.1.0",
         "prettier": "^3.5.3",
-        "run-pty": "^4.1.0",
         "shelljs": "^0.8.5"
     }
 }

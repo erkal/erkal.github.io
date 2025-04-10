@@ -808,6 +808,7 @@ viewTreeItem pathDict ( itemPath, item ) =
         itemTypeIcon =
             if isDirectory then
                 "📁 "
+
             else
                 "📄 "
 
