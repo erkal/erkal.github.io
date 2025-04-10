@@ -7,20 +7,113 @@
       content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"
     />
 
-    <link rel="stylesheet" href="./output.css" />
+    <style>
+      :root {
+        font-family: "Inter", "sans-serif", "Arial", "Helvetica", "system-ui";
+      }
 
-    <!-- elm logo -->
+      code,
+      pre,
+      kbd,
+      samp {
+        font-family:
+          "ui-monospace", "SFMono-Regular", "Menlo", "Monaco", "Consolas",
+          "Liberation Mono", "Courier New", "monospace";
+      }
+
+      body {
+        min-height: 100vh;
+        overflow: hidden;
+        line-height: 1.5;
+        text-rendering: optimizeLegibility;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+      }
+
+      /* Modern Reset CSS */
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      html {
+        font-size: 100%;
+        scroll-behavior: smooth;
+      }
+
+      img,
+      picture,
+      video,
+      canvas,
+      svg {
+        display: block;
+        max-width: 100%;
+      }
+
+      button,
+      [type="button"],
+      [type="reset"],
+      [type="submit"] {
+        -webkit-appearance: button;
+        appearance: button;
+        background-color: transparent;
+        background-image: none;
+        color: inherit;
+        cursor: pointer;
+        padding: 0;
+        font-family: inherit;
+        font-size: 100%;
+        font-weight: inherit;
+        line-height: inherit;
+        text-transform: none;
+        margin: 0;
+        border-width: 0;
+      }
+
+      input,
+      select,
+      textarea {
+        background-color: transparent;
+        border-width: 0;
+        border-radius: 0;
+        color: inherit;
+        font-family: inherit;
+        font-size: 100%;
+        font-weight: inherit;
+        line-height: inherit;
+        margin: 0;
+        padding: 0;
+      }
+
+      p,
+      h1,
+      h2,
+      h3,
+      h4,
+      h5,
+      h6 {
+        overflow-wrap: break-word;
+      }
+    </style>
+
+    <!-- Elm Logo -->
     <link
       rel="icon"
       href="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f3/Elm_logo.svg/1200px-Elm_logo.svg.png"
       type="image/png"
     />
 
-    <!-- PlayEGI for Senso -->
+    <!-- For PlayEGI for Senso -->
     <script src="./PlayEGI.js"></script>
+
+    <!-- For Pit's compiler -->
+    <script src="./eval-elm.js"></script>
   </head>
 
-  <body class="overflow-hidden">
+  <body>
     <div id="app"></div>
 
     <script src="./elm-canvas.js"></script>
