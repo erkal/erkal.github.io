@@ -2,7 +2,7 @@ module DancingCubes.Main exposing (main)
 
 import Animation exposing (wave)
 import Color exposing (hsl, rgba, white)
-import Html exposing (Html)
+import Html.Styled exposing (Html, fromUnstyled)
 import Play exposing (..)
 import Playground.Tape exposing (Message(..))
 import Scene3d.Material exposing (matte)
@@ -47,26 +47,27 @@ update computer message model =
 -- VIEW
 
 
-view : Computer -> Model -> Html Never
+view : Computer -> Model -> Html.Styled.Html Never
 view computer model =
-    SceneWebGL.sunny
-        { devicePixelRatio = computer.devicePixelRatio
-        , screen = computer.screen
-        , camera =
-            perspective
-                { focalPoint = { x = 0, y = 0, z = 0 }
-                , eyePoint =
-                    { x = getFloat "camera x" computer
-                    , y = getFloat "camera y" computer
-                    , z = getFloat "camera z" computer
+    fromUnstyled <|
+        SceneWebGL.sunny
+            { devicePixelRatio = computer.devicePixelRatio
+            , screen = computer.screen
+            , camera =
+                perspective
+                    { focalPoint = { x = 0, y = 0, z = 0 }
+                    , eyePoint =
+                        { x = getFloat "camera x" computer
+                        , y = getFloat "camera y" computer
+                        , z = getFloat "camera z" computer
+                        }
+                    , upDirection = { x = 0, y = 1, z = 0 }
                     }
-                , upDirection = { x = 0, y = 1, z = 0 }
-                }
-        , backgroundColor = hsl 0.6 0.5 0.2
-        , sunlightAzimuth = -(degrees 135)
-        , sunlightElevation = -(degrees 45)
-        }
-        [ cubes computer ]
+            , backgroundColor = hsl 0.6 0.5 0.2
+            , sunlightAzimuth = -(degrees 135)
+            , sunlightElevation = -(degrees 45)
+            }
+            [ cubes computer ]
 
 
 initialConfigurations : Configurations

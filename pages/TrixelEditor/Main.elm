@@ -3,13 +3,15 @@ module TrixelEditor.Main exposing (main)
 -- The coordinate system is as described in the following article
 -- http://www-cs-students.stanford.edu/~amitp/game-programming/grids/
 
-import Color exposing (Color, black, blue, green, red, white)
+import Color exposing (toCssString)
+import Css exposing (absolute, active, backgroundColor, border3, borderRadius, center, color, fixed, fontSize, height, hover, margin, overflowY, padding, pct, position, property, px, rem, rgb, rgba, right, scroll, solid, textAlign, top, transform, transforms, translate2, vh, vw, width, zero)
+import DesignSystem.Color exposing (..)
 import Dict.Any as AnyDict exposing (AnyDict)
 import Geometry3d exposing (Point)
-import Html exposing (Html, button, div, h2, hr, option, p, select, span, text)
-import Html.Attributes exposing (class, style, value)
-import Html.Events exposing (onClick, stopPropagationOn)
-import Html.Events.Extra exposing (onChange)
+import Html.Events.Extra
+import Html.Styled exposing (Attribute, Html, button, div, fromUnstyled, h2, hr, option, p, select, span, text)
+import Html.Styled.Attributes exposing (css, value)
+import Html.Styled.Events exposing (onClick, stopPropagationOn)
 import Icons
 import Json.Decode as Decode
 import Json.Encode as Encode
@@ -167,40 +169,33 @@ updateMouseOverUV computer model =
 view : Computer -> Model -> Html Msg
 view computer model =
     div []
-        [ div
-            [ class "fixed w-full h-full"
-            , style "touch-action" "none"
-            ]
-            [ Html.map never (viewWebGLCanvas computer model) ]
-        , div
-            [ class "absolute w-screen h-screen text-center text-lg text-white/60"
-            ]
-            [ div [ class "p-1" ] [ text "TRIXELS" ]
-            ]
+        [ div [ css [ position fixed, width (pct 100), height (pct 100), property "touch-action" "none" ] ]
+            [ Html.Styled.map never (viewWebGLCanvas computer model) ]
         , viewEditor computer model
         ]
 
 
 viewWebGLCanvas : Computer -> Model -> Html Never
 viewWebGLCanvas computer model =
-    SceneWebGL.sunny
-        { devicePixelRatio = computer.devicePixelRatio
-        , screen = computer.screen
-        , camera = camera computer
-        , backgroundColor =
-            (Levels.current model.pages).palette
-                |> ColorPalette.get (Levels.current model.pages).backgroundColorIndex
-        , sunlightAzimuth = degrees 225
-        , sunlightElevation = degrees 315
-        }
-        [ group
-            [ drawFaces computer model
+    fromUnstyled <|
+        SceneWebGL.sunny
+            { devicePixelRatio = computer.devicePixelRatio
+            , screen = computer.screen
+            , camera = camera computer
+            , backgroundColor =
+                (Levels.current model.pages).palette
+                    |> ColorPalette.get (Levels.current model.pages).backgroundColorIndex
+            , sunlightAzimuth = degrees 225
+            , sunlightElevation = degrees 315
+            }
+            [ group
+                [ drawFaces computer model
 
-            --, drawGrid computer
-            --, axes
-            --, drawMouseOveredFace computer model
+                --, drawGrid computer
+                --, axes
+                --, drawMouseOveredFace computer model
+                ]
             ]
-        ]
 
 
 axes : Shape
@@ -278,7 +273,7 @@ drawFace computer palette ( Face lr u v, colorIndex ) =
         |> moveY y
 
 
-drawGridDot : Color -> Float -> Vertex -> Shape
+drawGridDot : Color.Color -> Float -> Vertex -> Shape
 drawGridDot color radius v =
     let
         { x, y } =
@@ -305,7 +300,7 @@ drawGrid computer =
             0.05
 
         gridColor =
-            Color.black
+            black
     in
     group
         (cartesianProduct
@@ -353,7 +348,7 @@ handleMsgFromEditor editorMsg model =
             model
 
 
-stopPropagationOfInputs : List (Html.Attribute Msg)
+stopPropagationOfInputs : List (Attribute Msg)
 stopPropagationOfInputs =
     [ stopPropagationOn "mousedown" (Decode.succeed ( NoOp, True ))
     , stopPropagationOn "pointerdown" (Decode.succeed ( NoOp, True ))
@@ -372,11 +367,15 @@ viewEditor computer model =
 
 editorToggleButton : Model -> Html Msg
 editorToggleButton model =
-    div
-        [ class "fixed top-0 right-0"
-        ]
+    div [ css [ position fixed, top zero, right zero ] ]
         [ button
-            [ class "w-10 p-2 text-white/20 hover:text-white active:text-white/60"
+            [ css
+                [ width (px 40)
+                , padding (px 8)
+                , color (toCssColor whiteAlpha200)
+                , hover [ color (toCssColor white) ]
+                , active [ color (toCssColor whiteAlpha600) ]
+                ]
             , onClick PressedEditorOnOffButton
             ]
             [ if model.editorIsOn then
@@ -392,12 +391,18 @@ editorContent : Computer -> Model -> Html Msg
 editorContent computer model =
     if model.editorIsOn then
         div
-            [ class "fixed top-0 right-0 w-[300px]"
-            , style "height" <| String.fromFloat (computer.screen.height - 80) ++ "px"
-            , class "bg-black/20"
-            , class "border-[0.5px] border-white/20"
-            , class "overflow-y-scroll"
-            , class "text-xs text-white/60"
+            [ css
+                [ position fixed
+                , top zero
+                , right zero
+                , width (px 300)
+                , height (px (computer.screen.height - 80))
+                , backgroundColor (rgba 0 0 0 0.2)
+                , border3 (px 0.5) solid (rgba 255 255 255 0.2)
+                , overflowY scroll
+                , fontSize (px 12)
+                , color (rgba 255 255 255 0.6)
+                ]
             ]
             [ viewInstructions
             , viewColorSelection model
@@ -410,19 +415,20 @@ editorContent computer model =
 
 viewInstructions : Html Msg
 viewInstructions =
-    div [ class "p-4 border-[0.5px] border-white/20" ]
-        [ div [ class "text-lg" ] [ text "Instructions" ]
-        , div [ class "pl-2" ] [ text "- Press mouse to add trixel" ]
-        , div [ class "pl-2" ] [ text "- Hold shift and press mouse to remove trixel" ]
-        , div [ class "pl-2" ] [ text "- Panning: SCROLL or SPACE + DRAG" ]
-        , div [ class "pl-2" ] [ text "- Zooming: CTRL + SCROLL" ]
+    div
+        [ css [ padding (px 16), border3 (px 0.5) solid (toCssColor whiteAlpha200) ] ]
+        [ div [ css [ fontSize (px 20) ] ] [ text "Instructions" ]
+        , div [] [ text "- Press mouse to add trixel" ]
+        , div [] [ text "- Hold shift and press mouse to remove trixel" ]
+        , div [] [ text "- Panning: SCROLL or SPACE + DRAG" ]
+        , div [] [ text "- Zooming: CTRL + SCROLL" ]
         ]
 
 
 viewColorSelection : Model -> Html Msg
 viewColorSelection model =
-    div [ class "p-4 border-[0.5px] border-white/20" ]
-        [ div [ class "text-lg" ] [ text "Color Palette" ]
+    div [ css [ padding (px 16), border3 (px 0.5) solid (toCssColor whiteAlpha200) ] ]
+        [ div [ css [ fontSize (px 20) ] ] [ text "Color Palette" ]
         , selectColorPalette model
         , makeButton PressedButtonForSettingBackgroundColor "Set selected as background"
         , div [] [ text (String.fromInt model.selectedColorIndex) ]
@@ -432,18 +438,22 @@ viewColorSelection model =
 
 pageSelection : Model -> Html Msg
 pageSelection model =
-    div [ class "p-4 border-[0.5px] border-white/20" ]
-        [ div [ class "text-lg" ] [ text "Levels" ]
-        , div [ class "p-4" ]
-            [ Html.map FromLevelEditor
-                (Levels.view model.pages)
-            ]
+    div [ css [ padding (px 16), border3 (px 0.5) solid (toCssColor whiteAlpha200) ] ]
+        [ div [ css [ fontSize (px 20) ] ] [ text "Levels" ]
+        , div [ css [ padding (px 16) ] ] [ Html.Styled.map FromLevelEditor (Levels.view model.pages) ]
         ]
 
 
+makeButton : msg -> String -> Html msg
 makeButton msg string =
     button
-        [ class "m-1 p-2 rounded bg-black/40 hover:bg-black/80"
+        [ css
+            [ margin (px 4)
+            , padding (px 8)
+            , borderRadius (px 8)
+            , backgroundColor (toCssColor blackAlpha400)
+            , hover [ backgroundColor (toCssColor blackAlpha800) ]
+            ]
         , onClick msg
         ]
         [ text string ]
@@ -458,11 +468,15 @@ optionWith palette =
 
 selectColorPalette : Model -> Html Msg
 selectColorPalette model =
-    div [ class "p-2" ]
-        [ span [ class "p-2" ] [ text "Choose a palette:" ]
+    div [ css [ padding (px 8) ] ]
+        [ span [ css [ padding (px 8) ] ] [ text "Choose a palette:" ]
         , select
-            [ class "p-2 text-white/80 bg-black/20"
-            , onChange (ColorPalette.fromString >> SelectPalette)
+            [ css
+                [ padding (px 8)
+                , color (toCssColor whiteAlpha800)
+                , backgroundColor (toCssColor whiteAlpha200)
+                ]
+            , Html.Styled.Attributes.fromUnstyled <| Html.Events.Extra.onChange (ColorPalette.fromString >> SelectPalette)
             , value (ColorPalette.toString (currentPalette model))
             ]
             (List.map optionWith [ Parula, Inferno, Magma, Plasma, Viridis ])
@@ -484,6 +498,7 @@ viewColorPalette model =
         m =
             15
 
+        showColor : Int -> Color.Color -> Html Msg
         showColor i color =
             let
                 translateX =
@@ -500,18 +515,20 @@ viewColorPalette model =
                         0
             in
             div
-                [ class "absolute"
-                , style "width" (String.fromFloat boxSize ++ "px")
-                , style "height" (String.fromFloat boxSize ++ "px")
-                , style "background-color" (Color.toCssString color)
-                , style "transform" ("translate(" ++ String.fromFloat translateX ++ "px," ++ String.fromFloat translateY ++ "px)")
+                [ css
+                    [ position absolute
+                    , width (px boxSize)
+                    , height (px boxSize)
+                    , backgroundColor (toCssColor color)
+                    , transforms [ translate2 (px translateX) (px translateY) ]
+                    , border3 (px border) solid (rgb 255 255 255)
+                    ]
                 , onClick (SelectColor i)
-                , style "border" ("solid white " ++ String.fromFloat border ++ "px")
                 ]
                 []
     in
     div
-        [ class "h-[320px]"
+        [ css [ height (px 320) ]
         ]
         (ColorPalette.colors world.palette
             |> Nonempty.indexedMap showColor

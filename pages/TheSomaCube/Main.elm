@@ -2,8 +2,9 @@ module TheSomaCube.Main exposing (main)
 
 import Animation exposing (wave)
 import Color exposing (Color, black, hsl, rgba, white)
-import Html exposing (Html, div, h2, p, text)
-import Html.Attributes exposing (class, style)
+import Css exposing (fixed, fontSize, marginBottom, marginLeft, marginTop, position, px, rem)
+import Html.Styled exposing (Html, div, fromUnstyled, h2, p, text)
+import Html.Styled.Attributes exposing (css, style)
 import Play exposing (..)
 import Playground.Tape exposing (Message(..))
 import Scene3d.Material exposing (matte)
@@ -85,8 +86,8 @@ view : Computer -> Model -> Html Never
 view computer model =
     div
         []
-        [ div [ class "fixed ml-[340px]" ]
-            [ div [ class "text-2xl my-4" ] [ text "The Soma Cube" ]
+        [ div [ css [ position fixed, marginLeft (px 340) ] ]
+            [ div [ css [ fontSize (rem 1.5), marginTop (px 16), marginBottom (px 16) ] ] [ text "The Soma Cube" ]
             , div [ style "color" "darkred" ] [ text "(These controls are not implemented yet)" ]
             , div [] [ text "Space Key to chose the next piece" ]
             , div [] [ text "Arrow keys to rotate the cube" ]
@@ -99,17 +100,18 @@ view computer model =
 
 viewShapes : Computer -> Model -> Html Never
 viewShapes computer model =
-    SceneWebGL.sunny
-        { devicePixelRatio = computer.devicePixelRatio
-        , screen = computer.screen
-        , camera = camera computer
-        , backgroundColor = rgba 0 0 0 0
-        , sunlightAzimuth = getFloat "sunlight azimuth" computer
-        , sunlightElevation = getFloat "sunlight elevation" computer
-        }
-        [ drawPieces computer model
-        , drawBigCube computer
-        ]
+    fromUnstyled <|
+        SceneWebGL.sunny
+            { devicePixelRatio = computer.devicePixelRatio
+            , screen = computer.screen
+            , camera = camera computer
+            , backgroundColor = rgba 0 0 0 0
+            , sunlightAzimuth = getFloat "sunlight azimuth" computer
+            , sunlightElevation = getFloat "sunlight elevation" computer
+            }
+            [ drawPieces computer model
+            , drawBigCube computer
+            ]
 
 
 drawBigCube : Computer -> Shape

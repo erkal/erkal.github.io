@@ -1,8 +1,11 @@
 module JohnHarrisEightRollingCubes.Main exposing (main)
 
-import Color exposing (rgb255, rgba)
-import Html exposing (Html, br, div, p, text)
-import Html.Attributes exposing (class, style)
+import Css
+import Css.Global
+import Css.Transitions
+import DesignSystem.Color exposing (..)
+import Html.Styled exposing (Html, br, div, fromUnstyled, p, text)
+import Html.Styled.Attributes exposing (css)
 import JohnHarrisEightRollingCubes.Cube exposing (Axis(..), Cube(..), RedFaceDirection(..), RollDirection(..), Sign(..))
 import JohnHarrisEightRollingCubes.World as World exposing (RollResult(..), World)
 import Play exposing (..)
@@ -63,9 +66,9 @@ initialConfigurations =
         , floatConfig "duration of rolling animation" ( 0.1, 1 ) 0.25
         ]
     , configBlock "Colors and light"
-        [ colorConfig "color 1" (rgb255 244 88 67)
-        , colorConfig "color 2" (rgb255 47 41 43)
-        , colorConfig "board color" (rgb255 223 224 226)
+        [ colorConfig "color 1" red500
+        , colorConfig "color 2" gray900
+        , colorConfig "board color" gray300
         , floatConfig "sunlight azimuth" ( -pi, pi ) 2
         , floatConfig "sunlight elevation" ( -pi, 0 ) -2
         ]
@@ -169,17 +172,22 @@ startRollAnimation computer startPosition rollDirection newWorld model =
 
 view : Computer -> Model -> Html Never
 view computer model =
-    div [ style "width" "100%" ]
+    div [ css [ Css.width (Css.pct 100) ] ]
         [ header
         , viewShapes computer model
         ]
 
 
+header : Html msg
 header =
     div
-        [ class "absolute w-full text-center"
+        [ css
+            [ Css.position Css.absolute
+            , Css.width (Css.pct 100)
+            , Css.textAlign Css.center
+            ]
         ]
-        [ div [ class "font-bold pt-2 text-lg" ]
+        [ div [ css [ Css.fontWeight Css.bold, Css.paddingTop (Css.px 8), Css.fontSize (Css.px 18) ] ]
             [ text "Eight Rolling Cubes Puzzle"
             , br [] []
             , text "by John Harris"
@@ -201,17 +209,18 @@ camera computer =
 
 viewShapes : Computer -> Model -> Html Never
 viewShapes computer model =
-    SceneWebGL.sunny
-        { devicePixelRatio = computer.devicePixelRatio
-        , screen = computer.screen
-        , camera = camera computer
-        , backgroundColor = rgba 0 0 0 0
-        , sunlightAzimuth = getFloat "sunlight azimuth" computer
-        , sunlightElevation = getFloat "sunlight elevation" computer
-        }
-        [ board computer
-        , drawCubes computer model
-        ]
+    fromUnstyled <|
+        SceneWebGL.sunny
+            { devicePixelRatio = computer.devicePixelRatio
+            , screen = computer.screen
+            , camera = camera computer
+            , backgroundColor = purple100
+            , sunlightAzimuth = getFloat "sunlight azimuth" computer
+            , sunlightElevation = getFloat "sunlight elevation" computer
+            }
+            [ board computer
+            , drawCubes computer model
+            ]
 
 
 board : Computer -> Shape

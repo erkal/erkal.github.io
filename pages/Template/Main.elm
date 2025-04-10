@@ -2,7 +2,7 @@ module Template.Main exposing (main)
 
 import Animation exposing (..)
 import Color exposing (hsl, rgb255)
-import Html exposing (Html)
+import Html.Styled exposing (Html)
 import Play exposing (..)
 import Playground.Tape exposing (Message(..))
 import Scene3d.Material exposing (matte)
@@ -37,10 +37,17 @@ initialConfigurations =
         , floatConfig "camera elevation" ( -pi / 2, pi / 2 ) 0.5
         ]
     , configBlock "Color"
-        [ colorConfig "cube color" (hsl 0 0.36 0.5)
+        [ colorConfig "background color" (hsl 0.5 0.36 0.2)
+        , colorConfig "cube color" (hsl 0 0.36 0.5)
         ]
     , configBlock "Time"
         [ floatConfig "period" ( 0.1, 5 ) 0.7
+        ]
+    , configBlock "Other examples of input"
+        [ boolConfig "checkbox" True
+        , stringConfig "string input" "example input"
+        , intConfig "integer input" ( 1, 10 ) 5
+        , optionsConfig "options" ( [], "first option", [ "second option", "third option" ] )
         ]
     ]
 
@@ -75,18 +82,19 @@ camera computer =
 
 view : Computer -> Model -> Html Never
 view computer model =
-    SceneWebGL.sunny
-        { devicePixelRatio = computer.devicePixelRatio
-        , screen = computer.screen
-        , camera = camera computer
-        , backgroundColor = rgb255 26 46 46
-        , sunlightAzimuth = -(degrees 135)
-        , sunlightElevation = -(degrees 45)
-        }
-        [ wavingCube computer
-        , wavingCube computer |> moveX -2
-        , wavingCube computer |> moveX 2
-        ]
+    Html.Styled.fromUnstyled <|
+        SceneWebGL.sunny
+            { devicePixelRatio = computer.devicePixelRatio
+            , screen = computer.screen
+            , camera = camera computer
+            , backgroundColor = getColor "background color" computer
+            , sunlightAzimuth = -(degrees 135)
+            , sunlightElevation = -(degrees 45)
+            }
+            [ wavingCube computer
+            , wavingCube computer |> moveX -2
+            , wavingCube computer |> moveX 2
+            ]
 
 
 wavingCube : Computer -> Shape

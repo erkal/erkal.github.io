@@ -1,8 +1,12 @@
 module SensoTest.Main exposing (main)
 
-import Color exposing (blue, green, hsl, red, rgb255)
-import Html exposing (Html, div, text)
-import Html.Attributes exposing (class)
+import Color
+import Css
+import Css.Global
+import Css.Transitions
+import DesignSystem.Color exposing (..)
+import Html.Styled exposing (Html, div, fromUnstyled, text)
+import Html.Styled.Attributes exposing (css)
 import Play exposing (..)
 import Playground.Senso as Senso
 import Playground.Tape exposing (Message(..))
@@ -76,9 +80,9 @@ viewSensoAsText : Computer -> Html Never
 viewSensoAsText { senso } =
     let
         viewArea name { x, y, f } =
-            div [ class "bg-white/10 p-4" ]
+            div [ css [ Css.backgroundColor (setOpacity 0.1 white |> toCssColor), Css.padding (Css.px 16) ] ]
                 [ div [] [ text name ]
-                , div [ class "pl-4" ]
+                , div [ css [ Css.paddingLeft (Css.px 16) ] ]
                     [ div [] [ text <| "x: " ++ Round.floorCom 3 x ]
                     , div [] [ text <| "y: " ++ Round.floorCom 3 y ]
                     , div [] [ text <| "f: " ++ Round.floorCom 3 f ]
@@ -86,11 +90,18 @@ viewSensoAsText { senso } =
                 ]
     in
     div
-        [ class "absolute m-16 p-16 bg-white/10"
-        , class "flex flex-col gap-8"
+        [ css
+            [ Css.position Css.absolute
+            , Css.margin (Css.px 64)
+            , Css.padding (Css.px 64)
+            , Css.backgroundColor (setOpacity 0.1 white |> toCssColor)
+            , Css.displayFlex
+            , Css.flexDirection Css.column
+            , Css.property "gap" "32px"
+            ]
         ]
         [ div [] [ text "current:" ]
-        , div [ class "flex flex-row gap-8" ]
+        , div [ css [ Css.displayFlex, Css.flexDirection Css.row, Css.property "gap" "32px" ] ]
             [ viewArea "center:" senso.center
             , viewArea "right:" senso.right
             , viewArea "up:" senso.up
@@ -98,7 +109,7 @@ viewSensoAsText { senso } =
             , viewArea "down:" senso.down
             ]
         , div [] [ text "target:" ]
-        , div [ class "flex flex-row gap-8" ]
+        , div [ css [ Css.displayFlex, Css.flexDirection Css.row, Css.property "gap" "32px" ] ]
             [ viewArea "center:" senso.target.center
             , viewArea "right:" senso.target.right
             , viewArea "up:" senso.target.up
@@ -118,17 +129,18 @@ viewSensoAsText { senso } =
 
 viewSensoAsDrawing : Computer -> Model -> Html Never
 viewSensoAsDrawing computer model =
-    SceneWebGL.sunny
-        { devicePixelRatio = computer.devicePixelRatio
-        , screen = computer.screen
-        , camera = camera computer
-        , backgroundColor = Color.charcoal
-        , sunlightAzimuth = -(degrees 135)
-        , sunlightElevation = -(degrees 45)
-        }
-        [ viewSenso computer model
-        , axes
-        ]
+    fromUnstyled <|
+        SceneWebGL.sunny
+            { devicePixelRatio = computer.devicePixelRatio
+            , screen = computer.screen
+            , camera = camera computer
+            , backgroundColor = gray900
+            , sunlightAzimuth = -(degrees 135)
+            , sunlightElevation = -(degrees 45)
+            }
+            [ viewSenso computer model
+            , axes
+            ]
 
 
 axes : Shape

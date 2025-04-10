@@ -1,9 +1,13 @@
 module IsomorphismGame.Main exposing (main)
 
-import Color exposing (blue, green, lightBlue, red, rgb255, white, yellow)
-import Html exposing (Html, button, div, input, p, pre, span, text, textarea)
-import Html.Attributes exposing (checked, class, cols, for, id, name, rows, style, type_, value)
-import Html.Events exposing (onClick)
+import Css exposing (active, backgroundColor, border3, borderBottom, borderRadius, borderRight, borderTop, color, fixed, fontSize, height, hover, margin, marginLeft, marginTop, overflow, overflowY, padding, paddingBottom, paddingLeft, paddingRight, paddingTop, position, property, px, right, solid, top, width)
+import Css.Global
+import Css.Transitions
+import DesignSystem.Color exposing (..)
+import Html
+import Html.Styled exposing (Html, button, div, fromUnstyled, input, p, pre, span, text, textarea)
+import Html.Styled.Attributes exposing (checked, cols, css, for, id, name, rows, value)
+import Html.Styled.Events exposing (onClick)
 import Icons
 import Illuminance
 import IsomorphismGame.GeometryHelpers as GeometryHelpers exposing (Point, lerp)
@@ -84,8 +88,8 @@ initialConfigurations =
         , floatConfig "pointer reach" ( 0.5, 2 ) 1
         ]
     , configBlock "Base"
-        [ colorConfig "game background" (rgb255 44 100 200)
-        , colorConfig "base" (rgb255 176 69 76)
+        [ colorConfig "game background" blue
+        , colorConfig "base" red200
         , floatConfig "base height" ( 0.01, 5 ) 0.4
         , floatConfig "base vertex radius" ( 0.2, 2 ) 0.5
         , floatConfig "base edge width" ( 0.2, 1.5 ) 1
@@ -548,34 +552,42 @@ view computer model =
                 }
     in
     div []
-        [ div [ class "fixed text-white/50 ml-[320px] mt-8" ]
+        [ div
+            [ css
+                [ Css.position Css.fixed
+                , Css.color (Css.rgba 255 255 255 0.5)
+                , Css.marginLeft (Css.px 320)
+                , Css.marginTop (Css.px 32)
+                ]
+            ]
             [ div [] [ text "A game prototype for graph isomorphism problem" ]
             , div [] [ text "Drag vertices to match the edges" ]
             , div [] [ text "Create new levels using the level editor on the top-right" ]
             ]
-        , div [ style "touch-action" "none" ]
-            [ Html.map never <|
-                SceneWebGL.custom
-                    { devicePixelRatio = computer.devicePixelRatio
-                    , screen = computer.screen
-                    , camera = camera computer
-                    , lights = Scene3d.fourLights firstLight secondLight thirdLight fourthLight
-                    , clipDepth = 0.1
-                    , exposure = Scene3d.exposureValue 6
-                    , toneMapping = Scene3d.hableFilmicToneMapping -- See ExposureAndToneMapping.elm for details
-                    , whiteBalance = Scene3d.Light.fluorescent
-                    , antialiasing = Scene3d.multisampling
-                    , backgroundColor = lightBlue
-                    }
-                    [ drawBaseGraph computer model
-                    , drawPlayerGraph computer model
-                    , drawDraggedBaseEdge computer model
+        , div [ css [ Css.property "touch-action" "none" ] ]
+            [ fromUnstyled <|
+                Html.map never <|
+                    SceneWebGL.custom
+                        { devicePixelRatio = computer.devicePixelRatio
+                        , screen = computer.screen
+                        , camera = camera computer
+                        , lights = Scene3d.fourLights firstLight secondLight thirdLight fourthLight
+                        , clipDepth = 0.1
+                        , exposure = Scene3d.exposureValue 6
+                        , toneMapping = Scene3d.hableFilmicToneMapping -- See ExposureAndToneMapping.elm for details
+                        , whiteBalance = Scene3d.Light.fluorescent
+                        , antialiasing = Scene3d.multisampling
+                        , backgroundColor = blue200
+                        }
+                        [ drawBaseGraph computer model
+                        , drawPlayerGraph computer model
+                        , drawDraggedBaseEdge computer model
 
-                    --, axes
-                    --, sphere red 0.1
-                    , floor computer
-                    , drawPointerReach computer model
-                    ]
+                        --, axes
+                        --, sphere red 0.1
+                        , floor computer
+                        , drawPointerReach computer model
+                        ]
             ]
         , viewEditor computer model
         ]
@@ -851,10 +863,17 @@ viewEditor computer model =
 editorToggleButton : Model -> Html Msg
 editorToggleButton model =
     div
-        [ class "fixed top-0 right-0"
-        ]
+        [ css [ Css.position Css.fixed, Css.top (Css.px 0), Css.right (Css.px 0) ] ]
         [ button
-            [ class "w-10 p-2 text-white/20 hover:text-white active:text-white/60"
+            [ css
+                [ Css.width (Css.px 40)
+                , Css.padding (Css.px 8)
+                , Css.color (Css.rgba 255 255 255 0.2)
+                , Css.hover
+                    [ Css.color (Css.rgb 255 255 255) ]
+                , Css.active
+                    [ Css.color (Css.rgba 255 255 255 0.6) ]
+                ]
             , onClick PressedEditorOnOffButton
             ]
             [ if model.editorIsOn then
@@ -870,18 +889,24 @@ editorContent : Computer -> Model -> Html Msg
 editorContent computer model =
     if model.editorIsOn then
         div
-            [ class "fixed top-0 right-0 w-[300px]"
-            , style "height" <| String.fromFloat (computer.screen.height - 80) ++ "px"
-            , class "bg-black/20"
-            , class "border-[0.5px] border-white/20"
-            , class "overflow-y-scroll"
-            , class "text-xs text-white/60"
+            [ css
+                [ Css.position Css.fixed
+                , Css.top (Css.px 0)
+                , Css.right (Css.px 0)
+                , Css.width (Css.px 300)
+                , Css.height (Css.px (computer.screen.height - 80))
+                , Css.backgroundColor (Css.rgba 0 0 0 0.2)
+                , Css.border3 (Css.px 0.5) Css.solid (Css.rgba 255 255 255 0.2)
+                , Css.overflowY Css.scroll
+                , Css.fontSize (Css.px 12)
+                , Css.color (Css.rgba 255 255 255 0.6)
+                ]
             ]
-            [ div [ class "p-4" ]
+            [ div [ css [ Css.padding (Css.px 16) ] ]
                 [ explanationsForEditor computer model ]
-            , div [ class "p-4 border-[0.5px] border-white/20" ]
+            , div [ css [ Css.padding (Css.px 16), Css.border3 (Css.px 0.5) Css.solid (Css.rgba 255 255 255 0.2) ] ]
                 [ makeButton PressedResetPlayerGraphButton "Reset player graph" ]
-            , div [ class "p-4 border-[0.5px] border-white/20" ]
+            , div [ css [ Css.padding (Css.px 16), Css.border3 (Css.px 0.5) Css.solid (Css.rgba 255 255 255 0.2) ] ]
                 [ levelSelection model ]
             ]
 
@@ -892,25 +917,31 @@ editorContent computer model =
 levelSelection : Model -> Html Msg
 levelSelection model =
     div []
-        [ div [ class "text-lg" ] [ text "Levels" ]
-        , div [ class "p-4" ] [ Html.map FromLevelEditor (Levels.view model.levels) ]
+        [ div [ css [ Css.fontSize (Css.px 18) ] ] [ text "Levels" ]
+        , div [ css [ Css.padding (Css.px 16) ] ] [ Html.Styled.map FromLevelEditor (Levels.view model.levels) ]
         ]
 
 
 makeButton : msg -> String -> Html msg
 makeButton msg string =
-    Html.button
-        [ class "m-1 p-2 rounded bg-black/40 hover:bg-black/80"
-        , Html.Events.onClick msg
+    button
+        [ css
+            [ Css.margin (Css.px 4)
+            , Css.padding (Css.px 8)
+            , Css.borderRadius (Css.px 4)
+            , Css.backgroundColor (Css.rgba 0 0 0 0.4)
+            , Css.hover [ Css.backgroundColor (Css.rgba 0 0 0 0.8) ]
+            ]
+        , onClick msg
         ]
-        [ Html.text string ]
+        [ text string ]
 
 
 explanationsForEditor : Computer -> Model -> Html Msg
 explanationsForEditor computer model =
     div []
-        [ div [ class "py-4 text-lg" ] [ Html.text "Editing level" ]
-        , div [ class "text-xs" ] [ Html.text "- Hold shift + alt & Press mouse to add vertex" ]
-        , div [ class "text-xs" ] [ Html.text "- To move vertices drag them with mouse" ]
-        , div [ class "text-xs" ] [ Html.text "- Hold shift and drag with mouse to draw an edge" ]
+        [ div [ css [ Css.paddingTop (Css.px 16), Css.paddingBottom (Css.px 16), Css.fontSize (Css.px 18) ] ] [ text "Editing level" ]
+        , div [ css [ Css.fontSize (Css.px 12) ] ] [ text "- Hold shift + alt & Press mouse to add vertex" ]
+        , div [ css [ Css.fontSize (Css.px 12) ] ] [ text "- To move vertices drag them with mouse" ]
+        , div [ css [ Css.fontSize (Css.px 12) ] ] [ text "- Hold shift and drag with mouse to draw an edge" ]
         ]

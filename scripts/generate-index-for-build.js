@@ -19,8 +19,8 @@ try {
   let indexHtml = shell.cat("./build/index.html").toString();
 
   // Replace paths in indexHtml content
-  indexHtml = indexHtml.replace(/\.\.\/output\.css/g, "./output.css");
   indexHtml = indexHtml.replace(/\.\.\/input\.js/g, "./input.js");
+  indexHtml = indexHtml.replace(/\.\.\/eval-elm\.js/g, "./eval-elm.js");
   indexHtml = indexHtml.replace(/\.\.\/PlayEGI\.js/g, "./PlayEGI.js");
   indexHtml = indexHtml.replace(/\.\.\/elm-canvas\.js/g, "./elm-canvas.js");
 

@@ -3,7 +3,7 @@ module GrowingSquares.Main exposing (main)
 import Animation exposing (..)
 import Color exposing (Color, blue, gray, green, red, rgb255)
 import Geometry3d exposing (Point)
-import Html exposing (Html)
+import Html.Styled exposing (Html, fromUnstyled)
 import Play exposing (..)
 import Playground.Tape exposing (Message(..))
 import Scene3d.Material as Material exposing (matte)
@@ -114,20 +114,21 @@ addNew computer model =
 
 view : Computer -> Model -> Html Never
 view computer model =
-    SceneWebGL.sunny
-        { devicePixelRatio = computer.devicePixelRatio
-        , screen = computer.screen
-        , camera =
-            perspective
-                { focalPoint = { x = 0, y = 0, z = 0 }
-                , eyePoint = { x = sin computer.clock, y = -2, z = 4 }
-                , upDirection = { x = 0, y = 0, z = 1 }
-                }
-        , backgroundColor = rgb255 46 46 46
-        , sunlightAzimuth = -(degrees 20)
-        , sunlightElevation = -(degrees 45)
-        }
-        (shapes computer model)
+    fromUnstyled <|
+        SceneWebGL.sunny
+            { devicePixelRatio = computer.devicePixelRatio
+            , screen = computer.screen
+            , camera =
+                perspective
+                    { focalPoint = { x = 0, y = 0, z = 0 }
+                    , eyePoint = { x = sin computer.clock, y = -2, z = 4 }
+                    , upDirection = { x = 0, y = 0, z = 1 }
+                    }
+            , backgroundColor = rgb255 46 46 46
+            , sunlightAzimuth = -(degrees 20)
+            , sunlightElevation = -(degrees 45)
+            }
+            (shapes computer model)
 
 
 shapes : Computer -> Model -> List Shape

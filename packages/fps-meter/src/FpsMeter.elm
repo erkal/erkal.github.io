@@ -5,10 +5,12 @@ module FpsMeter exposing
     , view
     )
 
+import Css exposing (..)
 import Deque exposing (Deque)
+import DesignSystem.Color exposing (blackAlpha500, gray900, green, green300, red, toCssColor)
 import Float.Extra
-import Html exposing (Html, div, text)
-import Html.Attributes exposing (class, style)
+import Html.Styled exposing (Html, div, text)
+import Html.Styled.Attributes exposing (css)
 
 
 type FpsMeter
@@ -94,7 +96,7 @@ view fpsMeter =
 
         viewAsNumber : Html msg
         viewAsNumber =
-            div [ class "text-green-300" ]
+            div [ css [ color (toCssColor green300) ] ]
                 [ text "Frame Rate: "
                 , text (fps |> Maybe.map (Float.Extra.toFixedDecimalPlaces 0) |> Maybe.withDefault "-")
                 ]
@@ -106,39 +108,63 @@ view fpsMeter =
         viewBar : Float -> Html msg
         viewBar dt =
             div
-                [ class "flex-none bottom-0"
-                , class <|
-                    if dt < 1 / 60 + 0.0001 then
-                        "bg-green-500"
+                [ css
+                    [ flex none
+                    , width (px 4)
+                    , height (px (deltaTimeToPixels dt))
+                    , bottom zero
+                    , if dt < 1 / 60 + 0.0001 then
+                        backgroundColor (toCssColor green)
 
-                    else
-                        "bg-red-400"
-                , class "ring-[1px] ring-black"
-                , style "width" "4px"
-                , style "height" (String.fromFloat (deltaTimeToPixels dt) ++ "px")
+                      else
+                        backgroundColor (toCssColor red)
+                    ]
                 ]
                 []
 
         sixtyFpsLine : Html msg
         sixtyFpsLine =
             div
-                [ class "absolute w-full h-px -translate-y-1/2 bg-green-300"
-                , style "bottom" (String.fromFloat (deltaTimeToPixels (1 / 60)) ++ "px")
+                [ css
+                    [ position absolute
+                    , width (pct 100)
+                    , height (px 1)
+                    , transforms [ translateY (pct -50) ]
+                    , backgroundColor (toCssColor green300)
+                    , bottom (px (deltaTimeToPixels (1 / 60)))
+                    ]
                 ]
                 []
 
         viewAsBars : Html msg
         viewAsBars =
             div
-                [ class "relative h-[50px] bg-neutral-900"
+                [ css
+                    [ position relative
+                    , height (px 50)
+                    , backgroundColor (toCssColor gray900)
+                    ]
                 ]
                 [ sixtyFpsLine
-                , div [ class "h-full", class "flex flex-row items-end" ]
+                , div
+                    [ css
+                        [ height (pct 100)
+                        , displayFlex
+                        , flexDirection row
+                        , alignItems flexEnd
+                        ]
+                    ]
                     (fpsMeter |> getAll |> List.map viewBar)
                 ]
     in
     div
-        [ class "flex flex-col gap-2"
+        [ css
+            [ displayFlex
+            , flexDirection column
+            , property "gap" "8px"
+            , padding (px 8)
+            , backgroundColor (toCssColor blackAlpha500)
+            ]
         ]
         [ viewAsBars
         , viewAsNumber

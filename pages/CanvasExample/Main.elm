@@ -3,7 +3,7 @@ module CanvasExample.Main exposing (main)
 import Camera exposing (Camera)
 import Color exposing (black, blue, darkBlue, darkGreen, darkPurple, gray, green, lightBlue, lightGray, lightGreen, lightPurple, lightYellow, purple, red, rgb255, white)
 import Geometry2d exposing (..)
-import Html exposing (Html)
+import Html.Styled exposing (Html, fromUnstyled)
 import Play exposing (..)
 import Playground.Tape exposing (Message(..))
 import SceneCanvas2D exposing (..)
@@ -73,22 +73,23 @@ camera computer =
 
 view : Computer -> Model -> Html Never
 view computer model =
-    SceneCanvas2D.toHtml
-        { sceneWidthInPixels = round computer.screen.width
-        , camera = camera computer
-        }
-        [ rectangle 25 25 purple
-        , rectangle 4 4 lightBlue
-        , rectangle 2 2 lightGray
-            |> moveX 3
-            |> moveY 3
-        , group
-            [ circle 1.5 lightPurple
-            , circle 0.5 darkPurple
-                |> moveY (sin (3 * computer.clock))
+    fromUnstyled <|
+        SceneCanvas2D.toHtml
+            { sceneWidthInPixels = round computer.screen.width
+            , camera = camera computer
+            }
+            [ rectangle 25 25 purple
+            , rectangle 4 4 lightBlue
+            , rectangle 2 2 lightGray
+                |> moveX 3
+                |> moveY 3
+            , group
+                [ circle 1.5 lightPurple
+                , circle 0.5 darkPurple
+                    |> moveY (sin (3 * computer.clock))
+                ]
+                |> moveX (sin (3 * computer.clock))
+            , circle 0.2 white
+                |> moveX model.pointerInGameCoordinates.x
+                |> moveY model.pointerInGameCoordinates.y
             ]
-            |> moveX (sin (3 * computer.clock))
-        , circle 0.2 white
-            |> moveX model.pointerInGameCoordinates.x
-            |> moveY model.pointerInGameCoordinates.y
-        ]

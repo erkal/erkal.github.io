@@ -2,8 +2,9 @@ module Carousel.Main exposing (main)
 
 import Carousel.Carousel as Carousel exposing (Carousel)
 import Color exposing (Color, blue, charcoal, darkBlue, gray, green, lightBlue, lightBrown, orange, purple, red, rgb255)
-import Html exposing (Html, div, text)
-import Html.Attributes exposing (class, style)
+import Css
+import Html.Styled exposing (Html, div, fromUnstyled, text, toUnstyled)
+import Html.Styled.Attributes exposing (css)
 import Play exposing (..)
 import Playground.Tape exposing (Message(..))
 import Scene3d.Material exposing (matte)
@@ -100,12 +101,20 @@ camera =
 view : Computer -> Model -> Html Never
 view computer model =
     div
-        [ class "absolute"
-        , style "touch-action" "none"
+        [ css
+            [ Css.position Css.absolute
+            , Css.property "touch-action" "none"
+            ]
         ]
         [ div
-            [ class "absolute p-4 text-white/80"
-            , class "grid place-items-center w-full"
+            [ css
+                [ Css.position Css.absolute
+                , Css.padding (Css.rem 1)
+                , Css.color (Css.rgba 255 255 255 0.8)
+                , Css.property "display" "grid"
+                , Css.property "place-items" "center"
+                , Css.width (Css.pct 100)
+                ]
             ]
             [ div [] [ text "Swipe or press left/right arrow keys" ]
             ]
@@ -115,19 +124,19 @@ view computer model =
 
 viewScene : Computer -> Model -> Html Never
 viewScene computer model =
-    SceneWebGL.sunny
-        { devicePixelRatio = computer.devicePixelRatio
-        , screen = computer.screen
-        , camera =
-            camera
-        , backgroundColor = rgb255 46 46 46
-        , sunlightAzimuth = -(degrees 15)
-        , sunlightElevation = -(degrees 45)
-        }
-        [ drawCarousel computer model
+    fromUnstyled <|
+        SceneWebGL.sunny
+            { devicePixelRatio = computer.devicePixelRatio
+            , screen = computer.screen
+            , camera = camera
+            , backgroundColor = rgb255 46 46 46
+            , sunlightAzimuth = -(degrees 15)
+            , sunlightElevation = -(degrees 45)
+            }
+            [ drawCarousel computer model
 
-        --, axes
-        ]
+            -- , axes
+            ]
 
 
 axes : Shape

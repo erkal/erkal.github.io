@@ -2,8 +2,9 @@ module HappyBirthdayAndrey.Main exposing (main)
 
 import Animation exposing (wave)
 import Color exposing (Color, black, yellow)
-import Html exposing (Html, div, text)
-import Html.Attributes exposing (class)
+import Css exposing (color, fixed, marginLeft, marginTop, position, px, rgba)
+import Html.Styled exposing (Html, div, fromUnstyled, text)
+import Html.Styled.Attributes exposing (css)
 import Illuminance
 import LuminousFlux
 import Play exposing (..)
@@ -74,7 +75,7 @@ removeCube : Computer -> Model -> Model
 removeCube computer model =
     case Camera.mouseOverXY (camera computer) computer.screen computer.pointer of
         Just p ->
-            { model | cubes = Set.remove ( round p.x, round p.y ) model.cubes }
+            { model | cubes = Set.remove ( Basics.round p.x, Basics.round p.y ) model.cubes }
 
         Nothing ->
             model
@@ -84,7 +85,7 @@ insertCube : Computer -> Model -> Model
 insertCube computer model =
     case Camera.mouseOverXY (camera computer) computer.screen computer.pointer of
         Just p ->
-            { model | cubes = Set.insert ( round p.x, round p.y ) model.cubes }
+            { model | cubes = Set.insert ( Basics.round p.x, Basics.round p.y ) model.cubes }
 
         Nothing ->
             model
@@ -137,28 +138,36 @@ view computer model =
                 }
     in
     div []
-        [ div [ class "fixed text-white/50 ml-[320px] mt-8" ]
+        [ div
+            [ css
+                [ position fixed
+                , color (rgba 255 255 255 0.5)
+                , marginLeft (px 320)
+                , marginTop (px 32)
+                ]
+            ]
             [ div [] [ text "Press mouse to add new cube" ]
             , div [] [ text "Shift + Press to remove" ]
             ]
-        , SceneWebGL.custom
-            { devicePixelRatio = computer.devicePixelRatio
-            , screen = computer.screen
-            , camera = camera computer
-            , lights =
-                Scene3d.fourLights
-                    firstLight
-                    secondLight
-                    thirdLight
-                    fourthLight
-            , clipDepth = 0.1
-            , exposure = Scene3d.exposureValue 6
-            , toneMapping = Scene3d.hableFilmicToneMapping -- See ExposureAndToneMapping.elm for details
-            , whiteBalance = Scene3d.Light.fluorescent
-            , antialiasing = Scene3d.multisampling
-            , backgroundColor = black
-            }
-            [ cubes computer model ]
+        , fromUnstyled <|
+            SceneWebGL.custom
+                { devicePixelRatio = computer.devicePixelRatio
+                , screen = computer.screen
+                , camera = camera computer
+                , lights =
+                    Scene3d.fourLights
+                        firstLight
+                        secondLight
+                        thirdLight
+                        fourthLight
+                , clipDepth = 0.1
+                , exposure = Scene3d.exposureValue 6
+                , toneMapping = Scene3d.hableFilmicToneMapping -- See ExposureAndToneMapping.elm for details
+                , whiteBalance = Scene3d.Light.fluorescent
+                , antialiasing = Scene3d.multisampling
+                , backgroundColor = black
+                }
+                [ cubes computer model ]
         ]
 
 

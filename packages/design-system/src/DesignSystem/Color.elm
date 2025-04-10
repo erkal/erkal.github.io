@@ -1,5 +1,6 @@
 module DesignSystem.Color exposing
-    ( black, white
+    ( Color
+    , black, white, transparent
     , blue, blue100, blue200, blue300, blue400, blue500, blue600, blue700, blue800, blue900
     , green, green100, green200, green300, green400, green500, green600, green700, green800, green900
     , yellow, yellow100, yellow200, yellow300, yellow400, yellow500, yellow600, yellow700, yellow800, yellow900
@@ -18,9 +19,14 @@ module DesignSystem.Color exposing
 {-| A retro-futuristic color system with harmonized brightness levels.
 
 
+# Types
+
+@docs Color
+
+
 # Base Colors
 
-@docs black, white
+@docs black, white, transparent
 
 
 # Color Scales
@@ -81,6 +87,12 @@ import Color exposing (Color, rgba)
 import Css exposing (column, displayFlex, flexDirection, height, int, property, px)
 import Html.Styled exposing (Html, div, text)
 import Html.Styled.Attributes exposing (css)
+
+
+{-| So that the user oif this package doesn't need to import the `Color` package
+-}
+type alias Color =
+    Color.Color
 
 
 {-| Convert a Color to Css.Color while preserving its original alpha value.
@@ -275,6 +287,11 @@ white =
 black : Color
 black =
     rgba 0 0 0 1
+
+
+transparent : Color
+transparent =
+    rgba 0 0 0 0
 
 
 

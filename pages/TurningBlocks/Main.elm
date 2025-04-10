@@ -2,7 +2,7 @@ module TurningBlocks.Main exposing (main)
 
 import Animation exposing (wave)
 import Color exposing (gray, hsl, rgba)
-import Html exposing (Html)
+import Html.Styled exposing (Html, fromUnstyled)
 import Illuminance
 import LuminousFlux
 import Play exposing (..)
@@ -104,24 +104,25 @@ view computer model =
                 , intensityBelow = Illuminance.lux (getFloat "intensity below" computer)
                 }
     in
-    SceneWebGL.custom
-        { devicePixelRatio = computer.devicePixelRatio
-        , screen = computer.screen
-        , camera = camera computer
-        , lights =
-            Scene3d.fourLights
-                firstLight
-                secondLight
-                thirdLight
-                fourthLight
-        , clipDepth = 0.1
-        , exposure = Scene3d.exposureValue 6
-        , toneMapping = Scene3d.hableFilmicToneMapping -- See ExposureAndToneMapping.elm for details
-        , whiteBalance = Scene3d.Light.fluorescent
-        , antialiasing = Scene3d.multisampling
-        , backgroundColor = rgba 0 0 0 0.7
-        }
-        (shapes computer model)
+    fromUnstyled <|
+        SceneWebGL.custom
+            { devicePixelRatio = computer.devicePixelRatio
+            , screen = computer.screen
+            , camera = camera computer
+            , lights =
+                Scene3d.fourLights
+                    firstLight
+                    secondLight
+                    thirdLight
+                    fourthLight
+            , clipDepth = 0.1
+            , exposure = Scene3d.exposureValue 6
+            , toneMapping = Scene3d.hableFilmicToneMapping -- See ExposureAndToneMapping.elm for details
+            , whiteBalance = Scene3d.Light.fluorescent
+            , antialiasing = Scene3d.multisampling
+            , backgroundColor = rgba 0 0 0 0.7
+            }
+            (shapes computer model)
 
 
 camera : Computer -> Camera

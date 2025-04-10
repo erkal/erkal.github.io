@@ -1,11 +1,9 @@
 module Vortex.Main exposing (main)
 
-import Animation exposing (..)
 import Color exposing (blue, green, hsl, rgb255, white, yellow)
 import Color.Oklch exposing (oklch, toColor)
-import Html exposing (Html)
+import Html.Styled exposing (Html, fromUnstyled)
 import Play exposing (..)
-import Playground.Tape exposing (Message(..))
 import Scene3d.Material exposing (matte)
 import SceneWebGL exposing (..)
 import SceneWebGL.Camera as Camera exposing (Camera, perspectiveWithOrbit)
@@ -51,15 +49,17 @@ camera computer =
 
 
 scene : Computer -> List Shape -> Html Never
-scene computer =
-    SceneWebGL.sunny
-        { devicePixelRatio = computer.devicePixelRatio
-        , screen = computer.screen
-        , camera = camera computer
-        , backgroundColor = rgb255 38 35 54
-        , sunlightAzimuth = -(degrees 135)
-        , sunlightElevation = -(degrees 45)
-        }
+scene computer shapes =
+    fromUnstyled <|
+        SceneWebGL.sunny
+            { devicePixelRatio = computer.devicePixelRatio
+            , screen = computer.screen
+            , camera = camera computer
+            , backgroundColor = rgb255 38 35 54
+            , sunlightAzimuth = -(degrees 135)
+            , sunlightElevation = -(degrees 45)
+            }
+            shapes
 
 
 

@@ -6,11 +6,15 @@ import BallGame.World.Decode
 import BallGame.World.Encode
 import BallGame.World.Physics.Collision.Primitives.Geometry2d exposing (Point2d, Vector2d, distance, edgesOfPolygon, edgesOfPolyline)
 import BallGame.World.Physics.Tick
-import Color exposing (Color, black, blue, darkGreen, green, hsl, red, rgb255, white, yellow)
+import Color
+import Css
+import Css.Global
+import Css.Transitions
+import DesignSystem.Color exposing (..)
 import Geometry3d exposing (Point, Vector)
-import Html exposing (Html, button, div, p, text)
-import Html.Attributes exposing (class, style)
-import Html.Events exposing (onClick)
+import Html.Styled exposing (Html, button, div, fromUnstyled, p, text)
+import Html.Styled.Attributes exposing (class, css)
+import Html.Styled.Events exposing (onClick)
 import Icons
 import Illuminance
 import Levels exposing (Levels)
@@ -207,12 +211,19 @@ tickWorld computer model =
 view : Computer -> Model -> Html Msg
 view computer model =
     div []
-        [ div [ class "fixed text-white/50 ml-[320px] mt-8" ]
+        [ div
+            [ css
+                [ Css.position Css.fixed
+                , Css.color (setOpacity 0.5 white |> toCssColor)
+                , Css.marginLeft (Css.px 320)
+                , Css.marginTop (Css.px 32)
+                ]
+            ]
             [ div [] [ text "Roll the ball with arrow keys" ]
             , div [] [ text "Draw polygons with polygon editor on right bar" ]
             , div [] [ text "Play with `friction` and `gas force` on the left bar" ]
             ]
-        , Html.map never (viewGame computer model)
+        , Html.Styled.map never (viewGame computer model)
         , viewEditor computer model
         ]
 
@@ -258,7 +269,7 @@ viewGame computer model =
                     , screen = computer.screen
                     , camera = model.camera
                     , clipDepth = 0.1
-                    , background = rgb255 46 46 46
+                    , background = gray700
                     }
 
             else
@@ -272,19 +283,20 @@ viewGame computer model =
                     , toneMapping = Scene3d.hableFilmicToneMapping -- See ExposureAndToneMapping.elm for details
                     , whiteBalance = Scene3d.Light.fluorescent
                     , antialiasing = Scene3d.multisampling
-                    , backgroundColor = hsl 0.5 0.3 0.3
+                    , backgroundColor = cyan900
                     }
     in
-    viewScene
-        [ drawAxes computer
+    fromUnstyled <|
+        viewScene
+            [ drawAxes computer
 
-        --, drawFloor computer
-        , drawBall computer model
-        , drawBallTrail computer model
-        , drawPolygons computer model
-        , drawMouseOverXY computer model
-        , drawPolygonBeingEdited computer model
-        ]
+            --, drawFloor computer
+            , drawBall computer model
+            , drawBallTrail computer model
+            , drawPolygons computer model
+            , drawMouseOverXY computer model
+            , drawPolygonBeingEdited computer model
+            ]
 
 
 drawAxes : Computer -> Shape
@@ -365,7 +377,7 @@ drawPolygons : Computer -> Model -> Shape
 drawPolygons computer model =
     let
         material_ =
-            material computer (hsl 0.6 0.5 0.5)
+            material computer (Color.hsl 0.6 0.5 0.5)
 
         height =
             2
@@ -434,7 +446,7 @@ drawBall computer model =
         speedVector =
             if getBool "draw speed vector" computer then
                 thickLine2d computer
-                    darkGreen
+                    green800
                     0.2
                     ( Point2d 0 0
                     , Point2d (0.3 * vx) (0.3 * vy)
@@ -522,10 +534,20 @@ viewEditor computer model =
 editorToggleButton : Model -> Html Msg
 editorToggleButton model =
     div
-        [ class "fixed top-0 right-0"
+        [ css
+            [ Css.position Css.fixed
+            , Css.top Css.zero
+            , Css.right Css.zero
+            ]
         ]
         [ button
-            [ class "w-10 p-2 text-white/20 hover:text-white active:text-white/60"
+            [ css
+                [ Css.width (Css.px 40)
+                , Css.padding (Css.px 8)
+                , Css.color (setOpacity 0.2 white |> toCssColor)
+                , Css.hover [ Css.color (toCssColor white) ]
+                , Css.active [ Css.color (setOpacity 0.6 white |> toCssColor) ]
+                ]
             , onClick PressedEditorOnOffButton
             ]
             [ if model.editorIsOn then
@@ -541,16 +563,32 @@ editorContent : Computer -> Model -> Html Msg
 editorContent computer model =
     if model.editorIsOn then
         div
-            [ class "fixed top-0 right-0 w-[300px]"
-            , style "height" <| String.fromFloat (computer.screen.height - 80) ++ "px"
-            , class "bg-black/20"
-            , class "border-[0.5px] border-white/20"
-            , class "overflow-y-scroll"
-            , class "text-xs text-white/60"
+            [ css
+                [ Css.position Css.fixed
+                , Css.top Css.zero
+                , Css.right Css.zero
+                , Css.width (Css.px 300)
+                , Css.height (Css.px (computer.screen.height - 80))
+                , Css.backgroundColor (setOpacity 0.2 black |> toCssColor)
+                , Css.border3 (Css.px 0.5) Css.solid (setOpacity 0.2 white |> toCssColor)
+                , Css.overflowY Css.scroll
+                , Css.fontSize (Css.px 12)
+                , Css.color (setOpacity 0.6 white |> toCssColor)
+                ]
             ]
-            [ div [ class "p-4 border-[0.5px] border-white/20" ]
+            [ div
+                [ css
+                    [ Css.padding (Css.px 16)
+                    , Css.border3 (Css.px 0.5) Css.solid (setOpacity 0.2 white |> toCssColor)
+                    ]
+                ]
                 [ viewPolygonEditor computer model ]
-            , div [ class "p-4 border-[0.5px] border-white/20" ]
+            , div
+                [ css
+                    [ Css.padding (Css.px 16)
+                    , Css.border3 (Css.px 0.5) Css.solid (setOpacity 0.2 white |> toCssColor)
+                    ]
+                ]
                 [ pageSelection model ]
             ]
 
@@ -561,13 +599,14 @@ editorContent computer model =
 viewPolygonEditor : Computer -> Model -> Html Msg
 viewPolygonEditor computer model =
     div []
-        [ div [ class "h-40" ]
-            [ div [ class "text-lg" ] [ Html.text "Polygon editor" ]
+        [ div
+            [ css [ Css.height (Css.px 160) ] ]
+            [ div [ css [ Css.fontSize (Css.px 18) ] ] [ text "Polygon editor" ]
             , case model.state of
                 DrawingPolygon points ->
-                    div [ class "p-2" ]
-                        [ div [] [ Html.text "Now, draw your polygon in the counter-clockwise direction by holding the shift key pressed. " ]
-                        , div [] [ Html.text "After you are finished drawing, click the button below." ]
+                    div [ css [ Css.padding (Css.px 8) ] ]
+                        [ div [] [ text "Now, draw your polygon in the counter-clockwise direction by holding the shift key pressed. " ]
+                        , div [] [ text "After you are finished drawing, click the button below." ]
                         , makeButton (ClickedButtonFinishDrawingPolygon points) "Finish drawing polygon"
                         ]
 
@@ -579,16 +618,22 @@ viewPolygonEditor computer model =
 
 makeButton : msg -> String -> Html msg
 makeButton msg string =
-    Html.button
-        [ class "m-1 p-2 rounded bg-black/40 hover:bg-black/80"
-        , Html.Events.onClick msg
+    button
+        [ css
+            [ Css.margin (Css.px 4)
+            , Css.padding (Css.px 8)
+            , Css.borderRadius (Css.px 4)
+            , Css.backgroundColor (setOpacity 0.4 black |> toCssColor)
+            , Css.hover [ Css.backgroundColor (setOpacity 0.8 black |> toCssColor) ]
+            ]
+        , onClick msg
         ]
-        [ Html.text string ]
+        [ text string ]
 
 
 pageSelection : Model -> Html Msg
 pageSelection model =
     div []
-        [ div [ class "text-lg" ] [ text "Levels" ]
-        , div [ class "p-4" ] [ Html.map FromLevelEditor (Levels.view model.levels) ]
+        [ div [ css [ Css.fontSize (Css.px 18) ] ] [ text "Levels" ]
+        , div [ css [ Css.padding (Css.px 16) ] ] [ Html.Styled.map FromLevelEditor (Levels.view model.levels) ]
         ]

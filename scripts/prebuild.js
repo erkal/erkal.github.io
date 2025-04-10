@@ -16,6 +16,9 @@ shell.mkdir("-p", buildDir);
 // Copy input.js file to the build directory
 shell.cp("packages/playground/src/input.js", buildDir);
 
+// Copy eval-elm.js file to the build directory
+shell.cp("packages/playground/src/eval-elm.js", buildDir);
+
 // Copy PlayEGI.js file to the build directory
 shell.cp("packages/playground/src/PlayEGI.js", buildDir);
 

@@ -9,9 +9,11 @@ module Levels exposing
     , view
     )
 
-import Html exposing (Html, button, div, input, pre, text, textarea)
-import Html.Attributes exposing (autocomplete, class, cols, placeholder, rows, style, title, value)
-import Html.Events exposing (onClick, onInput, onMouseDown)
+import Css
+import DesignSystem.Color exposing (..)
+import Html.Styled exposing (Html, button, div, input, pre, text, textarea, toUnstyled)
+import Html.Styled.Attributes exposing (autocomplete, cols, css, placeholder, rows, title, value)
+import Html.Styled.Events exposing (onClick, onInput, onMouseDown)
 import Icons
 import Json.Decode as JD exposing (Decoder)
 import Json.Encode as JE exposing (Value)
@@ -23,7 +25,7 @@ type Levels level
         { selectList : SelectList (Item level)
 
         --
-        , encodeLevel : level -> Value
+        , encodeLevel : level -> JE.Value
         , levelDecoder : Decoder level
         , textAreaContentForExportingJson : String
         , textAreaContentForImportingJson : String
@@ -36,7 +38,7 @@ type alias Item level =
     }
 
 
-init : (level -> Value) -> Decoder level -> Item level -> List (Item level) -> Levels level
+init : (level -> JE.Value) -> Decoder level -> Item level -> List (Item level) -> Levels level
 init encodeLevel levelDecoder first rest =
     Levels
         { selectList = SelectList.init ( first, rest )
@@ -235,7 +237,13 @@ view (Levels p) =
     let
         addNewLevelButton =
             button
-                [ class "inline-block ml-1 w-4 text-white/40 hover:text-white/80"
+                [ css
+                    [ Css.display Css.inlineBlock
+                    , Css.marginLeft (Css.px 4)
+                    , Css.width (Css.px 16)
+                    , Css.color (toCssColor whiteAlpha400)
+                    , Css.hover [ Css.color (toCssColor whiteAlpha800) ]
+                    ]
                 , onClick PressedAddLevelButton
                 , title "Duplicate Level"
                 ]
@@ -243,7 +251,13 @@ view (Levels p) =
 
         deleteCurrentLevelButton =
             div
-                [ class "inline-block ml-1 w-4 text-white/40 hover:text-red-400"
+                [ css
+                    [ Css.display Css.inlineBlock
+                    , Css.marginLeft (Css.px 4)
+                    , Css.width (Css.px 16)
+                    , Css.color (toCssColor whiteAlpha400)
+                    , Css.hover [ Css.color (toCssColor red) ]
+                    ]
                 , onClick PressedRemoveLevelButton
                 , title "Delete Level"
                 ]
@@ -251,7 +265,13 @@ view (Levels p) =
 
         moveLevelDownButton =
             div
-                [ class "inline-block ml-1 w-4 text-white/40 hover:text-white/80"
+                [ css
+                    [ Css.display Css.inlineBlock
+                    , Css.marginLeft (Css.px 4)
+                    , Css.width (Css.px 16)
+                    , Css.color (toCssColor whiteAlpha400)
+                    , Css.hover [ Css.color (toCssColor whiteAlpha800) ]
+                    ]
                 , onClick PressedMoveLevelDownButton
                 , title "Move Level Down"
                 ]
@@ -259,7 +279,13 @@ view (Levels p) =
 
         moveLevelUpButton =
             div
-                [ class "inline-block ml-1 w-4 text-white/40 hover:text-white/80"
+                [ css
+                    [ Css.display Css.inlineBlock
+                    , Css.marginLeft (Css.px 4)
+                    , Css.width (Css.px 16)
+                    , Css.color (toCssColor whiteAlpha400)
+                    , Css.hover [ Css.color (toCssColor whiteAlpha800) ]
+                    ]
                 , onClick PressedMoveLevelUpButton
                 , title "Move Level Up"
                 ]
@@ -267,28 +293,40 @@ view (Levels p) =
 
         levelItem index levelName =
             button
-                [ class "w-full h-8 p-2 text-left text-white/80 border-b border-white/20"
-                , class
-                    (if index == SelectList.getCurrentIndex p.selectList then
-                        "bg-black/40 hover:bg-black/60 active:bg-black/80"
+                [ css
+                    [ Css.width (Css.pct 100)
+                    , Css.height (Css.px 32)
+                    , Css.padding (Css.px 8)
+                    , Css.textAlign Css.left
+                    , Css.color (setOpacity 0.8 white |> toCssColor)
+                    , Css.borderBottom3 (Css.px 1) Css.solid (setOpacity 0.2 white |> toCssColor)
+                    , Css.property "transition" "background-color 0.3s ease"
+                    , if index == SelectList.getCurrentIndex p.selectList then
+                        Css.batch
+                            [ Css.backgroundColor (setOpacity 0.4 black |> toCssColor)
+                            , Css.hover [ Css.backgroundColor (setOpacity 0.6 black |> toCssColor) ]
+                            , Css.active [ Css.backgroundColor (setOpacity 0.8 black |> toCssColor) ]
+                            ]
 
-                     else
-                        "hover:bg-black/20"
-                    )
-                , style "transition" "background-color 0.3s ease"
+                      else
+                        Css.hover [ Css.backgroundColor (setOpacity 0.2 black |> toCssColor) ]
+                    ]
                 , onMouseDown (MouseDownOnLevelItem index)
                 ]
                 [ if index == SelectList.getCurrentIndex p.selectList then
                     div []
                         [ input
-                            [ class "w-[100px] bg-transparent"
+                            [ css
+                                [ Css.width (Css.px 100)
+                                , Css.backgroundColor Css.transparent
+                                ]
                             , placeholder "Enter Level Name"
                             , value (p.selectList |> SelectList.getCurrent |> .name)
                             , onInput ChangedCurrentLevelsNameTo
                             , autocomplete False
                             ]
                             []
-                        , div [ class "float-right" ]
+                        , div [ css [ Css.float Css.right ] ]
                             [ addNewLevelButton
                             , moveLevelUpButton
                             , moveLevelDownButton
@@ -297,29 +335,56 @@ view (Levels p) =
                         ]
 
                   else
-                    div [ class "whitespace-nowrap" ] [ text levelName ]
+                    div [ css [ Css.whiteSpace Css.noWrap ] ] [ text levelName ]
                 ]
     in
     div
-        [ class "w-60 text-xs"
+        [ css
+            [ Css.width (Css.px 240)
+            , Css.fontSize (Css.px 12)
+            ]
         ]
-        [ div [ class "w-full h-[200px] overflow-hidden overflow-y-scroll" ]
+        [ div
+            [ css
+                [ Css.width (Css.pct 100)
+                , Css.height (Css.px 200)
+                , Css.overflow Css.hidden
+                , Css.overflowY Css.scroll
+                ]
+            ]
             (p.selectList |> SelectList.toList |> List.indexedMap (\index { name } -> levelItem index name))
-        , div [ class "p-4 border-[0.5px] border-white/20" ]
+        , div
+            [ css
+                [ Css.padding (Css.px 16)
+                , Css.border3 (Css.px 0.5) Css.solid (setOpacity 0.2 white |> toCssColor)
+                ]
+            ]
             [ exportingLevels (Levels p) ]
-        , div [ class "p-4 border-[0.5px] border-white/20" ]
+        , div
+            [ css
+                [ Css.padding (Css.px 16)
+                , Css.border3 (Css.px 0.5) Css.solid (setOpacity 0.2 white |> toCssColor)
+                ]
+            ]
             [ importingLevels (Levels p) ]
         ]
 
 
 makeButton : msg -> String -> Html msg
 makeButton msg string =
-    Html.button
-        [ class "m-1 p-2 rounded text-white/60 bg-black/40 hover:bg-black/80"
-        , style "transition" "background-color 0.3s ease"
-        , Html.Events.onClick msg
+    button
+        [ css
+            [ Css.margin (Css.px 4)
+            , Css.padding (Css.px 8)
+            , Css.borderRadius (Css.px 4)
+            , Css.color (setOpacity 0.6 white |> toCssColor)
+            , Css.backgroundColor (setOpacity 0.4 black |> toCssColor)
+            , Css.hover [ Css.backgroundColor (setOpacity 0.8 black |> toCssColor) ]
+            , Css.property "transition" "background-color 0.3s ease"
+            ]
+        , onClick msg
         ]
-        [ Html.text string ]
+        [ text string ]
 
 
 exportingLevels : Levels level -> Html Msg
@@ -327,8 +392,19 @@ exportingLevels (Levels p) =
     div []
         [ makeButton ClickedExportLevelsButton "Export"
         , pre
-            [ class "w-full p-2 h-28 overflow-y-scroll text-white/60 text-[8px] leading-[9px] bg-black/40 select-text" ]
-            [ Html.text p.textAreaContentForExportingJson ]
+            [ css
+                [ Css.width (Css.pct 100)
+                , Css.padding (Css.px 8)
+                , Css.height (Css.px 112)
+                , Css.overflowY Css.scroll
+                , Css.color (setOpacity 0.6 white |> toCssColor)
+                , Css.fontSize (Css.px 8)
+                , Css.lineHeight (Css.px 9)
+                , Css.backgroundColor (setOpacity 0.4 black |> toCssColor)
+                , Css.property "user-select" "text"
+                ]
+            ]
+            [ text p.textAreaContentForExportingJson ]
         ]
 
 
@@ -337,11 +413,21 @@ importingLevels (Levels p) =
     div []
         [ makeButton ClickedImportLevelsButton "Import"
         , textarea
-            [ class "w-full p-2 h-28 overflow-y-scroll text-white/60 text-[8px] leading-[9px] bg-black/40 select-text"
+            [ css
+                [ Css.width (Css.pct 100)
+                , Css.padding (Css.px 8)
+                , Css.height (Css.px 112)
+                , Css.overflowY Css.scroll
+                , Css.color (setOpacity 0.6 white |> toCssColor)
+                , Css.fontSize (Css.px 8)
+                , Css.lineHeight (Css.px 9)
+                , Css.backgroundColor (setOpacity 0.4 black |> toCssColor)
+                , Css.property "user-select" "text"
+                ]
             , rows 150
             , cols 10
-            , Html.Events.onInput EditedTextAreaForImportingLevels
+            , onInput EditedTextAreaForImportingLevels
             , value p.textAreaContentForImportingJson
             ]
-            [ Html.text "todo" ]
+            [ text "todo" ]
         ]

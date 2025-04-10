@@ -1,12 +1,16 @@
 module RedFacedCube.Main exposing (main)
 
 import Animation exposing (wave)
-import Color exposing (darkRed, hsl, lightRed, rgb255, white)
+import Color
+import Css
+import Css.Global
+import Css.Transitions
+import DesignSystem.Color exposing (..)
 import Ease
 import Geometry3d exposing (Point, Vector)
-import Html exposing (Attribute, Html, br, button, div, p, pre, span, text, textarea)
-import Html.Attributes exposing (checked, class, cols, for, id, name, rows, style, type_, value)
-import Html.Events exposing (onClick)
+import Html.Styled exposing (Attribute, Html, br, button, div, fromUnstyled, input, label, p, pre, span, text, textarea)
+import Html.Styled.Attributes exposing (checked, cols, css, for, id, name, placeholder, rows, type_, value)
+import Html.Styled.Events exposing (onCheck, onClick, onMouseEnter, onMouseLeave)
 import Icons
 import Illuminance
 import Levels exposing (Levels)
@@ -97,13 +101,13 @@ initialConfigurations =
         ]
     , configBlock "Colors and light"
         [ floatConfig "lumens of following lights" ( 40000, 120000 ) 100000
-        , colorConfig "background color" (rgb255 150 150 150)
-        , colorConfig "color 1" (rgb255 244 88 67)
-        , colorConfig "color 2" (rgb255 255 200 40)
-        , colorConfig "path color" (rgb255 244 88 67)
-        , colorConfig "board color" (rgb255 200 170 170)
-        , colorConfig "finish mark color" (rgb255 150 215 106)
-        , colorConfig "wall color" (rgb255 38 48 64)
+        , colorConfig "background color" gray300
+        , colorConfig "color 1" red500
+        , colorConfig "color 2" yellow400
+        , colorConfig "path color" red500
+        , colorConfig "board color" (Color.hsl 0 0.2 0.75)
+        , colorConfig "finish mark color" green400
+        , colorConfig "wall color" blue900
         ]
     ]
 
@@ -348,10 +352,14 @@ startRollAnimation computer startPosition rollDirection willBeSolved newWorld mo
 view : Computer -> Model -> Html Msg
 view computer model =
     div
-        [ class "fixed w-full h-full"
-        , style "touch-action" "none"
+        [ css
+            [ Css.position Css.fixed
+            , Css.width (Css.pct 100)
+            , Css.height (Css.pct 100)
+            , Css.property "touch-action" "none"
+            ]
         ]
-        [ div [ class "absolute" ] [ Html.map never <| viewShapes computer model ]
+        [ div [ css [ Css.position Css.absolute ] ] [ Html.Styled.map never <| viewShapes computer model ]
         , headerText computer model
         , explanationText computer model
         , viewEditor computer model
@@ -377,37 +385,75 @@ explanationText computer model =
                 _ ->
                     False
     in
-    div [ class "absolute w-full bottom-0 p-8" ]
-        [ div [ class "mx-auto w-full md:w-1/2 mt-4" ]
-            [ span [ classIf animatingMistakeForMustVisitEachCellBeforeReachingFinishCell "bg-red-300" ]
+    div
+        [ css
+            [ Css.position Css.absolute
+            , Css.width (Css.pct 100)
+            , Css.bottom Css.zero
+            , Css.padding (Css.px 32)
+            ]
+        ]
+        [ div
+            [ css
+                [ Css.margin2 Css.zero Css.auto
+                , Css.width (Css.pct 100)
+                , Css.marginTop (Css.px 16)
+                ]
+            ]
+            [ span
+                [ css
+                    (if animatingMistakeForMustVisitEachCellBeforeReachingFinishCell then
+                        [ Css.backgroundColor (setOpacity 0.5 red |> toCssColor) ]
+
+                     else
+                        []
+                    )
+                ]
                 [ text "Visit each cell exactly once. " ]
             , span [] [ text "End with the cube red side up on the (marked) finish cell. " ]
-            , span [ classIf animatingMistakeForTopFaceCannotBeRed "bg-red-300" ]
+            , span
+                [ css
+                    (if animatingMistakeForTopFaceCannotBeRed then
+                        [ Css.backgroundColor (setOpacity 0.5 red |> toCssColor) ]
+
+                     else
+                        []
+                    )
+                ]
                 [ text "At no time during the tour, however, is the cube allowed to rest with the red side up."
                 ]
             ]
         ]
 
 
-classIf : Bool -> String -> Attribute msg
-classIf condition className =
-    if condition then
-        class className
-
-    else
-        class ""
-
-
 headerText : Computer -> Model -> Html Msg
 headerText computer model =
-    div [ class "absolute w-full" ]
-        [ div [ class "mx-auto w-full md:w-1/2 mt-4" ]
-            [ div
-                [ class "px-8"
-                , class "flex flex-col items-center gap-4"
+    div [ css [ Css.position Css.absolute, Css.width (Css.pct 100) ] ]
+        [ div
+            [ css
+                [ Css.margin2 Css.zero Css.auto
+                , Css.width (Css.pct 100)
+                , Css.marginTop (Css.px 16)
                 ]
-                [ div [ class "text-2xl font-bold" ] [ text "The Red-Faced Cube" ]
-                , div [ class "font-bold italic" ] [ text "A puzzle from the book Mathematical Carnival (1975, Martin Gardner)" ]
+            ]
+            [ div
+                [ css
+                    [ Css.padding2 Css.zero (Css.px 32)
+                    , Css.displayFlex
+                    , Css.flexDirection Css.column
+                    , Css.alignItems Css.center
+                    , Css.property "gap" "16px"
+                    ]
+                ]
+                [ div
+                    [ css
+                        [ Css.fontSize (Css.px 24)
+                        , Css.fontWeight Css.bold
+                        ]
+                    ]
+                    [ text "The Red-Faced Cube" ]
+                , div [ css [ Css.fontWeight Css.bold, Css.fontStyle Css.italic ] ]
+                    [ text "A puzzle from the book Mathematical Carnival (1975, Martin Gardner)" ]
                 , div [] [ text "Roll the cube via swiping or pressing arrow keys." ]
                 ]
             ]
@@ -500,35 +546,36 @@ viewShapes computer model =
                 , intensityBelow = Illuminance.lux 40
                 }
     in
-    SceneWebGL.custom
-        { devicePixelRatio = computer.devicePixelRatio
-        , screen = computer.screen
-        , camera = camera computer model
-        , lights =
-            --Scene3d.fourLights firstLight secondLight thirdLight fourthLight
-            Scene3d.twoLights firstLight secondLight
-        , clipDepth = 0.1
-        , exposure = Scene3d.exposureValue 6
-        , toneMapping = Scene3d.hableFilmicToneMapping -- See ExposureAndToneMapping.elm for details
-        , whiteBalance = Scene3d.Light.fluorescent
-        , antialiasing = Scene3d.multisampling
-        , backgroundColor = getColor "background color" computer
-        }
-        (if model.editor.isOn then
-            [ drawBoard computer model
-            , drawLevelEditingCube computer model
-            , drawWallsForLevelEditingPath computer model
-            , drawPointer computer model
-            ]
+    fromUnstyled <|
+        SceneWebGL.custom
+            { devicePixelRatio = computer.devicePixelRatio
+            , screen = computer.screen
+            , camera = camera computer model
+            , lights =
+                --Scene3d.fourLights firstLight secondLight thirdLight fourthLight
+                Scene3d.twoLights firstLight secondLight
+            , clipDepth = 0.1
+            , exposure = Scene3d.exposureValue 6
+            , toneMapping = Scene3d.hableFilmicToneMapping -- See ExposureAndToneMapping.elm for details
+            , whiteBalance = Scene3d.Light.fluorescent
+            , antialiasing = Scene3d.multisampling
+            , backgroundColor = getColor "background color" computer
+            }
+            (if model.editor.isOn then
+                [ drawBoard computer model
+                , drawLevelEditingCube computer model
+                , drawWallsForLevelEditingPath computer model
+                , drawPointer computer model
+                ]
 
-         else
-            [ drawBoard computer model
-            , drawPlayerCube computer model
-            , drawMarkForFinishCell computer model
-            , drawWallsForPlayerPath computer model
-            , drawPlayerPath computer model
-            ]
-        )
+             else
+                [ drawBoard computer model
+                , drawPlayerCube computer model
+                , drawMarkForFinishCell computer model
+                , drawWallsForPlayerPath computer model
+                , drawPlayerPath computer model
+                ]
+            )
 
 
 drawMarkForFinishCell : Computer -> Model -> Shape
@@ -568,10 +615,10 @@ drawPointer computer model =
 
         color =
             if computer.pointer.isDown then
-                lightRed
+                red300
 
             else
-                darkRed
+                red700
     in
     sphere (matte color) 0.2
         |> moveX (toFloat x)
@@ -643,7 +690,7 @@ drawPlayerPath computer model =
         color i =
             case model.state of
                 CongratulationsAnimation ->
-                    hsl (wave 0 1 6 (computer.clock + 0.03 * toFloat i)) 1 0.8
+                    Color.hsl (wave 0 1 6 (computer.clock + 0.03 * toFloat i)) 1 0.8
 
                 _ ->
                     white
@@ -924,10 +971,20 @@ viewEditor computer model =
 editorToggleButton : Model -> Html Msg
 editorToggleButton model =
     div
-        [ class "fixed top-0 right-0"
+        [ css
+            [ Css.position Css.fixed
+            , Css.top Css.zero
+            , Css.right Css.zero
+            ]
         ]
         [ button
-            [ class "w-10 p-2 text-white/20 hover:text-white active:text-white/60"
+            [ css
+                [ Css.width (Css.px 40)
+                , Css.padding (Css.px 8)
+                , Css.color (setOpacity 0.2 white |> toCssColor)
+                , Css.hover [ Css.color (toCssColor white) ]
+                , Css.active [ Css.color (setOpacity 0.6 white |> toCssColor) ]
+                ]
             , onClick PressedEditorOnOffButton
             ]
             [ if model.editor.isOn then
@@ -943,16 +1000,27 @@ editorContent : Computer -> Model -> Html Msg
 editorContent computer model =
     if model.editor.isOn then
         div
-            [ class "fixed top-0 right-0 w-[300px]"
-            , style "height" <| String.fromFloat (computer.screen.height - 80) ++ "px"
-            , class "bg-black/20"
-            , class "border-[0.5px] border-white/20"
-            , class "overflow-y-scroll"
-            , class "text-xs text-white/60"
+            [ css
+                [ Css.position Css.fixed
+                , Css.top Css.zero
+                , Css.right Css.zero
+                , Css.width (Css.px 300)
+                , Css.height (Css.px (computer.screen.height - 80))
+                , Css.backgroundColor (setOpacity 0.2 black |> toCssColor)
+                , Css.border3 (Css.px 0.5) Css.solid (setOpacity 0.2 white |> toCssColor)
+                , Css.overflowY Css.scroll
+                , Css.fontSize (Css.px 12)
+                , Css.color (setOpacity 0.6 white |> toCssColor)
+                ]
             ]
-            [ div [ class "p-4" ]
+            [ div [ css [ Css.padding (Css.px 16) ] ]
                 [ viewSolutions computer model ]
-            , div [ class "p-4 border-[0.5px] border-white/20" ]
+            , div
+                [ css
+                    [ Css.padding (Css.px 16)
+                    , Css.border3 (Css.px 0.5) Css.solid (setOpacity 0.2 white |> toCssColor)
+                    ]
+                ]
                 [ levelSelection model ]
             ]
 
@@ -963,8 +1031,8 @@ editorContent computer model =
 viewSolutions : Computer -> Model -> Html Msg
 viewSolutions computer model =
     div []
-        [ div [ class "h-40" ]
-            [ div [ class "text-lg" ] [ Html.text "Solution Calculator" ]
+        [ div [ css [ Css.height (Css.px 160) ] ]
+            [ div [ css [ Css.fontSize (Css.px 18) ] ] [ text "Solution Calculator" ]
             , makeButton PressedCalculateSolutionsButton "Calculate all solutions"
             , div []
                 (Levels.current model.levels
@@ -972,11 +1040,18 @@ viewSolutions computer model =
                     |> List.indexedMap
                         (\i p ->
                             div
-                                [ class "m-2 p-2 w-24 bg-black/60 hover:bg-black cursor-crosshair"
-                                , Html.Events.onMouseEnter (MouseEnterSolution p)
-                                , Html.Events.onMouseLeave MouseLeftSolution
+                                [ css
+                                    [ Css.margin (Css.px 8)
+                                    , Css.padding (Css.px 8)
+                                    , Css.width (Css.px 96)
+                                    , Css.backgroundColor (setOpacity 0.6 black |> toCssColor)
+                                    , Css.hover [ Css.backgroundColor (toCssColor black) ]
+                                    , Css.cursor Css.crosshair
+                                    ]
+                                , onMouseEnter (MouseEnterSolution p)
+                                , onMouseLeave MouseLeftSolution
                                 ]
-                                [ Html.text ("Solution " ++ String.fromInt i) ]
+                                [ text ("Solution " ++ String.fromInt i) ]
                         )
                 )
             ]
@@ -986,31 +1061,41 @@ viewSolutions computer model =
 makeCheckBox : (Bool -> msg) -> Bool -> String -> Html msg
 makeCheckBox msg isChecked string_ =
     div []
-        [ Html.input
-            [ class "align-bottom"
+        [ input
+            [ css [ Css.verticalAlign Css.bottom ]
             , type_ "checkbox"
             , id string_
             , name string_
-            , Html.Events.onCheck msg
+            , onCheck msg
             , checked isChecked
             ]
             []
-        , Html.label [ class "pl-2 font-bold", for string_ ] [ Html.text string_ ]
+        , label
+            [ css [ Css.paddingLeft (Css.px 8), Css.fontWeight Css.bold ]
+            , for string_
+            ]
+            [ text string_ ]
         ]
 
 
 makeButton : msg -> String -> Html msg
 makeButton msg string =
-    Html.button
-        [ class "m-1 p-2 rounded bg-black/40 hover:bg-black/80"
-        , Html.Events.onClick msg
+    button
+        [ css
+            [ Css.margin (Css.px 4)
+            , Css.padding (Css.px 8)
+            , Css.borderRadius (Css.px 4)
+            , Css.backgroundColor (setOpacity 0.4 black |> toCssColor)
+            , Css.hover [ Css.backgroundColor (setOpacity 0.8 black |> toCssColor) ]
+            ]
+        , onClick msg
         ]
-        [ Html.text string ]
+        [ text string ]
 
 
 levelSelection : Model -> Html Msg
 levelSelection model =
     div []
-        [ div [ class "text-lg" ] [ text "Levels" ]
-        , div [ class "p-4" ] [ Html.map FromLevelEditor (Levels.view model.levels) ]
+        [ div [ css [ Css.fontSize (Css.px 18) ] ] [ text "Levels" ]
+        , div [ css [ Css.padding (Css.px 16) ] ] [ Html.Styled.map FromLevelEditor (Levels.view model.levels) ]
         ]

@@ -2,7 +2,7 @@ module PlanetarySystem.Main exposing (main)
 
 import Animation exposing (..)
 import Color exposing (..)
-import Html exposing (Html)
+import Html.Styled exposing (Html, fromUnstyled)
 import Play exposing (..)
 import Playground.Tape exposing (Message(..))
 import Scene3d.Material exposing (matte)
@@ -72,20 +72,21 @@ camera computer =
 
 view : Computer -> Model -> Html Never
 view computer model =
-    SceneWebGL.sunny
-        { devicePixelRatio = computer.devicePixelRatio
-        , screen = computer.screen
-        , camera = camera computer
-        , backgroundColor = rgb255 46 46 46
-        , sunlightAzimuth = -(degrees 135)
-        , sunlightElevation = -(degrees 45)
-        }
-        [ sun computer
-        , earthAndMoon computer
-        , axes
+    fromUnstyled <|
+        SceneWebGL.sunny
+            { devicePixelRatio = computer.devicePixelRatio
+            , screen = computer.screen
+            , camera = camera computer
+            , backgroundColor = rgb255 46 46 46
+            , sunlightAzimuth = -(degrees 135)
+            , sunlightElevation = -(degrees 45)
+            }
+            [ sun computer
+            , earthAndMoon computer
+            , axes
 
-        --, block gray ( 10, 0.01, 10 )
-        ]
+            --, block gray ( 10, 0.01, 10 )
+            ]
 
 
 axes : Shape

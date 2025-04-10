@@ -89,6 +89,7 @@ type alias Wheel =
     , deltaY : Float
     , pinchDeltaForChrome : Float
     , pinchScaleForSafari : Maybe Float
+    , elementIdsForLastWheel : List String
     }
 
 

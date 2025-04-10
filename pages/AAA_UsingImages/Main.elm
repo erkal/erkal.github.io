@@ -1,7 +1,8 @@
 module AAA_UsingImages.Main exposing (main)
 
-import Html exposing (Html, div)
-import Html.Attributes exposing (class, style)
+import Css exposing (..)
+import Html.Styled exposing (Html, div)
+import Html.Styled.Attributes exposing (class, css, style)
 import Play exposing (..)
 import Playground.Tape exposing (Message(..))
 
@@ -51,13 +52,13 @@ update computer message model =
 view : Computer -> Model -> Html Never
 view computer model =
     div
-        [ style "position" "fixed"
-        , style "width" "100%"
-        , style "height" "100%"
-        , style "background-image" "url('./assets/canvas-background.jpg')"
-
-        -- repeat the background image:
-        , style "background-size" "320px 200px"
-        , style "background-repeat" "repeat"
+        [ css
+            [ position fixed
+            , width (pct 100)
+            , height (pct 100)
+            , backgroundImage (url "./assets/canvas-background.jpg")
+            , backgroundSize2 (px 320) (px 200)
+            , backgroundRepeat repeat
+            ]
         ]
         []

@@ -1,9 +1,13 @@
 module UndoRedo.Main exposing (main)
 
+import Color exposing (black, blue)
+import Css exposing (..)
+import Css.Media as Media exposing (only, screen, withMedia)
 import DesignSystem exposing (buttonWithIcon, markdownBlock, textInput, withHomePageHeader)
-import Html exposing (Attribute, Html, a, div, input, label, text, textarea)
-import Html.Attributes as HA exposing (class, href, target, value)
-import Html.Events exposing (onClick, onMouseDown, preventDefaultOn)
+import DesignSystem.Color exposing (blackAlpha700, cyan300, cyan700, gray800, gray900, toCssColor, white, whiteAlpha600, whiteAlpha800, whiteAlpha900)
+import Html.Styled exposing (Attribute, Html, a, div, input, label, text, textarea)
+import Html.Styled.Attributes as HA exposing (class, css, href, target, value)
+import Html.Styled.Events exposing (onClick, onInput, onMouseDown, preventDefaultOn)
 import Icons
 import Json.Decode as Decode
 import Play exposing (..)
@@ -176,7 +180,7 @@ pressedKeyboardShortcutForRedo computer =
 -- VIEW
 
 
-preventBrowsersDefaultUndoRedoKeyboardShortcuts : Html.Attribute Msg
+preventBrowsersDefaultUndoRedoKeyboardShortcuts : Attribute Msg
 preventBrowsersDefaultUndoRedoKeyboardShortcuts =
     preventDefaultOn "keydown"
         (Decode.map3
@@ -184,18 +188,17 @@ preventBrowsersDefaultUndoRedoKeyboardShortcuts =
             (Decode.field "ctrlKey" Decode.bool)
             (Decode.field "metaKey" Decode.bool)
             (Decode.field "code" Decode.string)
-            |> Decode.map (\{ ctrl, meta, key } -> ( NoOp, (ctrl || meta) && (key == "KeyZ") ))
+            |> Decode.map
+                (\{ ctrl, meta, key } ->
+                    -- Only prevent default when it's an undo/redo keyboard shortcut
+                    ( NoOp, (ctrl || meta) && (key == "KeyZ") )
+                )
         )
 
 
-view : Computer -> Model -> Html Msg
-view computer model =
-    withHomePageHeader <|
-        div
-            [ class "px-4 sm:px-16 mb-32"
-            , preventBrowsersDefaultUndoRedoKeyboardShortcuts
-            ]
-            [ markdownBlock """
+txt1 : Html msg
+txt1 =
+    markdownBlock """
 # Resolving the "Great Undo-Redo Quandary" in Elm
 
 [Source code of this page](https://github.com/erkal/erkal.github.io/tree/main/pages/UndoRedo)
@@ -228,8 +231,10 @@ Note that the list for the `past` is reversed for efficiency purposes. This repr
 
 As you click the undo and redo buttons below and edit text in the input area, you will notice that the `UndoList` data structure is rendered as rows; starting with past states, followed by the present state (highlighted by a thick border), and ending with future states.
 """
-            , viewUndoListInteractive computer model UndoRedoUsual
-            , markdownBlock """
+
+
+txt2 =
+    markdownBlock """
 Editing within the input area creates a new undo item via the following function:
 
 ```elm
@@ -261,8 +266,10 @@ This ensures that **no action is ever truly lost**; everything becomes part of a
 
 Below is an interactive demonstration showing how it works.
 """
-            , viewUndoListInteractive computer model UndoRedoSafe
-            , markdownBlock """
+
+
+txt3 =
+    markdownBlock """
 Remarkably, this method is quite simple to implement in Elm. It only requires a minor adjustment to the standard undo/redo implementation. The sole modification we made was **substituting the `new` function with the following `newSafe` function**.
 
 ```elm
@@ -288,8 +295,10 @@ Note that each time we edit following an 'undo' action, the `UndoList` expands b
 
 To prevent this from happening, you can **collapse consecutive undos** into a single step:
 """
-            , viewUndoListInteractive computer model UndoRedoSafeConcise
-            , markdownBlock """
+
+
+txt4 =
+    markdownBlock """
 Here is the function that accomplishes this:
 ```elm
 newSafeConcise : state -> UndoList state -> UndoList state
@@ -310,6 +319,30 @@ newSafeConcise state { past, present, future } =
 
 In conclusion, integrating undo/redo functionality into your Elm applications is surprisingly simple. But that's not all - if you already have undo/redo implemented, enhancing it to be safe is as straightforward as adding a few lines of code.
 """
+
+
+view : Computer -> Model -> Html Msg
+view computer model =
+    withHomePageHeader <|
+        div
+            [ css
+                [ paddingLeft (px 16)
+                , paddingRight (px 16)
+                , marginBottom (px 128)
+                , withMedia [ only screen [ Media.minWidth (px 640) ] ]
+                    [ paddingLeft (px 64)
+                    , paddingRight (px 64)
+                    ]
+                ]
+            , preventBrowsersDefaultUndoRedoKeyboardShortcuts
+            ]
+            [ txt1
+            , viewUndoListInteractive model UndoRedoUsual
+            , txt2
+            , viewUndoListInteractive model UndoRedoSafe
+            , txt3
+            , viewUndoListInteractive model UndoRedoSafeConcise
+            , txt4
             ]
 
 
@@ -326,36 +359,65 @@ header interactiveID =
             "### The **concise** safe undo/redo"
 
 
-bgColorForInteractive : InteractiveID -> String
+bgColorForInteractive : InteractiveID -> List Style
 bgColorForInteractive interactiveID =
     case interactiveID of
         UndoRedoUsual ->
-            "bg-pink-400/40"
+            [ backgroundColor (rgba 236 72 153 0.2) ]
 
+        -- Darker pink
         UndoRedoSafe ->
-            "bg-green-400/40"
+            [ backgroundColor (rgba 74 222 128 0.2) ]
 
+        -- Darker green
         UndoRedoSafeConcise ->
-            "bg-blue-400/40"
+            [ backgroundColor (rgba 96 165 250 0.2) ]
 
 
-viewUndoListInteractive : Computer -> Model -> InteractiveID -> Html Msg
-viewUndoListInteractive computer model interactiveID =
+
+-- Darker blue
+
+
+viewUndoListInteractive : Model -> InteractiveID -> Html Msg
+viewUndoListInteractive model interactiveID =
     div
-        [ class "relative mx-auto w-full max-w-[640px] my-8 rounded-lg"
-        , class "p-4 sm:p-8"
-        , class "flex flex-col gap-8"
-        , class (bgColorForInteractive interactiveID)
-        , class "shadow-2xl"
+        [ css
+            ([ position relative
+             , margin4 (px 32) auto (px 32) auto
+             , width (pct 100)
+             , maxWidth (px 640)
+             , borderRadius (px 8)
+             , padding (px 16)
+             , displayFlex
+             , flexDirection column
+             , property "gap" "2rem"
+             , boxShadow5 zero (px 25) (px 50) (px -12) (rgba 0 0 0 0.25)
+             , withMedia [ only screen [ Media.minWidth (px 640) ] ]
+                [ padding (px 32) ]
+             , property "user-select" "none"
+             ]
+                ++ bgColorForInteractive interactiveID
+                ++ (if model.lastSelectedInteractive == interactiveID then
+                        [ property "outline" "2px solid rgba(255, 255, 255, 0.6)"
+                        , property "outline-offset" "2px"
+                        ]
+
+                    else
+                        []
+                   )
+            )
         , onMouseDown (SelectedInteractive interactiveID)
-        , classIf (model.lastSelectedInteractive == interactiveID) "ring-2 ring-black/60"
         ]
         [ div
-            [ class "w-full"
-            , class "flex flex-row items-center"
+            [ css
+                [ width (pct 100)
+                , displayFlex
+                , flexDirection row
+                , alignItems center
+                ]
             ]
-            [ div [ class "grow" ] [ markdownBlock (header interactiveID) ]
-            , div [ class "flex-none" ]
+            [ div [ css [ flexGrow (num 1) ] ] [ markdownBlock (header interactiveID) ]
+            , div [ css [ flexShrink (num 0) ] ]
                 [ buttonWithIcon
                     { name = "Reset"
                     , icon = Icons.icons.reset
@@ -363,31 +425,52 @@ viewUndoListInteractive computer model interactiveID =
                     }
                 ]
             ]
-        , div [ class "flex flex-col gap-4 sm:flex-row sm:gap-16" ]
-            [ div [ class "flex flex-col gap-4" ]
-                [ viewButtons computer model interactiveID
-                , markdownBlock "And edit your `state`:"
-                , viewInputArea computer model interactiveID
+        , div
+            [ css
+                [ displayFlex
+                , flexDirection column
+                , property "gap" "1rem"
+                , withMedia [ only screen [ Media.minWidth (px 640) ] ]
+                    [ flexDirection row
+                    , property "gap" "4rem"
+                    ]
                 ]
-            , viewUndoList computer model interactiveID
+            ]
+            [ div
+                [ css
+                    [ displayFlex
+                    , flexDirection column
+                    , property "gap" "1rem"
+                    ]
+                ]
+                [ viewButtons model interactiveID
+                , markdownBlock "And edit your `state`:"
+                , viewInputArea model interactiveID
+                ]
+            , viewUndoList model interactiveID
             ]
         ]
 
 
-classIf : Bool -> String -> Attribute msg
-classIf condition className =
-    if condition then
-        class className
-
-    else
-        class ""
-
-
-viewButtons : Computer -> Model -> InteractiveID -> Html Msg
-viewButtons computer model interactiveID =
-    div [ class "flex flex-col gap-2" ]
+viewButtons : Model -> InteractiveID -> Html Msg
+viewButtons model interactiveID =
+    div
+        [ css
+            [ displayFlex
+            , flexDirection column
+            , property "gap" "0.5rem"
+            ]
+        ]
         [ markdownBlock "Press the undo/redo buttons:"
-        , div [ class "p-2 flex-none flex flex-row gap-2" ]
+        , div
+            [ css
+                [ padding (px 8)
+                , flexShrink (num 0)
+                , displayFlex
+                , flexDirection row
+                , property "gap" "0.5rem"
+                ]
+            ]
             [ buttonWithIcon
                 { name = "Undo"
                 , icon = Icons.icons.undo
@@ -402,8 +485,8 @@ viewButtons computer model interactiveID =
         ]
 
 
-viewInputArea : Computer -> Model -> InteractiveID -> Html Msg
-viewInputArea computer model interactiveID =
+viewInputArea : Model -> InteractiveID -> Html Msg
+viewInputArea model interactiveID =
     textInput
         { name = ""
         , onChange = EditedTextArea interactiveID
@@ -420,8 +503,8 @@ viewInputArea computer model interactiveID =
         }
 
 
-viewUndoList : Computer -> Model -> InteractiveID -> Html Msg
-viewUndoList computer model interactiveID =
+viewUndoList : Model -> InteractiveID -> Html Msg
+viewUndoList model interactiveID =
     let
         undoList =
             case interactiveID of
@@ -434,19 +517,43 @@ viewUndoList computer model interactiveID =
                 UndoRedoSafeConcise ->
                     model.undoListSafeConcise
     in
-    div [ class "flex-1 flex flex-col" ]
-        [ div [ class "mb-2" ] [ markdownBlock "Current `undoList`:" ]
-        , div [ class "flex flex-col" ] (undoList.past |> List.reverse |> List.map viewUndoItem)
-        , div [ class "flex flex-col ring-8 ring-black z-10" ] [ undoList.present |> viewUndoItem ]
-        , div [ class "flex flex-col" ] (undoList.future |> List.map viewUndoItem)
+    div
+        [ css
+            [ flex (num 1)
+            , displayFlex
+            , flexDirection column
+            ]
+        ]
+        [ div [ css [ marginBottom (px 8) ] ] [ markdownBlock "Current `undoList`:" ]
+        , div [ css [ displayFlex, flexDirection column ] ]
+            (undoList.past |> List.reverse |> List.map viewUndoItem)
+        , div
+            [ css
+                [ displayFlex
+                , flexDirection column
+                , zIndex (int 10)
+                , outline3 (px 8) solid (toCssColor cyan700)
+                ]
+            ]
+            [ undoList.present |> viewUndoItem ]
+        , div [ css [ displayFlex, flexDirection column ] ]
+            (undoList.future |> List.map viewUndoItem)
         ]
 
 
 viewUndoItem : String -> Html Msg
 viewUndoItem str =
     div
-        [ class "h-8 px-2 py-1 my-px"
-        , class "text-gray-900 bg-white/60 whitespace-pre"
-        , class "font-mono font-bold"
+        [ css
+            [ height (px 32)
+            , padding2 (px 4) (px 8)
+            , margin2 (px 2) zero
+            , fontSize (px 16)
+            , backgroundColor (toCssColor blackAlpha700)
+            , color (toCssColor whiteAlpha900)
+            , whiteSpace pre
+            , fontFamily monospace
+            , fontWeight bold
+            ]
         ]
         [ text str ]

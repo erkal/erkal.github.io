@@ -2,11 +2,16 @@ module DesignSystem exposing (..)
 
 import Color exposing (Color)
 import Color.Convert
-import Html exposing (Html, a, div, input, label, text)
-import Html.Attributes as HA exposing (checked, class, for, href, id, style, target, type_, value)
-import Html.Events as HE
-import Html.Events.Extra
+import Css exposing (..)
+import Css.Global exposing (descendants, typeSelector)
+import Css.Media
+import DesignSystem.Color exposing (..)
+import Html.Attributes exposing (style)
+import Html.Styled exposing (Html, a, div, fromUnstyled, input, label, text, toUnstyled)
+import Html.Styled.Attributes as HA exposing (checked, css, for, href, id, target, type_, value)
+import Html.Styled.Events as HE exposing (onCheck, onClick, onInput)
 import Icons
+import Json.Decode as Decode
 import Markdown
 import SelectList exposing (SelectList)
 
@@ -14,39 +19,70 @@ import SelectList exposing (SelectList)
 withHomePageHeader : Html msg -> Html msg
 withHomePageHeader content =
     div
-        [ class "absolute w-full h-full z-10"
-        , class "bg-[#303030]"
-        , class "overflow-y-auto"
+        [ css
+            [ position absolute
+            , zIndex (int 1)
+            , width (pct 100)
+            , height (pct 100)
+            , backgroundColor (toCssColor gray900)
+            , overflow auto
+            , property "user-select" "text"
+            ]
         ]
         [ div
-            [ class "mx-auto container max-w-5xl px-4 sm:px-12"
-            , class "flex flex-col gap-0"
+            [ css
+                [ margin2 zero auto
+                , maxWidth (px 860)
+                , padding4 zero (px 16) zero (px 16)
+                , displayFlex
+                , flexDirection column
+                ]
             ]
             [ div
-                [ class "w-full sm:mt-4 sm:mb-24 mt-0 mb-12"
-                , class "flex justify-end items-center"
-                , class "border-b border-gray-200 border-opacity-50"
+                [ css
+                    [ width (pct 100)
+                    , margin4 zero zero (px 48) zero
+                    , displayFlex
+                    , justifyContent flexEnd
+                    , alignItems center
+                    , borderBottom3 (px 1) solid (toCssColor whiteAlpha400)
+                    ]
                 ]
                 [ a
-                    [ class "p-4 w-20 h-20"
-                    , class "text-white/40 hover:text-white/80"
+                    [ css
+                        [ padding (px 16)
+                        , width (px 80)
+                        , height (px 80)
+                        , color (toCssColor whiteAlpha600)
+                        , hover [ color (toCssColor whiteAlpha900) ]
+                        ]
                     , href "../index.html"
                     , HA.title "Home"
                     ]
                     [ Icons.icons.home ]
                 , a
-                    [ class "p-4 w-20 h-20"
-                    , class "text-white/40 hover:text-white/80"
+                    [ css
+                        [ padding (px 16)
+                        , width (px 80)
+                        , height (px 80)
+                        , color (toCssColor whiteAlpha600)
+                        , hover [ color (toCssColor whiteAlpha900) ]
+                        ]
                     , href "https://twitter.com/AzizErkalSelman"
-                    , target "_blank"
+                    , HA.target "_blank"
                     , HA.title "Twitter"
                     ]
                     [ Icons.icons.twitter ]
                 , a
-                    [ class "p-4 w-20 h-20"
-                    , class "text-white/40 hover:text-white/80"
+                    [ css
+                        [ padding (px 16)
+                        , width (px 80)
+                        , height (px 80)
+                        , color (toCssColor whiteAlpha600)
+                        , hover [ color (toCssColor whiteAlpha900) ]
+                        ]
                     , href "https://github.com/erkal"
-                    , target "_blank"
+                    , HA.target "_blank"
                     , HA.title "GitHub"
                     ]
                     [ Icons.icons.githubCat ]
@@ -57,33 +93,206 @@ withHomePageHeader content =
 
 
 markdownBlock : String -> Html msg
-markdownBlock =
-    Markdown.toHtmlWith
-        { githubFlavored = Just { tables = True, breaks = True }
-        , defaultHighlighting = Nothing
-        , sanitize = True
-        , smartypants = True
-        }
-        [ class "prose prose-gruvbox lg:prose-xl max-w-none"
-        , class "select-text"
+markdownBlock content =
+    div
+        [ css
+            [ -- Base typography styles
+              color (toCssColor whiteAlpha800)
+            , fontSize (px 16)
+            , lineHeight (num 1.75)
+            , maxWidth none
+
+            -- Headers
+            , descendants
+                [ typeSelector "h1"
+                    [ fontSize (px 36)
+                    , fontWeight bold
+                    , marginTop (px 24)
+                    , marginBottom (px 16)
+                    , color (toCssColor whiteAlpha900)
+                    ]
+                , typeSelector "h2"
+                    [ fontSize (px 30)
+                    , fontWeight bold
+                    , marginTop (px 24)
+                    , marginBottom (px 16)
+                    , color (toCssColor whiteAlpha900)
+                    ]
+                , typeSelector "h3"
+                    [ fontSize (px 24)
+                    , fontWeight bold
+                    , marginTop (px 24)
+                    , marginBottom (px 16)
+                    , color (toCssColor whiteAlpha900)
+                    ]
+                , typeSelector "h4"
+                    [ fontSize (px 20)
+                    , fontWeight bold
+                    , marginTop (px 24)
+                    , marginBottom (px 16)
+                    , color (toCssColor whiteAlpha900)
+                    ]
+
+                -- Paragraphs
+                , typeSelector "p"
+                    [ marginTop (px 16)
+                    , marginBottom (px 16)
+                    ]
+
+                -- Lists
+                , typeSelector "ul"
+                    [ listStyleType disc
+                    , paddingLeft (px 24)
+                    , marginTop (px 16)
+                    , marginBottom (px 16)
+                    ]
+                , typeSelector "ol"
+                    [ listStyleType decimal
+                    , paddingLeft (px 24)
+                    , marginTop (px 16)
+                    , marginBottom (px 16)
+                    ]
+                , typeSelector "li"
+                    [ marginTop (px 4)
+                    , marginBottom (px 4)
+                    ]
+
+                -- Blockquotes
+                , typeSelector "blockquote"
+                    [ borderLeft3 (px 4) solid (toCssColor cyan700)
+                    , paddingLeft (px 16)
+                    , fontStyle italic
+                    , color (toCssColor whiteAlpha700)
+                    ]
+
+                -- Code blocks
+                , typeSelector "pre"
+                    [ backgroundColor (toCssColor gray800)
+                    , overflow auto
+                    , padding (px 16)
+                    , borderRadius (px 4)
+                    , marginTop (px 16)
+                    , marginBottom (px 16)
+                    ]
+                , typeSelector "code"
+                    [ fontFamilies [ "monospace" ]
+                    , fontSize (px 16)
+                    , backgroundColor (toCssColor gray800)
+                    , borderRadius (px 4)
+                    ]
+
+                -- Tables
+                , typeSelector "table"
+                    [ width (pct 100)
+                    , borderCollapse collapse
+                    , marginTop (px 16)
+                    , marginBottom (px 16)
+                    ]
+                , typeSelector "th"
+                    [ textAlign left
+                    , padding (px 8)
+                    , borderBottom3 (px 2) solid (toCssColor cyan700)
+                    , fontWeight bold
+                    ]
+                , typeSelector "td"
+                    [ textAlign left
+                    , padding (px 8)
+                    , borderBottom3 (px 1) solid (toCssColor whiteAlpha300)
+                    ]
+
+                -- Links
+                , typeSelector "a"
+                    [ color (toCssColor cyan300)
+                    , textDecoration underline
+                    , fontWeight bold
+                    , hover [ color (toCssColor cyan100) ]
+                    ]
+
+                -- Images
+                , typeSelector "img"
+                    [ maxWidth (pct 100)
+                    , height auto
+                    , marginTop (px 16)
+                    , marginBottom (px 16)
+                    ]
+
+                -- Horizontal rules
+                , typeSelector "hr"
+                    [ borderTop3 (px 1) solid (toCssColor whiteAlpha400)
+                    , marginTop (px 24)
+                    , marginBottom (px 24)
+                    ]
+                ]
+
+            -- Responsive styles for larger screens (equivalent to lg:prose-xl)
+            , Css.Media.withMedia [ Css.Media.only Css.Media.screen [ Css.Media.minWidth (px 1024) ] ]
+                [ fontSize (px 20)
+                , lineHeight (num 1.8)
+                , descendants
+                    [ typeSelector "h1"
+                        [ fontSize (px 48)
+                        , marginTop (px 32)
+                        , marginBottom (px 24)
+                        ]
+                    , typeSelector "h2"
+                        [ fontSize (px 36)
+                        , marginTop (px 32)
+                        , marginBottom (px 24)
+                        ]
+                    , typeSelector "h3"
+                        [ fontSize (px 30)
+                        , marginTop (px 32)
+                        , marginBottom (px 24)
+                        ]
+                    , typeSelector "h4"
+                        [ fontSize (px 24)
+                        , marginTop (px 32)
+                        , marginBottom (px 24)
+                        ]
+                    , typeSelector "p"
+                        [ marginTop (px 24)
+                        , marginBottom (px 24)
+                        ]
+                    ]
+                ]
+            ]
+        ]
+        [ fromUnstyled <|
+            Markdown.toHtmlWith
+                { githubFlavored = Just { tables = True, breaks = True }
+                , defaultHighlighting = Nothing
+                , sanitize = True
+                , smartypants = True
+                }
+                [-- style "pointer-events" "auto"
+                 --, style "user-select" "text"
+                ]
+                content
         ]
 
 
-buttonWithIcon :
-    { name : String
-    , icon : Html msg
-    , onClick : msg
-    }
-    -> Html msg
+buttonWithIcon : { name : String, icon : Html msg, onClick : msg } -> Html msg
 buttonWithIcon { onClick, name, icon } =
     div
         [ HA.title name
-        , class "w-12 h-12 p-2"
-        , class "rounded-full shadow-lg"
-        , class "cursor-pointer"
-        , class "bg-white/60 text-black"
-        , class "hover:bg-black/60 hover:text-white active:bg-black active:text-white/60"
-        , class "transition-all"
+        , css
+            [ width (px 48)
+            , height (px 48)
+            , padding (px 8)
+            , borderRadius (pct 100)
+            , boxShadow5 zero (px 2) (px 4) zero (rgba 0 0 0 0.3)
+            , cursor pointer
+            , backgroundColor (toCssColor blackAlpha700)
+            , color (toCssColor whiteAlpha800)
+            , hover
+                [ backgroundColor (toCssColor cyan800)
+                , color (toCssColor white)
+                ]
+            , active
+                [ backgroundColor (toCssColor cyan600)
+                , color (toCssColor white)
+                ]
+            ]
         , HE.onClick onClick
         ]
         [ icon ]
@@ -96,25 +305,34 @@ textInput :
     }
     -> Html msg
 textInput { name, value, onChange } =
-    div [ class "flex flex-col gap-2" ]
+    div [ css [ displayFlex, flexDirection column, property "gap" "8px" ] ]
         [ label [ for name ]
             [ inputLabel name ]
         , div []
             [ input
-                [ class "p-2 w-full text-gray-900 bg-white/60 font-mono font-bold"
-                , class "focus:outline-none focus:ring focus:ring-2 focus:ring-black"
-                , HE.onInput onChange
+                [ css
+                    [ padding (px 8)
+                    , width (pct 100)
+                    , color (toCssColor whiteAlpha900)
+                    , backgroundColor (toCssColor blackAlpha600)
+                    , fontFamilies [ "monospace" ]
+                    , fontWeight bold
+                    , borderRadius (px 4)
+                    , outline none
+                    , borderBottom3 (px 2) solid (toCssColor whiteAlpha400)
+                    , focus [ borderBottom3 (px 2) solid (toCssColor whiteAlpha700) ]
+                    ]
+                , onInput onChange
                 , HA.value value
                 ]
                 []
-            , div [ class "w-full h-1 bg-black" ] []
             ]
         ]
 
 
 inputLabel : String -> Html msg
 inputLabel str =
-    div [ class "text-xs font-bold" ]
+    div [ css [ fontSize (px 12), fontWeight bold, color (toCssColor whiteAlpha700) ] ]
         [ text str ]
 
 
@@ -126,22 +344,30 @@ checkbox :
     -> Html msg
 checkbox { name, value, onCheck } =
     div
-        [ class "flex flex-row items-center gap-2"
-        , class "cursor-pointer"
+        [ css
+            [ displayFlex
+            , flexDirection row
+            , alignItems center
+            , property "gap" "8px"
+            , cursor pointer
+            ]
         ]
-        [ Html.input
+        [ Html.Styled.input
             [ type_ "checkbox"
-            , class "w-4 h-4"
-            , class "cursor-pointer"
+            , css
+                [ width (px 16)
+                , height (px 16)
+                , cursor pointer
+                ]
             , id name
             , HA.name name
+            , HA.checked value
             , HE.onCheck onCheck
-            , checked value
             ]
             []
         , label
             [ for name
-            , class "cursor-pointer"
+            , css [ cursor pointer, color (toCssColor whiteAlpha800) ]
             ]
             [ inputLabel name ]
         ]
@@ -158,21 +384,31 @@ optionSelection { name, options, optionToString, onChange } =
     let
         optionWith : String -> Html msg
         optionWith optionStr =
-            Html.option
-                [ HA.value optionStr ]
+            Html.Styled.option
+                [ value optionStr ]
                 [ text optionStr ]
     in
     div []
-        [ div [ class "mb-2" ]
+        [ div [ css [ marginBottom (px 8) ] ]
             [ label [ for name ]
                 [ inputLabel name ]
             ]
-        , Html.select
-            [ class "w-fit px-2 py-1 rounded bg-white text-black"
+        , Html.Styled.select
+            [ css
+                [ maxWidth fitContent
+                , padding2 (px 4) (px 8)
+                , borderRadius (px 4)
+                , backgroundColor (toCssColor blackAlpha600)
+                , color (toCssColor whiteAlpha900)
+                , border3 (px 1) solid (toCssColor whiteAlpha400)
+                ]
             , id name
             , HA.name name
-            , Html.Events.Extra.onChange onChange
-            , HA.value (options |> SelectList.getCurrent |> optionToString)
+            , HE.on "change"
+                (HE.targetValue
+                    |> Decode.map onChange
+                )
+            , value (options |> SelectList.getCurrent |> optionToString)
             ]
             (options |> SelectList.toList |> List.map (optionToString >> optionWith))
         ]
@@ -188,17 +424,30 @@ slider :
     }
     -> Html msg
 slider { name, value, min, max, step, onChange } =
-    div [ class "flex flex-col gap-2" ]
+    div
+        [ css
+            [ width (pct 100)
+            , displayFlex
+            , flexDirection column
+            , property "gap" "8px"
+            ]
+        ]
         [ label
             [ for name ]
-            [ div [ class "relative w-full" ]
-                [ div [ class "inline-block" ] [ inputLabel name ]
-                , div [ class "inline-block float-right" ] [ text (String.fromFloat value) ]
+            [ div [ css [ position relative, width (pct 100) ] ]
+                [ div [ css [ display inlineBlock, color (toCssColor whiteAlpha700) ] ] [ inputLabel name ]
+                , div [ css [ display inlineBlock, float right, color (toCssColor cyan400) ] ] [ text (String.fromFloat value) ]
                 ]
             ]
         , input
             [ type_ "range"
-            , style "width" "100%"
+            , css
+                [ width (pct 100)
+                , height (px 8)
+                , backgroundColor (toCssColor blackAlpha600)
+                , cursor pointer
+                , borderRadius (px 4)
+                ]
             , id name
             , HA.name name
             , HA.min (String.fromFloat min)
@@ -213,20 +462,27 @@ slider { name, value, min, max, step, onChange } =
 
 colorPicker :
     { name : String
-    , value : Color
-    , onChange : Color -> msg
+    , value : Color.Color
+    , onChange : Color.Color -> msg
     }
     -> Html msg
 colorPicker { name, value, onChange } =
     div []
-        [ div [ class "mb-2" ]
+        [ div [ css [ marginBottom (px 8) ] ]
             [ label
                 [ for name ]
                 [ inputLabel name ]
             ]
-        , Html.input
+        , Html.Styled.input
             [ type_ "color"
-            , class "w-full h-8 p-0 cursor-pointer"
+            , css
+                [ width (pct 100)
+                , height (px 32)
+                , padding zero
+                , cursor pointer
+                , border3 (px 1) solid (toCssColor whiteAlpha400)
+                , borderRadius (px 4)
+                ]
             , id name
             , HA.name name
             , HE.onInput (Color.Convert.hexToColor >> Result.withDefault Color.black >> onChange)

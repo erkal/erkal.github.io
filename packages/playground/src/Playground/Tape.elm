@@ -19,9 +19,11 @@ module Playground.Tape exposing
     , view
     )
 
-import Html exposing (Attribute, Html, button, div, input, text)
-import Html.Attributes as HA exposing (class, disabled, style, type_)
-import Html.Events exposing (onClick)
+import Css exposing (..)
+import DesignSystem.Color exposing (..)
+import Html.Styled exposing (Attribute, Html, button, div, input, text)
+import Html.Styled.Attributes as HA exposing (css, disabled, type_)
+import Html.Styled.Events exposing (onClick)
 import Icons
 import Playground.Computer as Computer exposing (Computer, Inputs)
 import Playground.Configurations as Configurations
@@ -43,16 +45,16 @@ type State
 --  INIT
 
 
-initNoTape : Computer -> (Computer -> appModel) -> Tape appModel
-initNoTape initialComputer initAppModel =
+initNoTape : Computer -> appModel -> Tape appModel
+initNoTape initialComputer initialAppModel =
     Tape NoTape
-        (SelectList.singleton ( initialComputer, initAppModel initialComputer ))
+        (SelectList.singleton ( initialComputer, initialAppModel ))
 
 
-init : Computer -> (Computer -> appModel) -> Tape appModel
-init initialComputer initAppModel =
+init : Computer -> appModel -> Tape appModel
+init initialComputer initialAppModel =
     Tape Recording
-        (SelectList.singleton ( initialComputer, initAppModel initialComputer ))
+        (SelectList.singleton ( initialComputer, initialAppModel ))
 
 
 
@@ -256,36 +258,54 @@ goTo tickIndex ((Tape _ timeline) as tape) =
 view : Tape appModel -> Html Msg
 view tape =
     div
-        [ class "w-full h-full px-2 rounded-tl-lg"
-        , class "flex flex-row items-center gap-4"
-        , hiddenIf (isNoTape tape)
+        [ css
+            [ width (pct 100) -- w-full
+            , height (pct 100) -- h-full
+            , paddingLeft (rem 0.5) -- px-2
+            , paddingRight (rem 0.5) -- px-2
+            , borderTopLeftRadius (rem 0.5) -- rounded-tl-lg
+            , displayFlex
+            , flexDirection row
+            , alignItems center
+            , property "gap" "1rem" -- gap-4
+            , if isNoTape tape then
+                display none
+
+              else
+                batch []
+            ]
         ]
         [ div
-            [ class "flex flex-row items-center gap-2"
-            , hiddenIf (isRecording tape)
+            [ css
+                [ displayFlex
+                , flexDirection row
+                , alignItems center
+                , property "gap" "0.5rem" -- gap-2
+                , if isRecording tape then
+                    display none
+
+                  else
+                    batch []
+                ]
             ]
             [ playPauseButton tape
-            , viewSlider tape
+            , input
+                [ type_ "range"
+                , css
+                    [ width (px 260)
+                    , height (px 8)
+                    , borderRadius (px 4)
+                    , backgroundColor (toCssColor whiteAlpha500)
+                    ]
+                , HA.min (String.fromInt 0)
+                , HA.max (String.fromInt (getTotalSize tape - 1))
+                , HA.value (String.fromInt (getCurrentFrameIndex tape))
+                , HA.step (String.fromInt 1)
+                , Html.Styled.Events.onInput (String.toFloat >> Maybe.withDefault 42 >> Basics.round >> SliderMovedTo)
+                ]
+                []
             ]
         , tapeToggleButton tape
-        ]
-
-
-viewSlider : Tape appModel -> Html Msg
-viewSlider tape =
-    div
-        [ class "w-[220px]"
-        , class "flex flex-row items-center"
-        ]
-        [ input
-            [ type_ "range"
-            , HA.min (String.fromInt 0)
-            , HA.max (String.fromInt (getTotalSize tape - 1))
-            , HA.value (String.fromInt (getCurrentFrameIndex tape))
-            , HA.step (String.fromInt 1)
-            , Html.Events.onInput (String.toFloat >> Maybe.withDefault 42 >> round >> SliderMovedTo)
-            ]
-            []
         ]
 
 
@@ -295,8 +315,12 @@ tapeToggleButton (Tape state timeline) =
         recButton : Msg -> Html Msg -> Html Msg
         recButton msg icon =
             button
-                [ class "w-8 h-8"
-                , class "text-white/60 hover:text-white/80"
+                [ css
+                    [ width (rem 2) -- w-8
+                    , height (rem 2) -- h-8
+                    , color (rgba 255 255 255 0.6) -- text-white/60
+                    , hover [ color (rgba 255 255 255 0.8) ] -- hover:text-white/80
+                    ]
                 , onClick msg
                 ]
                 [ icon ]
@@ -321,11 +345,30 @@ playPauseButton (Tape state timeline) =
         tapeButtonWithIcon : Bool -> Html msg -> msg -> Html msg
         tapeButtonWithIcon isDisabled icon msg =
             button
-                [ class "p-2 bg-black/60 hover:bg-black/80 active:bg-black disabled:opacity-30 disabled:bg-black/60 rounded-lg"
-                , disabled isDisabled
+                [ css
+                    [ padding (rem 0.5) -- p-2
+                    , backgroundColor (rgba 0 0 0 0.6) -- bg-black/60
+                    , hover [ backgroundColor (rgba 0 0 0 0.8) ] -- hover:bg-black/80
+                    , active [ backgroundColor (rgb 0 0 0) ] -- active:bg-black
+                    , Css.disabled
+                        [ opacity (num 0.3)
+                        , backgroundColor (rgba 0 0 0 0.6)
+                        ]
+                    , borderRadius (rem 0.5) -- rounded-lg
+                    ]
+                , HA.disabled isDisabled
                 , onClick msg
                 ]
-                [ div [ class "w-6 h-6 text-white/60 hover:text-white/80" ] [ icon ] ]
+                [ div
+                    [ css
+                        [ width (rem 1.5) -- w-6
+                        , height (rem 1.5) -- h-6
+                        , color (rgba 255 255 255 0.6) -- text-white/60
+                        , hover [ color (rgba 255 255 255 0.8) ] -- hover:text-white/80
+                        ]
+                    ]
+                    [ icon ]
+                ]
     in
     case state of
         NoTape ->
@@ -341,15 +384,5 @@ playPauseButton (Tape state timeline) =
             tapeButtonWithIcon False Icons.icons.pause PressedPauseButton
 
 
-hiddenIf : Bool -> Attribute msg
-hiddenIf condition =
-    styleIf condition "display" "none"
 
-
-styleIf : Bool -> String -> String -> Attribute msg
-styleIf condition styleName style_ =
-    if condition then
-        style styleName style_
-
-    else
-        style "" ""
+-- These helper functions are no longer needed with elm-css

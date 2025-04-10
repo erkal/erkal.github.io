@@ -2,7 +2,7 @@ module CubeAndCube.Main exposing (main)
 
 import Animation exposing (..)
 import Color exposing (blue, gray, green, red, rgb255)
-import Html exposing (Html)
+import Html.Styled exposing (Html, fromUnstyled)
 import Play exposing (..)
 import Scene3d.Material exposing (matte)
 import SceneWebGL exposing (..)
@@ -32,20 +32,21 @@ colors =
 
 view : Computer -> {} -> Html Never
 view computer model =
-    SceneWebGL.sunny
-        { devicePixelRatio = computer.devicePixelRatio
-        , screen = computer.screen
-        , camera =
-            perspective
-                { focalPoint = { x = 0, y = 0, z = 0 }
-                , eyePoint = { x = 0, y = 2, z = 4 }
-                , upDirection = { x = 0, y = 1, z = 0 }
-                }
-        , backgroundColor = Color.rgb255 30 30 30
-        , sunlightAzimuth = -(degrees 85)
-        , sunlightElevation = -(degrees 80)
-        }
-        [ scene computer model ]
+    fromUnstyled <|
+        SceneWebGL.sunny
+            { devicePixelRatio = computer.devicePixelRatio
+            , screen = computer.screen
+            , camera =
+                perspective
+                    { focalPoint = { x = 0, y = 0, z = 0 }
+                    , eyePoint = { x = 0, y = 2, z = 4 }
+                    , upDirection = { x = 0, y = 1, z = 0 }
+                    }
+            , backgroundColor = Color.rgb255 30 30 30
+            , sunlightAzimuth = -(degrees 85)
+            , sunlightElevation = -(degrees 80)
+            }
+            [ scene computer model ]
 
 
 scene computer _ =

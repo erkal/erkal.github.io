@@ -1,11 +1,15 @@
 module HomePage.Main exposing (main)
 
+import Css exposing (..)
+import Css.Global exposing (descendants)
+import Css.Media
+import Css.Transitions as Transitions exposing (easeInOut)
 import DesignSystem exposing (withHomePageHeader)
-import Html exposing (Html, a, div, img, text)
-import Html.Attributes as HA exposing (class, href, src, target)
+import DesignSystem.Color exposing (..)
+import Html.Styled exposing (Html, a, div, img, text)
+import Html.Styled.Attributes as HA exposing (css, href, src)
 import Icons
 import Play exposing (..)
-import Playground.Tape exposing (Message(..))
 
 
 main : Playground Model Never
@@ -23,10 +27,6 @@ type alias Model =
     {}
 
 
-
--- VIEW
-
-
 view : Computer -> Model -> Html Never
 view computer model =
     withHomePageHeader (cards computer model)
@@ -35,7 +35,17 @@ view computer model =
 cards : Computer -> Model -> Html Never
 cards computer model =
     div
-        [ class "grid grid-cols-1 md:grid-cols-2 mb-24 gap-8 text-white text-xl" ]
+        [ css
+            [ property "display" "grid"
+            , property "grid-template-columns" "repeat(1, minmax(0, 1fr))"
+            , property "gap" "2rem"
+            , marginBottom (rem 6)
+            , color (toCssColor whiteAlpha800)
+            , fontSize (rem 1.25)
+            , Css.Media.withMedia [ Css.Media.only Css.Media.screen [ Css.Media.minWidth (px 768) ] ]
+                [ property "grid-template-columns" "repeat(2, minmax(0, 1fr))" ]
+            ]
+        ]
         [ card
             { exampleLink = "https://erkal.github.io/kite/"
             , imageLink = "./assets/kite.png"
@@ -77,25 +87,86 @@ cardWithInternalLink exampleName =
 
 card : { exampleLink : String, imageLink : String, sourceCodeLink : String } -> String -> Html Never
 card { exampleLink, imageLink, sourceCodeLink } descriptionText =
-    div
-        [ class "p-6 transition-all duration-300 ease-in-out rounded-3xl shadow-lg hover:shadow-2xl"
-        , class "bg-black/50"
-        , class "flex flex-col items-center gap-8"
-        ]
-        [ a [ href exampleLink ]
-            [ div
-                [ class "relative cursor-pointer group" ]
-                [ img [ src imageLink, class "rounded-xl transition-all duration-300 hover:opacity-75" ] []
-                , div
-                    [ class "flex opacity-0 justify-center items-center absolute inset-0 w-full h-full text-2xl font-bold text-white bg-black bg-opacity-75 rounded-xl transition-all duration-300 group-hover:opacity-100" ]
-                    [ div [ class "w-20 h-20" ] [ Icons.icons.zoomToFit ] ]
+    a
+        [ href exampleLink
+        , css
+            [ padding (rem 1.5)
+            , borderRadius (rem 1.5)
+            , border3 (px 1) solid (toCssColor blackAlpha700)
+            , boxShadow5 zero (px 8) (px 12) (px -3) (rgba 0 0 0 0.3)
+            , backgroundColor (toCssColor blackAlpha600)
+            , color (toCssColor whiteAlpha800)
+            , displayFlex
+            , flexDirection column
+            , alignItems center
+            , property "gap" "2rem"
+            , cursor pointer
+            , property "isolation" "isolate"
+            , Transitions.transition
+                [ Transitions.backgroundColor 300
+                , Transitions.boxShadow 300
+                ]
+            , hover
+                [ backgroundColor (toCssColor blackAlpha500)
+                , boxShadow5 zero (px 12) (px 16) (px -3) (rgba 0 0 0 0.4)
+                , descendants
+                    [ Css.Global.selector "img" [ opacity (num 0.75) ]
+                    , Css.Global.selector ".zoom-overlay" [ opacity (num 1) ]
+                    ]
                 ]
             ]
-        , div [ class "px-4 grow flex items-center" ] [ text descriptionText ]
+        ]
+        [ div [ css [ position relative ] ]
+            [ img
+                [ src imageLink
+                , css [ borderRadius (rem 0.75) ]
+                ]
+                []
+            , div
+                [ css
+                    [ displayFlex
+                    , opacity zero
+                    , justifyContent center
+                    , alignItems center
+                    , position absolute
+                    , top zero
+                    , right zero
+                    , bottom zero
+                    , left zero
+                    , width (pct 100)
+                    , height (pct 100)
+                    , fontSize (rem 1.5)
+                    , fontWeight bold
+                    , color (toCssColor whiteAlpha900)
+                    , backgroundColor (rgba 0 0 0 0.75)
+                    , borderRadius (rem 0.75)
+                    , Transitions.transition [ Transitions.opacity 300 ]
+                    ]
+                , HA.class "zoom-overlay"
+                ]
+                [ div [ css [ width (rem 5), height (rem 5) ] ] [ Icons.icons.zoomToFit ] ]
+            ]
+        , div
+            [ css
+                [ flexGrow (num 1)
+                ]
+            ]
+            [ text descriptionText ]
         , a
-            [ class "inline-block mt-4 px-6 py-2 bg-purple-600 hover:bg-purple-700 transition-all duration-300 shadow-lg hover:shadow-2xl text-base font-medium tracking-wide rounded-lg"
+            [ css
+                [ display inlineBlock
+                , paddingLeft (rem 1.5)
+                , paddingRight (rem 1.5)
+                , paddingTop (rem 0.5)
+                , paddingBottom (rem 0.5)
+                , color (toCssColor whiteAlpha900)
+                , backgroundColor (toCssColor blackAlpha800)
+                , border3 (px 1) solid (toCssColor whiteAlpha300)
+                , borderRadius (rem 0.5)
+                , Transitions.transition [ Transitions.backgroundColor 200 ]
+                , hover [ backgroundColor (toCssColor blackAlpha600) ]
+                ]
             , href sourceCodeLink
-            , target "_blank"
             ]
             [ text "Source code" ]
         ]

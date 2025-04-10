@@ -1,7 +1,7 @@
 module GooeyEffect.Main exposing (main)
 
-import Html exposing (Html)
-import Html.Attributes exposing (height, style, width)
+import Html.Attributes exposing (height, width)
+import Html.Styled exposing (Html, fromUnstyled)
 import Math.Vector2 exposing (Vec2, vec2)
 import Play exposing (..)
 import Playground.Tape exposing (Message(..))
@@ -62,18 +62,19 @@ view computer model =
             , computer.screen.height
             )
     in
-    WebGL.toHtml
-        [ width (round w)
-        , height (round h)
-        ]
-        [ WebGL.entity vertexShader
-            fragmentShader
-            mesh
-            { time = computer.clock
-            , resolution = vec2 w h
-            , ballRadius = getFloat "ball radius" computer
-            }
-        ]
+    fromUnstyled <|
+        WebGL.toHtml
+            [ width (round w)
+            , height (round h)
+            ]
+            [ WebGL.entity vertexShader
+                fragmentShader
+                mesh
+                { time = computer.clock
+                , resolution = vec2 w h
+                , ballRadius = getFloat "ball radius" computer
+                }
+            ]
 
 
 

@@ -1,27 +1,49 @@
 module Playground.ConfigurationsView exposing (..)
 
+import Css exposing (..)
 import DesignSystem
-import Html exposing (Html, div, input, label, text)
-import Html.Attributes as HA exposing (checked, class, for, id, name, style, type_)
+import Html.Styled exposing (Html, div, input, label, text)
+import Html.Styled.Attributes as HA exposing (checked, css, for, id, name, type_)
 import Playground.Configurations exposing (..)
 
 
 viewConfigurations : Configurations -> Html Msg
 viewConfigurations configurations =
     div
-        [ class "p-6 text-gray-300"
-        , class "flex flex-col gap-12"
+        [ css
+            [ padding (rem 1.5)
+            , color (rgba 255 255 255 0.7) -- text-gray-300 equivalent
+            , displayFlex
+            , flexDirection column
+            , property "gap" "3rem" -- gap-12
+            ]
         ]
         (List.map viewBlock configurations)
 
 
 viewBlock : Block -> Html Msg
 viewBlock block =
-    div [ class "flex flex-col gap-4" ]
-        [ div [ class "text-2xl font-bold" ] [ text block.name ]
+    div
+        [ css
+            [ displayFlex
+            , flexDirection column
+            , property "gap" "1rem" -- gap-4
+            ]
+        ]
+        [ div
+            [ css
+                [ fontSize (rem 1.5) -- text-2xl
+                , fontWeight bold
+                ]
+            ]
+            [ text block.name ]
         , div
-            [ class "text-sm"
-            , class "flex flex-col gap-4"
+            [ css
+                [ fontSize (rem 0.875) -- text-sm
+                , displayFlex
+                , flexDirection column
+                , property "gap" "1rem" -- gap-4
+                ]
             ]
             (block.configs |> List.map viewConfig)
         ]
@@ -61,7 +83,7 @@ viewConfig ( name, config ) =
                 , min = toFloat min
                 , max = toFloat max
                 , step = 1
-                , onChange = round >> SetInt name
+                , onChange = Basics.round >> SetInt name
                 }
 
         ColorConfig value ->

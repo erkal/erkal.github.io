@@ -2,7 +2,7 @@ module RecursiveTree.Main exposing (main)
 
 import Animation exposing (spin, wave)
 import Color exposing (blue, gray, hsl, lightBlue)
-import Html exposing (Html)
+import Html.Styled exposing (Html, fromUnstyled)
 import Play exposing (..)
 import Playground.Tape exposing (Message(..))
 import Scene3d.Material exposing (matte)
@@ -58,20 +58,21 @@ update computer message model =
 
 view : Computer -> Model -> Html Never
 view computer model =
-    SceneWebGL.sunny
-        { devicePixelRatio = computer.devicePixelRatio
-        , screen = computer.screen
-        , camera =
-            perspective
-                { focalPoint = { x = 0, y = 4, z = 0 }
-                , eyePoint = { x = 0, y = 15, z = 18 }
-                , upDirection = { x = 0, y = 1, z = 0 }
-                }
-        , backgroundColor = lightBlue
-        , sunlightAzimuth = -(degrees 135)
-        , sunlightElevation = -(degrees 45)
-        }
-        (shapes computer model)
+    fromUnstyled <|
+        SceneWebGL.sunny
+            { devicePixelRatio = computer.devicePixelRatio
+            , screen = computer.screen
+            , camera =
+                perspective
+                    { focalPoint = { x = 0, y = 4, z = 0 }
+                    , eyePoint = { x = 0, y = 15, z = 18 }
+                    , upDirection = { x = 0, y = 1, z = 0 }
+                    }
+            , backgroundColor = lightBlue
+            , sunlightAzimuth = -(degrees 135)
+            , sunlightElevation = -(degrees 45)
+            }
+            (shapes computer model)
 
 
 shapes : Computer -> Model -> List Shape

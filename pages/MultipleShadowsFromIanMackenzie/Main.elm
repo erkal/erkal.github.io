@@ -2,7 +2,7 @@ module MultipleShadowsFromIanMackenzie.Main exposing (main)
 
 import Animation exposing (spin, wave)
 import Color exposing (blue, brown, gray, green, hsl, lightBlue, lightGreen, lightPurple, orange, red, white)
-import Html exposing (Html)
+import Html.Styled exposing (Html, fromUnstyled)
 import Illuminance
 import LuminousFlux
 import Play exposing (..)
@@ -111,24 +111,25 @@ view computer model =
                 , intensityBelow = Illuminance.lux 10
                 }
     in
-    SceneWebGL.custom
-        { devicePixelRatio = computer.devicePixelRatio
-        , screen = computer.screen
-        , camera = camera
-        , lights =
-            Scene3d.fourLights
-                firstLight
-                secondLight
-                thirdLight
-                fourthLight
-        , clipDepth = 0.1
-        , exposure = Scene3d.exposureValue 6
-        , toneMapping = Scene3d.hableFilmicToneMapping -- See ExposureAndToneMapping.elm for details
-        , whiteBalance = Scene3d.Light.fluorescent
-        , antialiasing = Scene3d.multisampling
-        , backgroundColor = lightBlue
-        }
-        (shapes computer model)
+    fromUnstyled <|
+        SceneWebGL.custom
+            { devicePixelRatio = computer.devicePixelRatio
+            , screen = computer.screen
+            , camera = camera
+            , lights =
+                Scene3d.fourLights
+                    firstLight
+                    secondLight
+                    thirdLight
+                    fourthLight
+            , clipDepth = 0.1
+            , exposure = Scene3d.exposureValue 6
+            , toneMapping = Scene3d.hableFilmicToneMapping -- See ExposureAndToneMapping.elm for details
+            , whiteBalance = Scene3d.Light.fluorescent
+            , antialiasing = Scene3d.multisampling
+            , backgroundColor = lightBlue
+            }
+            (shapes computer model)
 
 
 shapes : Computer -> Model -> List Shape

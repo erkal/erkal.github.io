@@ -2,7 +2,7 @@ module ColorShower.Main exposing (main)
 
 import Animation exposing (wave)
 import Color exposing (hsl)
-import Html exposing (Html)
+import Html.Styled exposing (Html, fromUnstyled)
 import Play exposing (..)
 import Playground.Tape exposing (Message(..))
 import Scene3d.Material exposing (matte)
@@ -78,18 +78,19 @@ initialConfigurations =
 
 view : Computer -> Model -> Html Never
 view computer _ =
-    SceneWebGL.sunny
-        { devicePixelRatio = computer.devicePixelRatio
-        , screen = computer.screen
-        , camera = camera computer
-        , backgroundColor = getColor "background color" computer
-        , sunlightAzimuth = -(degrees 135)
-        , sunlightElevation = -(degrees 45)
-        }
-        [ spheresInAColumn computer
-        , spheresInAColumn computer |> rotateY (degrees 120)
-        , spheresInAColumn computer |> rotateY (degrees 240)
-        ]
+    fromUnstyled <|
+        SceneWebGL.sunny
+            { devicePixelRatio = computer.devicePixelRatio
+            , screen = computer.screen
+            , camera = camera computer
+            , backgroundColor = getColor "background color" computer
+            , sunlightAzimuth = -(degrees 135)
+            , sunlightElevation = -(degrees 45)
+            }
+            [ spheresInAColumn computer
+            , spheresInAColumn computer |> rotateY (degrees 120)
+            , spheresInAColumn computer |> rotateY (degrees 240)
+            ]
 
 
 spheresInAColumn : Computer -> Shape

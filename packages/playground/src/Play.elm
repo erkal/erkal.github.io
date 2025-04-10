@@ -1,9 +1,9 @@
 port module Play exposing
-    ( application, simpleApplication
+    ( application, simpleApplication, Configurations, Playground
     , boolConfig, colorConfig, configBlock, stringConfig, floatConfig, intConfig, optionsConfig
     , getBool, getColor, getFloat, getInt, getOption, getString
     , Computer, Keyboard, Pointer, Screen
-    , Configurations, Playground
+    , measureAwareElement, measureFrame
     )
 
 {-|
@@ -11,7 +11,7 @@ port module Play exposing
 
 # Create
 
-@docs application, simpleApplication, Configurations. Playground
+@docs application, simpleApplication, Configurations, Playground
 
 
 # Declaring Configurations
@@ -28,12 +28,19 @@ port module Play exposing
 
 @docs Computer, Keyboard, Pointer, Screen, toX, toXY, toY
 
+
+# Measure aware elements
+
+@docs measureAwareElement, measureFrame
+
 -}
 
 import Browser
-import Html exposing (Attribute, Html, a, button, div, text)
-import Html.Attributes as HA exposing (class, href, style, target)
-import Html.Events exposing (stopPropagationOn)
+import Css exposing (..)
+import DesignSystem.Color exposing (toCssColor, white)
+import Html.Styled exposing (Attribute, Html, a, button, div, fromUnstyled, text, toUnstyled)
+import Html.Styled.Attributes as HA exposing (css, href, target)
+import Html.Styled.Events exposing (stopPropagationOn)
 import Icons
 import Json.Decode as Decode
 import Playground.Computer as Computer exposing (Computer, Inputs, Wheel)
@@ -74,7 +81,7 @@ type alias SimpleApp appModel appMsg =
 
 type alias App appModel appMsg =
     { initialConfigurations : Configurations
-    , init : Computer -> appModel
+    , init : Computer -> ( appModel, Cmd appMsg )
     , update : Computer -> Message appMsg -> appModel -> ( appModel, Cmd appMsg )
     , subscriptions : appModel -> Sub appMsg
     , view : Computer -> appModel -> Html appMsg
@@ -90,7 +97,7 @@ simpleApplication : SimpleApp appModel appMsg -> Program Flags (Model appModel) 
 simpleApplication simpleApp =
     application
         { initialConfigurations = simpleApp.initialConfigurations
-        , init = simpleApp.init
+        , init = \computer -> ( simpleApp.init computer, Cmd.none )
         , update = \computer msg appModel -> ( simpleApp.update computer msg appModel, Cmd.none )
         , subscriptions = \_ -> Sub.none
         , view = simpleApp.view
@@ -104,7 +111,7 @@ application app =
         { init = init app
         , update = update app
         , subscriptions = subscriptions app
-        , view = view app
+        , view = view app >> toUnstyled
         }
 
 
@@ -169,7 +176,23 @@ getOption =
 
 
 
--- Getting Inputs
+-- Measure Aware Elements
+
+
+{-| must be used as canvas id.
+-}
+measureFrame : String
+measureFrame =
+    "measure-frame"
+
+
+measureAwareElement : String
+measureAwareElement =
+    "measure-aware-element"
+
+
+
+-- Exposed types
 
 
 type alias Playground appModel appMsg =
@@ -213,8 +236,16 @@ type LeftBarState
     | ShowingConfigurations
 
 
-init : App appModel appMsg -> Flags -> ( Model appModel, Cmd msg )
+init : App appModel appMsg -> Flags -> ( Model appModel, Cmd (Msg appMsg) )
 init app flags =
+    let
+        initialComputer : Computer
+        initialComputer =
+            Computer.init app.initialConfigurations flags.inputs
+
+        ( initialAppModel, initialAppCmd ) =
+            app.init initialComputer
+    in
     ( { tape =
             (if app.hasTape then
                 Tape.init
@@ -222,8 +253,8 @@ init app flags =
              else
                 Tape.initNoTape
             )
-                (Computer.init app.initialConfigurations flags.inputs)
-                app.init
+                initialComputer
+                initialAppModel
       , distractionFree = flags.inputs.screen.width < 500
       , leftBarState =
             if flags.inputs.screen.width < 1000 then
@@ -232,7 +263,8 @@ init app flags =
             else
                 ShowingConfigurations
       }
-    , Cmd.none
+    , Cmd.map FromApp
+        initialAppCmd
     )
 
 
@@ -370,14 +402,15 @@ view app model =
             currentComputer model.tape
     in
     div
-        [ class "absolute bg-white"
-        , class "overflow-hidden"
-        , class "select-none"
-        , class "antialiased"
-        , style "width" (String.fromFloat computer.screen.width ++ "px")
-        , style "height" (String.fromFloat computer.screen.height ++ "px")
+        [ css
+            [ position absolute
+            , backgroundColor (toCssColor white)
+            , overflow hidden
+            , width (px computer.screen.width)
+            , height (px computer.screen.height)
+            ]
         ]
-        [ Html.map FromApp (app.view computer (currentAppModel model.tape))
+        [ Html.Styled.map FromApp (app.view computer (currentAppModel model.tape))
         , viewHUD computer model
         ]
 
@@ -385,11 +418,27 @@ view app model =
 leftBarButton : Bool -> Bool -> Msg appMsg -> String -> Html (Msg appMsg) -> Html (Msg appMsg)
 leftBarButton hidden isSelected msg title icon =
     button
-        [ class "p-2 w-12 h-12"
-        , class "text-white/40 hover:text-white/80 active:text-white"
-        , classIf isSelected "bg-white/10"
-        , hiddenIf hidden
-        , Html.Events.onClick msg
+        [ css
+            [ padding (rem 0.5)
+            , width (rem 3)
+            , height (rem 3)
+            , color (rgba 255 255 255 0.4)
+            , hover [ color (rgba 255 255 255 0.8) ]
+            , active [ color (rgb 255 255 255) ]
+            , if isSelected then
+                backgroundColor (rgba 255 255 255 0.1)
+
+              else
+                batch []
+
+            -- bg-white/10 if selected
+            , if hidden then
+                display none
+
+              else
+                batch []
+            ]
+        , Html.Styled.Events.onClick msg
         , HA.title title
         ]
         [ icon ]
@@ -398,10 +447,14 @@ leftBarButton hidden isSelected msg title icon =
 iconLink : String -> String -> Html msg -> Html msg
 iconLink title linkAddress icon =
     a
-        [ class "p-2 w-12 h-12"
-        , class "text-white/40 hover:text-white/80"
+        [ css
+            [ padding (rem 0.5) -- p-2
+            , width (rem 3) -- w-12
+            , height (rem 3) -- h-12
+            , color (rgba 255 255 255 0.4) -- text-white/40
+            , hover [ color (rgba 255 255 255 0.8) ] -- hover:text-white/80
+            ]
         , href linkAddress
-        , target "_blank"
         , HA.title title
         ]
         [ icon ]
@@ -422,7 +475,7 @@ githubLink =
     iconLink "GitHub" "https://github.com/erkal" Icons.icons.githubCat
 
 
-stopPropagationOfInputs : List (Html.Attribute (Msg appMsg))
+stopPropagationOfInputs : List (Html.Styled.Attribute (Msg appMsg))
 stopPropagationOfInputs =
     [ stopPropagationOn "mousedown" (Decode.succeed ( NoOp, True ))
     , stopPropagationOn "pointerdown" (Decode.succeed ( NoOp, True ))
@@ -459,15 +512,30 @@ viewHUD computer model =
         leftStripe : Html (Msg appMsg)
         leftStripe =
             div
-                [ class "w-12 h-full bg-black/80"
-                , class "flex flex-col justify-between"
+                [ css
+                    [ width (rem 3) -- w-12
+                    , height (pct 100) -- h-full
+                    , backgroundColor (rgba 0 0 0 0.8) -- bg-black/80
+                    , displayFlex
+                    , flexDirection column
+                    , justifyContent spaceBetween
+                    ]
                 ]
-                [ div [ class "flex flex-col" ]
+                [ div [ css [ displayFlex, flexDirection column ] ]
                     [ yinYangButton
                     , configurationsButton
-                    , div [ hiddenIf (Tape.isNoTape model.tape) ] [ inputsButton ]
+                    , div
+                        [ css
+                            [ if Tape.isNoTape model.tape then
+                                display none
+
+                              else
+                                batch []
+                            ]
+                        ]
+                        [ inputsButton ]
                     ]
-                , div [ class "flex flex-col" ]
+                , div [ css [ displayFlex, flexDirection column ] ]
                     [ twitterLink
                     , githubLink
                     , homeButton
@@ -477,21 +545,37 @@ viewHUD computer model =
         viewConfigurations : Html (Msg appMsg)
         viewConfigurations =
             div
-                [ class "overflow-y-auto left-12 bg-black/40"
-                , style "width" "260px"
-                , style "height" <| String.fromFloat computer.screen.height ++ "px"
-                , hiddenIf (model.leftBarState /= ShowingConfigurations)
+                [ css
+                    [ overflowY auto -- overflow-y-auto
+                    , left (rem 3) -- left-12
+                    , backgroundColor (rgba 0 0 0 0.4) -- bg-black/40
+                    , width (px 260)
+                    , height (px computer.screen.height)
+                    , if model.leftBarState /= ShowingConfigurations then
+                        display none
+
+                      else
+                        batch []
+                    ]
                 ]
-                [ Html.map FromConfigurationsEditor (ConfigurationsGUI.viewConfigurations (currentComputer model.tape).configurations)
+                [ Html.Styled.map FromConfigurationsEditor (ConfigurationsGUI.viewConfigurations (currentComputer model.tape).configurations)
                 ]
 
         viewInputs : Html (Msg appMsg)
         viewInputs =
             div
-                [ class "overflow-y-auto left-12 bg-black/40"
-                , style "width" "260px"
-                , style "height" <| String.fromFloat (Tape.currentComputer model.tape).screen.height ++ "px"
-                , hiddenIf (model.leftBarState /= ShowingInputs)
+                [ css
+                    [ overflowY auto -- overflow-y-auto
+                    , left (rem 3) -- left-12
+                    , backgroundColor (rgba 0 0 0 0.4) -- bg-black/40
+                    , width (px 260)
+                    , height (px (Tape.currentComputer model.tape).screen.height)
+                    , if model.leftBarState /= ShowingInputs then
+                        display none
+
+                      else
+                        batch []
+                    ]
                 ]
                 [ viewComputer model
                 ]
@@ -499,28 +583,59 @@ viewHUD computer model =
         viewTape : Html (Msg appMsg)
         viewTape =
             div
-                [ class "absolute bottom-0 right-0 w-fit h-12 bg-black rounded-tl-lg"
+                [ css
+                    [ position absolute
+                    , bottom zero
+                    , right zero
+                    , maxWidth fitContent
+                    , height (rem 3) -- h-12
+                    , backgroundColor (rgb 0 0 0) -- bg-black
+                    , borderTopLeftRadius (rem 0.5) -- rounded-tl-lg
+                    ]
                 ]
-                [ Html.map FromTapeControls (Tape.view model.tape) ]
+                [ Html.Styled.map FromTapeControls (Tape.view model.tape) ]
     in
     if model.distractionFree then
         div stopPropagationOfInputs
-            [ div [ class "absolute top-0 left-0 w-12 h-12" ] [ yinYangButton ]
+            [ div
+                [ css
+                    [ position absolute
+                    , top zero
+                    , left zero
+                    , width (rem 3) -- w-12
+                    , height (rem 3) -- h-12
+                    ]
+                ]
+                [ yinYangButton ]
             ]
 
     else
         div stopPropagationOfInputs
             [ div
-                [ class "absolute left-0 top-0 h-full"
-                , class "flex flex-row"
+                [ css
+                    [ position absolute
+                    , left zero
+                    , top zero
+                    , height (pct 100) -- h-full
+                    , displayFlex
+                    , flexDirection row
+                    ]
                 ]
                 [ leftStripe
                 , viewConfigurations
                 , viewInputs
                 ]
             , div
-                [ class "absolute left-0 top-0"
-                , hiddenIf (Tape.isRecording model.tape || Tape.isNoTape model.tape)
+                [ css
+                    [ position absolute
+                    , left zero
+                    , top zero
+                    , if Tape.isRecording model.tape || Tape.isNoTape model.tape then
+                        display none
+
+                      else
+                        batch []
+                    ]
                 ]
                 [ viewPointer computer model
                 ]
@@ -531,17 +646,26 @@ viewHUD computer model =
 viewPointer : Computer -> Model appModel -> Html msg
 viewPointer computer model =
     div
-        [ class "absolute w-8 h-8"
-        , style "left" (String.fromFloat (computer.pointer.x + 0.5 * computer.screen.width) ++ "px")
-        , style "top" (String.fromFloat (-computer.pointer.y + 0.5 * computer.screen.height) ++ "px")
+        [ css
+            [ position absolute
+            , width (rem 2) -- w-8
+            , height (rem 2) -- h-8
+            , left (px (computer.pointer.x + 0.5 * computer.screen.width))
+            , top (px (-computer.pointer.y + 0.5 * computer.screen.height))
+            ]
         ]
         [ div
-            [ class <|
-                if computer.pointer.isDown then
-                    "text-black/80"
+            [ css
+                [ color <|
+                    if computer.pointer.isDown then
+                        rgba 0 0 0 0.8
+                        -- text-black/80
 
-                else
-                    "text-black/40"
+                    else
+                        rgba 0 0 0 0.4
+
+                -- text-black/40
+                ]
             ]
             [ Icons.icons.pointer ]
         ]
@@ -563,23 +687,53 @@ viewComputer model =
                 "False"
     in
     div
-        [ class "p-6 text-sm text-white/80"
-        , class "flex flex-col gap-8"
-        ]
-        [ div [ class "flex flex-col gap-2" ]
-            [ div [ class "text-2xl font-bold" ] [ text "Tape" ]
-            , div [] [ Html.text ("frame: " ++ (model.tape |> Tape.getCurrentFrameIndex |> String.fromInt)) ]
+        [ css
+            [ padding (rem 1.5)
+            , fontSize (rem 0.875)
+            , color (rgba 255 255 255 0.8)
+            , displayFlex
+            , flexDirection column
+            , property "gap" "2rem"
             ]
-        , div [ class "flex flex-col gap-2" ]
-            [ div [ class "text-2xl font-bold" ] [ text "Inputs" ]
-            , div [] [ Html.text ("pressedKeys: " ++ (computer.keyboard.pressedKeys |> List.intersperse " " |> String.concat)) ]
-            , div [] [ Html.text ("keyboard.shift: " ++ (computer.keyboard.shift |> boolAsText)) ]
-            , div [] [ Html.text ("keyboard.control: " ++ (computer.keyboard.control |> boolAsText)) ]
-            , div [] [ Html.text ("downs: " ++ (computer.keyboard.downs |> List.intersperse " " |> String.concat)) ]
-            , div [] [ Html.text ("delta time: " ++ Round.round 4 computer.dt) ]
-            , div [] [ Html.text ("clock: " ++ Round.round 4 computer.clock) ]
+        ]
+        [ div
+            [ css
+                [ displayFlex
+                , flexDirection column
+                , property "gap" "0.5rem"
+                ]
+            ]
+            [ div
+                [ css
+                    [ fontSize (rem 1.5)
+                    , fontWeight bold
+                    ]
+                ]
+                [ text "Tape" ]
+            , div [] [ text ("frame: " ++ (model.tape |> Tape.getCurrentFrameIndex |> String.fromInt)) ]
+            ]
+        , div
+            [ css
+                [ displayFlex
+                , flexDirection column
+                , property "gap" "0.5rem"
+                ]
+            ]
+            [ div
+                [ css
+                    [ fontSize (rem 1.5)
+                    , fontWeight bold
+                    ]
+                ]
+                [ text "Inputs" ]
+            , div [] [ text ("pressedKeys: " ++ (computer.keyboard.pressedKeys |> List.intersperse " " |> String.concat)) ]
+            , div [] [ text ("keyboard.shift: " ++ (computer.keyboard.shift |> boolAsText)) ]
+            , div [] [ text ("keyboard.control: " ++ (computer.keyboard.control |> boolAsText)) ]
+            , div [] [ text ("downs: " ++ (computer.keyboard.downs |> List.intersperse " " |> String.concat)) ]
+            , div [] [ text ("delta time: " ++ Round.round 4 computer.dt) ]
+            , div [] [ text ("clock: " ++ Round.round 4 computer.clock) ]
             , div []
-                [ Html.text
+                [ text
                     ("pointer is down: "
                         ++ (if computer.pointer.isDown then
                                 "yes"
@@ -589,12 +743,12 @@ viewComputer model =
                            )
                     )
                 ]
-            , div [] [ Html.text ("pointer.x: " ++ Round.round 2 computer.pointer.x) ]
-            , div [] [ Html.text ("pointer.y: " ++ Round.round 2 computer.pointer.y) ]
-            , div [] [ Html.text ("wheel.deltaX: " ++ String.fromFloat computer.wheel.deltaX) ]
-            , div [] [ Html.text ("wheel.deltaY: " ++ String.fromFloat computer.wheel.deltaY) ]
-            , div [] [ Html.text ("wheel.pinchDeltaForChrome: " ++ String.fromFloat computer.wheel.pinchDeltaForChrome) ]
-            , div [] [ Html.text ("pinchScaleForSafari: " ++ maybeFloatToString computer.wheel.pinchScaleForSafari) ]
+            , div [] [ text ("pointer.x: " ++ Round.round 2 computer.pointer.x) ]
+            , div [] [ text ("pointer.y: " ++ Round.round 2 computer.pointer.y) ]
+            , div [] [ text ("wheel.deltaX: " ++ String.fromFloat computer.wheel.deltaX) ]
+            , div [] [ text ("wheel.deltaY: " ++ String.fromFloat computer.wheel.deltaY) ]
+            , div [] [ text ("wheel.pinchDeltaForChrome: " ++ String.fromFloat computer.wheel.pinchDeltaForChrome) ]
+            , div [] [ text ("pinchScaleForSafari: " ++ maybeFloatToString computer.wheel.pinchScaleForSafari) ]
             ]
         ]
 
@@ -607,26 +761,3 @@ maybeFloatToString maybeFloat =
 
         Just f ->
             String.fromFloat f
-
-
-hiddenIf : Bool -> Attribute msg
-hiddenIf condition =
-    styleIf condition "display" "none"
-
-
-classIf : Bool -> String -> Attribute msg
-classIf condition className =
-    if condition then
-        class className
-
-    else
-        class ""
-
-
-styleIf : Bool -> String -> String -> Attribute msg
-styleIf condition styleName style_ =
-    if condition then
-        style styleName style_
-
-    else
-        style "" ""
