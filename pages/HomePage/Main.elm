@@ -92,10 +92,11 @@ card { exampleLink, imageLink, sourceCodeLink } descriptionText =
         , css
             [ padding (rem 1.5)
             , borderRadius (rem 1.5)
-            , border3 (px 1) solid (toCssColor blackAlpha700)
+            , border3 (px 1) solid (toCssColor black)
             , boxShadow5 zero (px 8) (px 12) (px -3) (rgba 0 0 0 0.3)
             , backgroundColor (toCssColor blackAlpha600)
             , color (toCssColor whiteAlpha800)
+            , textDecoration none
             , displayFlex
             , flexDirection column
             , alignItems center
@@ -109,42 +110,15 @@ card { exampleLink, imageLink, sourceCodeLink } descriptionText =
             , hover
                 [ backgroundColor (toCssColor blackAlpha500)
                 , boxShadow5 zero (px 12) (px 16) (px -3) (rgba 0 0 0 0.4)
-                , descendants
-                    [ Css.Global.selector "img" [ opacity (num 0.75) ]
-                    , Css.Global.selector ".zoom-overlay" [ opacity (num 1) ]
-                    ]
                 ]
             ]
         ]
         [ div [ css [ position relative ] ]
             [ img
                 [ src imageLink
-                , css [ borderRadius (rem 0.75) ]
+                , css [ borderRadius (rem 0.75), maxWidth (pct 100) ]
                 ]
                 []
-            , div
-                [ css
-                    [ displayFlex
-                    , opacity zero
-                    , justifyContent center
-                    , alignItems center
-                    , position absolute
-                    , top zero
-                    , right zero
-                    , bottom zero
-                    , left zero
-                    , width (pct 100)
-                    , height (pct 100)
-                    , fontSize (rem 1.5)
-                    , fontWeight bold
-                    , color (toCssColor whiteAlpha900)
-                    , backgroundColor (rgba 0 0 0 0.75)
-                    , borderRadius (rem 0.75)
-                    , Transitions.transition [ Transitions.opacity 300 ]
-                    ]
-                , HA.class "zoom-overlay"
-                ]
-                [ div [ css [ width (rem 5), height (rem 5) ] ] [ Icons.icons.zoomToFit ] ]
             ]
         , div
             [ css
@@ -159,12 +133,17 @@ card { exampleLink, imageLink, sourceCodeLink } descriptionText =
                 , paddingRight (rem 1.5)
                 , paddingTop (rem 0.5)
                 , paddingBottom (rem 0.5)
-                , color (toCssColor whiteAlpha900)
-                , backgroundColor (toCssColor blackAlpha800)
-                , border3 (px 1) solid (toCssColor whiteAlpha300)
                 , borderRadius (rem 0.5)
-                , Transitions.transition [ Transitions.backgroundColor 200 ]
-                , hover [ backgroundColor (toCssColor blackAlpha600) ]
+                , Transitions.transition [ Transitions.backgroundColor 100 ]
+                , backgroundColor (toCssColor blackAlpha900)
+                , color (toCssColor yellow)
+                , border3 (px 1) solid (toCssColor black)
+                , hover
+                    [ backgroundColor (toCssColor black)
+                    , color (toCssColor yellow100)
+                    , border3 (px 1) solid (toCssColor yellow100)
+                    ]
+                , textDecoration none
                 ]
             , href sourceCodeLink
             ]

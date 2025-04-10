@@ -4,7 +4,7 @@ import Color exposing (black, blue)
 import Css exposing (..)
 import Css.Media as Media exposing (only, screen, withMedia)
 import DesignSystem exposing (buttonWithIcon, markdownBlock, textInput, withHomePageHeader)
-import DesignSystem.Color exposing (blackAlpha700, cyan300, cyan700, gray800, gray900, toCssColor, white, whiteAlpha600, whiteAlpha800, whiteAlpha900)
+import DesignSystem.Color exposing (..)
 import Html.Styled exposing (Attribute, Html, a, div, input, label, text, textarea)
 import Html.Styled.Attributes as HA exposing (class, css, href, target, value)
 import Html.Styled.Events exposing (onClick, onInput, onMouseDown, preventDefaultOn)
@@ -363,15 +363,13 @@ bgColorForInteractive : InteractiveID -> List Style
 bgColorForInteractive interactiveID =
     case interactiveID of
         UndoRedoUsual ->
-            [ backgroundColor (rgba 236 72 153 0.2) ]
+            [ backgroundColor (toCssColor blue900) ]
 
-        -- Darker pink
         UndoRedoSafe ->
-            [ backgroundColor (rgba 74 222 128 0.2) ]
+            [ backgroundColor (toCssColor cyan900) ]
 
-        -- Darker green
         UndoRedoSafeConcise ->
-            [ backgroundColor (rgba 96 165 250 0.2) ]
+            [ backgroundColor (toCssColor green900) ]
 
 
 
@@ -529,10 +527,8 @@ viewUndoList model interactiveID =
             (undoList.past |> List.reverse |> List.map viewUndoItem)
         , div
             [ css
-                [ displayFlex
-                , flexDirection column
-                , zIndex (int 10)
-                , outline3 (px 8) solid (toCssColor cyan700)
+                [ zIndex (int 10)
+                , outline3 (px 8) solid (toCssColor yellow)
                 ]
             ]
             [ undoList.present |> viewUndoItem ]
@@ -545,10 +541,7 @@ viewUndoItem : String -> Html Msg
 viewUndoItem str =
     div
         [ css
-            [ height (px 32)
-            , padding2 (px 4) (px 8)
-            , margin2 (px 2) zero
-            , fontSize (px 16)
+            [ padding2 (px 4) (px 8)
             , backgroundColor (toCssColor blackAlpha700)
             , color (toCssColor whiteAlpha900)
             , whiteSpace pre
