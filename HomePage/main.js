@@ -11989,6 +11989,8 @@ var $rtfeldman$elm_css$Css$Transitions$backgroundColor = $rtfeldman$elm_css$Css$
 var $author$project$DesignSystem$Color$black = A4($avh4$elm_color$Color$rgba, 0, 0, 0, 1);
 var $author$project$DesignSystem$Color$blackAlpha500 = A4($avh4$elm_color$Color$rgba, 0.08, 0.08, 0.12, 0.36);
 var $author$project$DesignSystem$Color$blackAlpha900 = A4($avh4$elm_color$Color$rgba, 0.08, 0.08, 0.12, 0.92);
+var $rtfeldman$elm_css$Css$Transitions$Border = {$: 'Border'};
+var $rtfeldman$elm_css$Css$Transitions$border = $rtfeldman$elm_css$Css$Transitions$durationTransition($rtfeldman$elm_css$Css$Transitions$Border);
 var $rtfeldman$elm_css$Css$Transitions$BoxShadow = {$: 'BoxShadow'};
 var $rtfeldman$elm_css$Css$Transitions$boxShadow = $rtfeldman$elm_css$Css$Transitions$durationTransition($rtfeldman$elm_css$Css$Transitions$BoxShadow);
 var $rtfeldman$elm_css$Css$prop5 = F6(
@@ -12255,6 +12257,8 @@ var $rtfeldman$elm_css$Css$Transitions$transition = function (options) {
 var $author$project$DesignSystem$Color$yellow500 = A4($avh4$elm_color$Color$rgba, 0.9, 0.71, 0, 1);
 var $author$project$DesignSystem$Color$yellow = $author$project$DesignSystem$Color$yellow500;
 var $author$project$DesignSystem$Color$yellow100 = A4($avh4$elm_color$Color$rgba, 1.0, 0.95, 0.4, 1);
+var $author$project$DesignSystem$Color$yellow400 = A4($avh4$elm_color$Color$rgba, 1.0, 0.79, 0, 1);
+var $author$project$DesignSystem$Color$yellow900 = A4($avh4$elm_color$Color$rgba, 0.5, 0.39, 0, 1);
 var $author$project$HomePage$Main$card = F2(
 	function (_v0, descriptionText) {
 		var exampleLink = _v0.exampleLink;
@@ -12276,7 +12280,7 @@ var $author$project$HomePage$Main$card = F2(
 							$rtfeldman$elm_css$Css$border3,
 							$rtfeldman$elm_css$Css$px(1),
 							$rtfeldman$elm_css$Css$solid,
-							$author$project$DesignSystem$Color$toCssColor($author$project$DesignSystem$Color$black)),
+							$author$project$DesignSystem$Color$toCssColor($author$project$DesignSystem$Color$yellow900)),
 							A5(
 							$rtfeldman$elm_css$Css$boxShadow5,
 							$rtfeldman$elm_css$Css$zero,
@@ -12298,14 +12302,20 @@ var $author$project$HomePage$Main$card = F2(
 							$rtfeldman$elm_css$Css$Transitions$transition(
 							_List_fromArray(
 								[
-									$rtfeldman$elm_css$Css$Transitions$backgroundColor(300),
-									$rtfeldman$elm_css$Css$Transitions$boxShadow(300)
+									$rtfeldman$elm_css$Css$Transitions$backgroundColor(100),
+									$rtfeldman$elm_css$Css$Transitions$boxShadow(100),
+									$rtfeldman$elm_css$Css$Transitions$border(100)
 								])),
 							$rtfeldman$elm_css$Css$hover(
 							_List_fromArray(
 								[
 									$rtfeldman$elm_css$Css$backgroundColor(
 									$author$project$DesignSystem$Color$toCssColor($author$project$DesignSystem$Color$blackAlpha500)),
+									A3(
+									$rtfeldman$elm_css$Css$border3,
+									$rtfeldman$elm_css$Css$px(1),
+									$rtfeldman$elm_css$Css$solid,
+									$author$project$DesignSystem$Color$toCssColor($author$project$DesignSystem$Color$yellow400)),
 									A5(
 									$rtfeldman$elm_css$Css$boxShadow5,
 									$rtfeldman$elm_css$Css$zero,

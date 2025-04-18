@@ -12381,7 +12381,6 @@ var $rtfeldman$elm_css$Css$borderCollapse = $rtfeldman$elm_css$Css$prop1('border
 var $rtfeldman$elm_css$Css$borderLeft3 = $rtfeldman$elm_css$Css$prop3('border-left');
 var $rtfeldman$elm_css$Css$borderTop3 = $rtfeldman$elm_css$Css$prop3('border-top');
 var $rtfeldman$elm_css$Css$collapse = {borderCollapse: $rtfeldman$elm_css$Css$Structure$Compatible, value: 'collapse', visibility: $rtfeldman$elm_css$Css$Structure$Compatible};
-var $author$project$DesignSystem$Color$cyan100 = A4($avh4$elm_color$Color$rgba, 0.52, 0.93, 0.89, 1);
 var $author$project$DesignSystem$Color$cyan300 = A4($avh4$elm_color$Color$rgba, 0.32, 0.83, 0.79, 1);
 var $author$project$DesignSystem$Color$cyan700 = A4($avh4$elm_color$Color$rgba, 0.1, 0.53, 0.49, 1);
 var $rtfeldman$elm_css$Css$decimal = {listStyleType: $rtfeldman$elm_css$Css$Structure$Compatible, listStyleTypeOrPositionOrImage: $rtfeldman$elm_css$Css$Structure$Compatible, value: 'decimal'};
@@ -12395,10 +12394,11 @@ var $rtfeldman$elm_css$Css$disc = {listStyleType: $rtfeldman$elm_css$Css$Structu
 var $rtfeldman$elm_css$Css$fontStyle = $rtfeldman$elm_css$Css$prop1('font-style');
 var $rtfeldman$elm_css$VirtualDom$Styled$unstyledNode = $rtfeldman$elm_css$VirtualDom$Styled$Unstyled;
 var $rtfeldman$elm_css$Html$Styled$fromUnstyled = $rtfeldman$elm_css$VirtualDom$Styled$unstyledNode;
-var $author$project$DesignSystem$Color$gray800 = A4($avh4$elm_color$Color$rgba, 0.26, 0.28, 0.3, 1);
 var $rtfeldman$elm_css$Css$italic = {fontStyle: $rtfeldman$elm_css$Css$Structure$Compatible, value: 'italic'};
 var $rtfeldman$elm_css$Css$lineHeight = $rtfeldman$elm_css$Css$prop1('line-height');
 var $rtfeldman$elm_css$Css$listStyleType = $rtfeldman$elm_css$Css$prop1('list-style-type');
+var $rtfeldman$elm_css$Css$marginLeft = $rtfeldman$elm_css$Css$prop1('margin-left');
+var $rtfeldman$elm_css$Css$marginRight = $rtfeldman$elm_css$Css$prop1('margin-right');
 var $rtfeldman$elm_css$Css$marginTop = $rtfeldman$elm_css$Css$prop1('margin-top');
 var $rtfeldman$elm_css$Css$textAlign = function (fn) {
 	return A3(
@@ -12440,6 +12440,9 @@ var $rtfeldman$elm_css$Css$Preprocess$WithMedia = F2(
 		return {$: 'WithMedia', a: a, b: b};
 	});
 var $rtfeldman$elm_css$Css$Media$withMedia = $rtfeldman$elm_css$Css$Preprocess$WithMedia;
+var $author$project$DesignSystem$Color$yellow500 = A4($avh4$elm_color$Color$rgba, 0.9, 0.71, 0, 1);
+var $author$project$DesignSystem$Color$yellow = $author$project$DesignSystem$Color$yellow500;
+var $author$project$DesignSystem$Color$yellow300 = A4($avh4$elm_color$Color$rgba, 1.0, 0.85, 0.15, 1);
 var $author$project$DesignSystem$markdownBlock = function (content) {
 	return A2(
 		$rtfeldman$elm_css$Html$Styled$div,
@@ -12453,7 +12456,7 @@ var $author$project$DesignSystem$markdownBlock = function (content) {
 						$rtfeldman$elm_css$Css$fontSize(
 						$rtfeldman$elm_css$Css$px(16)),
 						$rtfeldman$elm_css$Css$lineHeight(
-						$rtfeldman$elm_css$Css$num(1.75)),
+						$rtfeldman$elm_css$Css$num(1.5)),
 						$rtfeldman$elm_css$Css$maxWidth($rtfeldman$elm_css$Css$none),
 						$rtfeldman$elm_css$Css$Global$descendants(
 						_List_fromArray(
@@ -12467,7 +12470,7 @@ var $author$project$DesignSystem$markdownBlock = function (content) {
 										$rtfeldman$elm_css$Css$px(36)),
 										$rtfeldman$elm_css$Css$fontWeight($rtfeldman$elm_css$Css$bold),
 										$rtfeldman$elm_css$Css$marginTop(
-										$rtfeldman$elm_css$Css$px(24)),
+										$rtfeldman$elm_css$Css$px(48)),
 										$rtfeldman$elm_css$Css$marginBottom(
 										$rtfeldman$elm_css$Css$px(16)),
 										$rtfeldman$elm_css$Css$color(
@@ -12482,7 +12485,7 @@ var $author$project$DesignSystem$markdownBlock = function (content) {
 										$rtfeldman$elm_css$Css$px(30)),
 										$rtfeldman$elm_css$Css$fontWeight($rtfeldman$elm_css$Css$bold),
 										$rtfeldman$elm_css$Css$marginTop(
-										$rtfeldman$elm_css$Css$px(24)),
+										$rtfeldman$elm_css$Css$px(48)),
 										$rtfeldman$elm_css$Css$marginBottom(
 										$rtfeldman$elm_css$Css$px(16)),
 										$rtfeldman$elm_css$Css$color(
@@ -12497,7 +12500,7 @@ var $author$project$DesignSystem$markdownBlock = function (content) {
 										$rtfeldman$elm_css$Css$px(24)),
 										$rtfeldman$elm_css$Css$fontWeight($rtfeldman$elm_css$Css$bold),
 										$rtfeldman$elm_css$Css$marginTop(
-										$rtfeldman$elm_css$Css$px(24)),
+										$rtfeldman$elm_css$Css$px(48)),
 										$rtfeldman$elm_css$Css$marginBottom(
 										$rtfeldman$elm_css$Css$px(16)),
 										$rtfeldman$elm_css$Css$color(
@@ -12512,7 +12515,7 @@ var $author$project$DesignSystem$markdownBlock = function (content) {
 										$rtfeldman$elm_css$Css$px(20)),
 										$rtfeldman$elm_css$Css$fontWeight($rtfeldman$elm_css$Css$bold),
 										$rtfeldman$elm_css$Css$marginTop(
-										$rtfeldman$elm_css$Css$px(24)),
+										$rtfeldman$elm_css$Css$px(48)),
 										$rtfeldman$elm_css$Css$marginBottom(
 										$rtfeldman$elm_css$Css$px(16)),
 										$rtfeldman$elm_css$Css$color(
@@ -12586,16 +12589,26 @@ var $author$project$DesignSystem$markdownBlock = function (content) {
 								_List_fromArray(
 									[
 										$rtfeldman$elm_css$Css$backgroundColor(
-										$author$project$DesignSystem$Color$toCssColor($author$project$DesignSystem$Color$gray800)),
+										$author$project$DesignSystem$Color$toCssColor($author$project$DesignSystem$Color$blackAlpha600)),
+										$rtfeldman$elm_css$Css$lineHeight(
+										$rtfeldman$elm_css$Css$num(1.34)),
 										$rtfeldman$elm_css$Css$overflow($rtfeldman$elm_css$Css$auto),
-										$rtfeldman$elm_css$Css$padding(
-										$rtfeldman$elm_css$Css$px(16)),
+										A2(
+										$rtfeldman$elm_css$Css$padding2,
+										$rtfeldman$elm_css$Css$px(16),
+										$rtfeldman$elm_css$Css$px(24)),
 										$rtfeldman$elm_css$Css$borderRadius(
-										$rtfeldman$elm_css$Css$px(4)),
+										$rtfeldman$elm_css$Css$px(8)),
+										$rtfeldman$elm_css$Css$marginLeft(
+										$rtfeldman$elm_css$Css$px(16)),
+										$rtfeldman$elm_css$Css$marginRight(
+										$rtfeldman$elm_css$Css$px(16)),
 										$rtfeldman$elm_css$Css$marginTop(
 										$rtfeldman$elm_css$Css$px(16)),
 										$rtfeldman$elm_css$Css$marginBottom(
-										$rtfeldman$elm_css$Css$px(16))
+										$rtfeldman$elm_css$Css$px(24)),
+										$rtfeldman$elm_css$Css$color(
+										$author$project$DesignSystem$Color$toCssColor($author$project$DesignSystem$Color$cyan300))
 									])),
 								A2(
 								$rtfeldman$elm_css$Css$Global$typeSelector,
@@ -12606,11 +12619,7 @@ var $author$project$DesignSystem$markdownBlock = function (content) {
 										_List_fromArray(
 											['monospace'])),
 										$rtfeldman$elm_css$Css$fontSize(
-										$rtfeldman$elm_css$Css$px(16)),
-										$rtfeldman$elm_css$Css$backgroundColor(
-										$author$project$DesignSystem$Color$toCssColor($author$project$DesignSystem$Color$gray800)),
-										$rtfeldman$elm_css$Css$borderRadius(
-										$rtfeldman$elm_css$Css$px(4))
+										$rtfeldman$elm_css$Css$pct(74))
 									])),
 								A2(
 								$rtfeldman$elm_css$Css$Global$typeSelector,
@@ -12660,14 +12669,14 @@ var $author$project$DesignSystem$markdownBlock = function (content) {
 								_List_fromArray(
 									[
 										$rtfeldman$elm_css$Css$color(
-										$author$project$DesignSystem$Color$toCssColor($author$project$DesignSystem$Color$cyan300)),
+										$author$project$DesignSystem$Color$toCssColor($author$project$DesignSystem$Color$yellow)),
 										$rtfeldman$elm_css$Css$textDecoration($rtfeldman$elm_css$Css$underline),
 										$rtfeldman$elm_css$Css$fontWeight($rtfeldman$elm_css$Css$bold),
 										$rtfeldman$elm_css$Css$hover(
 										_List_fromArray(
 											[
 												$rtfeldman$elm_css$Css$color(
-												$author$project$DesignSystem$Color$toCssColor($author$project$DesignSystem$Color$cyan100))
+												$author$project$DesignSystem$Color$toCssColor($author$project$DesignSystem$Color$yellow300))
 											]))
 									])),
 								A2(
@@ -12716,8 +12725,6 @@ var $author$project$DesignSystem$markdownBlock = function (content) {
 							[
 								$rtfeldman$elm_css$Css$fontSize(
 								$rtfeldman$elm_css$Css$px(20)),
-								$rtfeldman$elm_css$Css$lineHeight(
-								$rtfeldman$elm_css$Css$num(1.8)),
 								$rtfeldman$elm_css$Css$Global$descendants(
 								_List_fromArray(
 									[
@@ -12839,9 +12846,8 @@ var $rtfeldman$elm_css$Css$prop5 = F6(
 		return A2($rtfeldman$elm_css$Css$property, key, argA.value + (' ' + (argB.value + (' ' + (argC.value + (' ' + (argD.value + (' ' + argE.value))))))));
 	});
 var $rtfeldman$elm_css$Css$boxShadow5 = $rtfeldman$elm_css$Css$prop5('box-shadow');
-var $author$project$DesignSystem$Color$blackAlpha700 = A4($avh4$elm_color$Color$rgba, 0.08, 0.08, 0.12, 0.64);
-var $author$project$DesignSystem$Color$cyan600 = A4($avh4$elm_color$Color$rgba, 0.11, 0.63, 0.59, 1);
-var $author$project$DesignSystem$Color$cyan800 = A4($avh4$elm_color$Color$rgba, 0.09, 0.43, 0.39, 1);
+var $author$project$DesignSystem$Color$blackAlpha900 = A4($avh4$elm_color$Color$rgba, 0.08, 0.08, 0.12, 0.92);
+var $author$project$DesignSystem$Color$yellow400 = A4($avh4$elm_color$Color$rgba, 1.0, 0.79, 0, 1);
 var $author$project$DesignSystem$buttonWithIcon = function (_v0) {
 	var onClick = _v0.onClick;
 	var name = _v0.name;
@@ -12871,24 +12877,20 @@ var $author$project$DesignSystem$buttonWithIcon = function (_v0) {
 						A4($rtfeldman$elm_css$Css$rgba, 0, 0, 0, 0.3)),
 						$rtfeldman$elm_css$Css$cursor($rtfeldman$elm_css$Css$pointer),
 						$rtfeldman$elm_css$Css$backgroundColor(
-						$author$project$DesignSystem$Color$toCssColor($author$project$DesignSystem$Color$blackAlpha700)),
+						$author$project$DesignSystem$Color$toCssColor($author$project$DesignSystem$Color$yellow)),
 						$rtfeldman$elm_css$Css$color(
-						$author$project$DesignSystem$Color$toCssColor($author$project$DesignSystem$Color$whiteAlpha800)),
+						$author$project$DesignSystem$Color$toCssColor($author$project$DesignSystem$Color$blackAlpha900)),
 						$rtfeldman$elm_css$Css$hover(
 						_List_fromArray(
 							[
 								$rtfeldman$elm_css$Css$backgroundColor(
-								$author$project$DesignSystem$Color$toCssColor($author$project$DesignSystem$Color$cyan800)),
-								$rtfeldman$elm_css$Css$color(
-								$author$project$DesignSystem$Color$toCssColor($author$project$DesignSystem$Color$white))
+								$author$project$DesignSystem$Color$toCssColor($author$project$DesignSystem$Color$yellow300))
 							])),
 						$rtfeldman$elm_css$Css$active(
 						_List_fromArray(
 							[
 								$rtfeldman$elm_css$Css$backgroundColor(
-								$author$project$DesignSystem$Color$toCssColor($author$project$DesignSystem$Color$cyan600)),
-								$rtfeldman$elm_css$Css$color(
-								$author$project$DesignSystem$Color$toCssColor($author$project$DesignSystem$Color$white))
+								$author$project$DesignSystem$Color$toCssColor($author$project$DesignSystem$Color$yellow400))
 							]))
 					])),
 				$rtfeldman$elm_css$Html$Styled$Events$onClick(onClick)
@@ -12919,6 +12921,7 @@ var $rtfeldman$elm_css$Html$Styled$Events$onMouseDown = function (msg) {
 		'mousedown',
 		$elm$json$Json$Decode$succeed(msg));
 };
+var $rtfeldman$elm_css$Css$outline3 = $rtfeldman$elm_css$Css$prop3('outline');
 var $author$project$UndoRedo$Main$PressedRedoButton = function (a) {
 	return {$: 'PressedRedoButton', a: a};
 };
@@ -13012,7 +13015,7 @@ var $rtfeldman$elm_css$Css$int = function (val) {
 		value: $elm$core$String$fromInt(val)
 	};
 };
-var $rtfeldman$elm_css$Css$outline3 = $rtfeldman$elm_css$Css$prop3('outline');
+var $author$project$DesignSystem$Color$blackAlpha700 = A4($avh4$elm_color$Color$rgba, 0.08, 0.08, 0.12, 0.64);
 var $rtfeldman$elm_css$Css$fontFamily = $rtfeldman$elm_css$Css$prop1('font-family');
 var $rtfeldman$elm_css$Css$monospace = {fontFamily: $rtfeldman$elm_css$Css$Structure$Compatible, value: 'monospace'};
 var $rtfeldman$elm_css$Css$pre = {value: 'pre', whiteSpace: $rtfeldman$elm_css$Css$Structure$Compatible};
@@ -13043,8 +13046,6 @@ var $author$project$UndoRedo$Main$viewUndoItem = function (str) {
 				$rtfeldman$elm_css$Html$Styled$text(str)
 			]));
 };
-var $author$project$DesignSystem$Color$yellow500 = A4($avh4$elm_color$Color$rgba, 0.9, 0.71, 0, 1);
-var $author$project$DesignSystem$Color$yellow = $author$project$DesignSystem$Color$yellow500;
 var $rtfeldman$elm_css$Css$zIndex = $rtfeldman$elm_css$Css$prop1('z-index');
 var $author$project$UndoRedo$Main$viewUndoList = F2(
 	function (model, interactiveID) {
@@ -13196,8 +13197,11 @@ var $author$project$UndoRedo$Main$viewUndoListInteractive = F2(
 							$author$project$UndoRedo$Main$bgColorForInteractive(interactiveID),
 							_Utils_eq(model.lastSelectedInteractive, interactiveID) ? _List_fromArray(
 								[
-									A2($rtfeldman$elm_css$Css$property, 'outline', '2px solid rgba(255, 255, 255, 0.6)'),
-									A2($rtfeldman$elm_css$Css$property, 'outline-offset', '2px')
+									A3(
+									$rtfeldman$elm_css$Css$outline3,
+									$rtfeldman$elm_css$Css$px(4),
+									$rtfeldman$elm_css$Css$solid,
+									$author$project$DesignSystem$Color$toCssColor($author$project$DesignSystem$Color$yellow))
 								]) : _List_Nil))),
 					$rtfeldman$elm_css$Html$Styled$Events$onMouseDown(
 					$author$project$UndoRedo$Main$SelectedInteractive(interactiveID))
