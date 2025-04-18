@@ -1,14 +1,12 @@
 module HomePage.Main exposing (main)
 
 import Css exposing (..)
-import Css.Global exposing (descendants)
 import Css.Media
-import Css.Transitions as Transitions exposing (easeInOut)
+import Css.Transitions as Transitions
 import DesignSystem exposing (withHomePageHeader)
 import DesignSystem.Color exposing (..)
 import Html.Styled exposing (Html, a, div, img, text)
 import Html.Styled.Attributes as HA exposing (css, href, src)
-import Icons
 import Play exposing (..)
 
 
@@ -92,7 +90,7 @@ card { exampleLink, imageLink, sourceCodeLink } descriptionText =
         , css
             [ padding (rem 1.5)
             , borderRadius (rem 1.5)
-            , border3 (px 1) solid (toCssColor black)
+            , border3 (px 1) solid (toCssColor yellow900)
             , boxShadow5 zero (px 8) (px 12) (px -3) (rgba 0 0 0 0.3)
             , backgroundColor (toCssColor blackAlpha600)
             , color (toCssColor whiteAlpha800)
@@ -104,11 +102,13 @@ card { exampleLink, imageLink, sourceCodeLink } descriptionText =
             , cursor pointer
             , property "isolation" "isolate"
             , Transitions.transition
-                [ Transitions.backgroundColor 300
-                , Transitions.boxShadow 300
+                [ Transitions.backgroundColor 100
+                , Transitions.boxShadow 100
+                , Transitions.border 100
                 ]
             , hover
                 [ backgroundColor (toCssColor blackAlpha500)
+                , border3 (px 1) solid (toCssColor yellow400)
                 , boxShadow5 zero (px 12) (px 16) (px -3) (rgba 0 0 0 0.4)
                 ]
             ]

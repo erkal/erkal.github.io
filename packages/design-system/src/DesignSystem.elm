@@ -6,9 +6,8 @@ import Css exposing (..)
 import Css.Global exposing (descendants, typeSelector)
 import Css.Media
 import DesignSystem.Color exposing (..)
-import Html.Attributes exposing (style)
-import Html.Styled exposing (Html, a, div, fromUnstyled, input, label, text, toUnstyled)
-import Html.Styled.Attributes as HA exposing (checked, css, for, href, id, target, type_, value)
+import Html.Styled exposing (Html, a, div, fromUnstyled, input, label, text)
+import Html.Styled.Attributes as HA exposing (css, for, href, id, type_, value)
 import Html.Styled.Events as HE exposing (onCheck, onClick, onInput)
 import Icons
 import Json.Decode as Decode
@@ -99,7 +98,7 @@ markdownBlock content =
             [ -- Base typography styles
               color (toCssColor whiteAlpha800)
             , fontSize (px 16)
-            , lineHeight (num 1.75)
+            , lineHeight (num 1.5)
             , maxWidth none
 
             -- Headers
@@ -107,28 +106,28 @@ markdownBlock content =
                 [ typeSelector "h1"
                     [ fontSize (px 36)
                     , fontWeight bold
-                    , marginTop (px 24)
+                    , marginTop (px 48)
                     , marginBottom (px 16)
                     , color (toCssColor whiteAlpha900)
                     ]
                 , typeSelector "h2"
                     [ fontSize (px 30)
                     , fontWeight bold
-                    , marginTop (px 24)
+                    , marginTop (px 48)
                     , marginBottom (px 16)
                     , color (toCssColor whiteAlpha900)
                     ]
                 , typeSelector "h3"
                     [ fontSize (px 24)
                     , fontWeight bold
-                    , marginTop (px 24)
+                    , marginTop (px 48)
                     , marginBottom (px 16)
                     , color (toCssColor whiteAlpha900)
                     ]
                 , typeSelector "h4"
                     [ fontSize (px 20)
                     , fontWeight bold
-                    , marginTop (px 24)
+                    , marginTop (px 48)
                     , marginBottom (px 16)
                     , color (toCssColor whiteAlpha900)
                     ]
@@ -167,18 +166,20 @@ markdownBlock content =
 
                 -- Code blocks
                 , typeSelector "pre"
-                    [ backgroundColor (toCssColor gray800)
+                    [ backgroundColor (toCssColor blackAlpha600)
+                    , lineHeight (num 1.34)
                     , overflow auto
-                    , padding (px 16)
-                    , borderRadius (px 4)
+                    , padding2 (px 16) (px 24)
+                    , borderRadius (px 8)
+                    , marginLeft (px 16)
+                    , marginRight (px 16)
                     , marginTop (px 16)
-                    , marginBottom (px 16)
+                    , marginBottom (px 24)
+                    , color (toCssColor cyan300)
                     ]
                 , typeSelector "code"
                     [ fontFamilies [ "monospace" ]
-                    , fontSize (px 16)
-                    , backgroundColor (toCssColor gray800)
-                    , borderRadius (px 4)
+                    , fontSize (pct 74)
                     ]
 
                 -- Tables
@@ -202,10 +203,10 @@ markdownBlock content =
 
                 -- Links
                 , typeSelector "a"
-                    [ color (toCssColor cyan300)
+                    [ color (toCssColor yellow)
                     , textDecoration underline
                     , fontWeight bold
-                    , hover [ color (toCssColor cyan100) ]
+                    , hover [ color (toCssColor yellow300) ]
                     ]
 
                 -- Images
@@ -227,7 +228,6 @@ markdownBlock content =
             -- Responsive styles for larger screens (equivalent to lg:prose-xl)
             , Css.Media.withMedia [ Css.Media.only Css.Media.screen [ Css.Media.minWidth (px 1024) ] ]
                 [ fontSize (px 20)
-                , lineHeight (num 1.8)
                 , descendants
                     [ typeSelector "h1"
                         [ fontSize (px 48)
@@ -282,15 +282,13 @@ buttonWithIcon { onClick, name, icon } =
             , borderRadius (pct 100)
             , boxShadow5 zero (px 2) (px 4) zero (rgba 0 0 0 0.3)
             , cursor pointer
-            , backgroundColor (toCssColor blackAlpha700)
-            , color (toCssColor whiteAlpha800)
+            , backgroundColor (toCssColor yellow)
+            , color (toCssColor blackAlpha900)
             , hover
-                [ backgroundColor (toCssColor cyan800)
-                , color (toCssColor white)
+                [ backgroundColor (toCssColor yellow300)
                 ]
             , active
-                [ backgroundColor (toCssColor cyan600)
-                , color (toCssColor white)
+                [ backgroundColor (toCssColor yellow400)
                 ]
             ]
         , HE.onClick onClick

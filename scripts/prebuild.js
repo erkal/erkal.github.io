@@ -56,10 +56,14 @@ function processDirectory(dir) {
     fs.writeFileSync(`${buildExamplePath}/index.html`, resultFile);
 
     // If image.png exists, copy it to the build directory
-    shell.cp("-n", `${examplePath}/image.png`, buildExamplePath);
+    if (shell.test("-f", `${examplePath}/image.png`)) {
+      shell.cp("-n", `${examplePath}/image.png`, buildExamplePath);
+    }
 
     // If assets directory exists, copy it to the build directory
-    shell.cp("-r", `${examplePath}/assets`, buildExamplePath);
+    if (shell.test("-d", `${examplePath}/assets`)) {
+      shell.cp("-r", `${examplePath}/assets`, buildExamplePath);
+    }
 
     // Store the inputs and output strings
     const inputData = `${dir.slice(2)}/${exampleName}/Main.elm`;

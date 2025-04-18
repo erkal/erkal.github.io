@@ -1,29 +1,30 @@
 {
-    "name": "erkal.github.io",
-    "author": "Aziz Erkal Selman",
-    "description": "",
-    "version": "1.0.0",
-    "license": "MIT",
-    "engines": {
-        "node": ">=23"
-    },
-    "scripts": {
-        "postinstall": "elm-tooling install",
-        "dev": "node ./scripts/prebuild.js && node ./scripts/generate-index-for-dev.js && npx elm-watch hot",
-        "build": "node ./scripts/prebuild.js && npx elm-watch make && node ./scripts/generate-index-for-build.js",
-        "deploy": "npm run build && gh-pages -d build"
-    },
-    "devDependencies": {
-        "@lydell/elm-json-darwin-arm64": "^0.2.13-0",
-        "cors": "^2.8.5",
-        "elm": "^0.19.1-6",
-        "elm-tooling": "^1.15.1",
-        "elm-watch": "^2.0.0-beta.6",
-        "express": "^4.21.2",
-        "gh-pages": "^6.1.0",
-        "http-proxy-middleware": "^3.0.3",
-        "inquirer": "^12.1.0",
-        "prettier": "^3.5.3",
-        "shelljs": "^0.8.5"
-    }
+  "name": "erkal.github.io",
+  "author": "Aziz Erkal Selman",
+  "description": "",
+  "version": "1.0.0",
+  "license": "MIT",
+  "engines": {
+    "node": ">=23"
+  },
+  "scripts": {
+    "postinstall": "elm-tooling install",
+    "formatWithPrettier": "prettier --write \"**/*.{js,jsx,ts,tsx,json,css,md}\"",
+    "dev": "node ./scripts/prebuild.js && node ./scripts/generate-index-for-dev.js && npx elm-watch hot",
+    "build": "node ./scripts/prebuild.js && npx elm-watch make && node ./scripts/generate-index-for-build.js",
+    "deploy": "npm run build && gh-pages -d build"
+  },
+  "devDependencies": {
+    "@lydell/elm-json-darwin-arm64": "^0.2.13-0",
+    "cors": "^2.8.5",
+    "elm": "^0.19.1-6",
+    "elm-tooling": "^1.15.1",
+    "elm-watch": "^2.0.0-beta.6",
+    "express": "^4.21.2",
+    "gh-pages": "^6.1.0",
+    "http-proxy-middleware": "^3.0.3",
+    "inquirer": "^12.1.0",
+    "prettier": "3.5.3",
+    "shelljs": "^0.8.5"
+  }
 }

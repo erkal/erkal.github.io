@@ -1,6 +1,8 @@
-# [erkal.github.io](https://erkal.github.io/index.html)
+# What?
 
-## Development Setup
+This repository creates [erkal.github.io](https://erkal.github.io/index.html) and all of its subpages.
+
+# Development Setup
 
 You have to have Node.js installed on your machine.
 If you don't have it, I strongly recommend you to install it using a version manager like [nvm](https://github.com/nvm-sh/nvm).

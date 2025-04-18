@@ -396,8 +396,7 @@ viewUndoListInteractive model interactiveID =
              ]
                 ++ bgColorForInteractive interactiveID
                 ++ (if model.lastSelectedInteractive == interactiveID then
-                        [ property "outline" "2px solid rgba(255, 255, 255, 0.6)"
-                        , property "outline-offset" "2px"
+                        [ outline3 (px 4) solid (toCssColor yellow)
                         ]
 
                     else

@@ -3,7 +3,7 @@ module Icons exposing (icons)
 import Css exposing (..)
 import Html.Styled exposing (Html)
 import Svg.Styled exposing (Svg, path, svg)
-import Svg.Styled.Attributes exposing (clipRule, css, d, fill, fillRule, viewBox, xmlSpace)
+import Svg.Styled.Attributes exposing (clipRule, d, fillRule)
 
 
 draw : List (Svg msg) -> Html msg
@@ -11,8 +11,8 @@ draw =
     svg
         [ Svg.Styled.Attributes.viewBox "0 0 24 24"
         , Svg.Styled.Attributes.fill "currentColor"
-        , css [ width (pct 100), height (pct 100) ]
-        , xmlSpace "http://www.w3.org/2000/svg"
+        , Svg.Styled.Attributes.css [ width (pct 100), height (pct 100) ]
+        , Svg.Styled.Attributes.xmlSpace "http://www.w3.org/2000/svg"
         ]
 
 
