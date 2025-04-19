@@ -22,98 +22,33 @@
       content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"
     />
 
-    <style>
-      :root {
-        font-family: "Inter", "sans-serif", "Arial", "Helvetica", "system-ui";
-      }
-
-      code,
-      pre,
-      kbd,
-      samp {
-        font-family:
-          "ui-monospace", "SFMono-Regular", "Menlo", "Monaco", "Consolas",
-          "Liberation Mono", "Courier New", "monospace";
-      }
-
-      body {
-        min-height: 100vh;
-        overflow: hidden;
-        line-height: 1.5;
-        text-rendering: optimizeLegibility;
-        -webkit-font-smoothing: antialiased;
-        -moz-osx-font-smoothing: grayscale;
-      }
-
-      /* Modern Reset CSS */
-      *,
-      *::before,
-      *::after {
-        box-sizing: border-box;
-        margin: 0;
-        padding: 0;
-      }
-
-      html {
-        scroll-behavior: smooth;
-      }
-
-      button {
-        -webkit-appearance: button;
-        appearance: button;
-        background-color: transparent;
-        background-image: none;
-        color: inherit;
-        cursor: pointer;
-        padding: 0;
-        font-family: inherit;
-        font-size: 100%;
-        font-weight: inherit;
-        line-height: inherit;
-        text-transform: none;
-        margin: 0;
-        border-width: 0;
-      }
-
-      input,
-      select,
-      textarea {
-        background-color: transparent;
-        border-width: 0;
-        border-radius: 0;
-        color: inherit;
-        font-family: inherit;
-        font-size: 100%;
-        font-weight: inherit;
-        line-height: inherit;
-        margin: 0;
-        padding: 0;
-      }
-    </style>
-
-    <!-- Elm Logo -->
+    <!-- favicon -->
     <link
       rel="icon"
-      href="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f3/Elm_logo.svg/1200px-Elm_logo.svg.png"
-      type="image/png"
+      href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><polygon points='90,50 70,85.98 30,85.98 10,50 30,14.02 70,14.02' fill='%23ffdd00'/></svg>"
+      type="image/svg+xml"
     />
 
+    <!-- Reset CSS -->
+    <link rel="stylesheet" href="./reset.css" />
+
     <!-- For PlayEGI for Senso -->
-    <script src="../PlayEGI.js"></script>
+    <script src="./PlayEGI.js"></script>
 
     <!-- For Pit's compiler -->
-    <script src="../eval-elm.js"></script>
+    <script src="./eval-elm.js"></script>
+
+    <!-- For Joakin's elm-canvas package -->
+    <script src="./elm-canvas.js"></script>
   </head>
 
   <body>
     <div id="app"></div>
 
-    <script src="../elm-canvas.js"></script>
-
-    <script src="main.js"></script>
+    <script src="./main.js"></script>
 
     <script type="module">
-      import { sendInputsToElmApp, inputs } from "../input.js";
+      import { sendInputsToElmApp, inputs } from "./input.js";
 
       const app = Elm.MultipleShadowsFromIanMackenzie.Main.init({
         node: document.querySelector("#app"),
