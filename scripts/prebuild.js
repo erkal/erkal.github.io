@@ -13,18 +13,6 @@ if (shell.test("-d", buildDir)) {
 // Create a new build directory
 shell.mkdir("-p", buildDir);
 
-// Copy input.js file to the build directory
-shell.cp("packages/playground/src/input.js", buildDir);
-
-// Copy eval-elm.js file to the build directory
-shell.cp("packages/playground/src/eval-elm.js", buildDir);
-
-// Copy PlayEGI.js file to the build directory
-shell.cp("packages/playground/src/PlayEGI.js", buildDir);
-
-// Copy elm-canvas.js file to the build directory
-shell.cp("packages/scene-canvas2d/elm-canvas.js", buildDir);
-
 // Initialize a variable for targets JSON
 let targets = {};
 
@@ -64,6 +52,13 @@ function processDirectory(dir) {
     if (shell.test("-d", `${examplePath}/assets`)) {
       shell.cp("-r", `${examplePath}/assets`, buildExamplePath);
     }
+
+    // Copy required files to the example's build directory
+    shell.cp("packages/playground/src/input.js", buildExamplePath);
+    shell.cp("packages/playground/src/reset.css", buildExamplePath);
+    shell.cp("packages/playground/src/eval-elm.js", buildExamplePath);
+    shell.cp("packages/playground/src/PlayEGI.js", buildExamplePath);
+    shell.cp("packages/scene-canvas2d/elm-canvas.js", buildExamplePath);
 
     // Store the inputs and output strings
     const inputData = `${dir.slice(2)}/${exampleName}/Main.elm`;

@@ -3,6 +3,5 @@
 node_modules
 elm-stuff
 build
-dist
 *.local
 elm-watch.json
