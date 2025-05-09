@@ -7208,7 +7208,6 @@ var $elm$browser$Browser$element = _Browser_element;
 var $author$project$Play$FromApp = function (a) {
 	return {$: 'FromApp', a: a};
 };
-var $author$project$Play$ShowingConfigurations = {$: 'ShowingConfigurations'};
 var $author$project$Play$ShowingNothing = {$: 'ShowingNothing'};
 var $author$project$Playground$Senso$initSensoPress = {f: 0, x: 0, y: 0};
 var $author$project$Playground$Senso$init = {
@@ -7301,8 +7300,8 @@ var $author$project$Play$init = F2(
 		var initialAppCmd = _v0.b;
 		return _Utils_Tuple2(
 			{
-				distractionFree: flags.inputs.screen.width < 500,
-				leftBarState: (flags.inputs.screen.width < 1000) ? $author$project$Play$ShowingNothing : $author$project$Play$ShowingConfigurations,
+				distractionFree: true,
+				leftBarState: $author$project$Play$ShowingNothing,
 				tape: A2(
 					app.hasTape ? $author$project$Playground$Tape$init : $author$project$Playground$Tape$initNoTape,
 					initialComputer,
@@ -8903,6 +8902,7 @@ var $author$project$Play$handleClickOnDistractionFreeButton = F2(
 			return model;
 		}
 	});
+var $author$project$Play$ShowingConfigurations = {$: 'ShowingConfigurations'};
 var $author$project$Play$ShowingInputs = {$: 'ShowingInputs'};
 var $author$project$Play$handleClickOnLeftBarButtonsButton = F2(
 	function (msg, model) {

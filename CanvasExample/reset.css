@@ -1,5 +1,11 @@
+html {
+  box-sizing: border-box;
+  scroll-behavior: smooth;
+  font-size: 13px;
+}
+
 :root {
-  font-family: "Inter", "sans-serif", "Arial", "Helvetica", "system-ui";
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
 }
 
 code,
@@ -23,13 +29,14 @@ body {
 *,
 *::before,
 *::after {
-  box-sizing: border-box;
+  box-sizing: inherit;
   margin: 0;
   padding: 0;
 }
 
-html {
-  scroll-behavior: smooth;
+img {
+  max-width: 100%;
+  height: auto;
 }
 
 button {

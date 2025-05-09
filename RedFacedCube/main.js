@@ -7704,7 +7704,6 @@ var $elm$browser$Browser$element = _Browser_element;
 var $author$project$Play$FromApp = function (a) {
 	return {$: 'FromApp', a: a};
 };
-var $author$project$Play$ShowingConfigurations = {$: 'ShowingConfigurations'};
 var $author$project$Play$ShowingNothing = {$: 'ShowingNothing'};
 var $author$project$Playground$Senso$initSensoPress = {f: 0, x: 0, y: 0};
 var $author$project$Playground$Senso$init = {
@@ -7788,8 +7787,8 @@ var $author$project$Play$init = F2(
 		var initialAppCmd = _v0.b;
 		return _Utils_Tuple2(
 			{
-				distractionFree: flags.inputs.screen.width < 500,
-				leftBarState: (flags.inputs.screen.width < 1000) ? $author$project$Play$ShowingNothing : $author$project$Play$ShowingConfigurations,
+				distractionFree: true,
+				leftBarState: $author$project$Play$ShowingNothing,
 				tape: A2(
 					app.hasTape ? $author$project$Playground$Tape$init : $author$project$Playground$Tape$initNoTape,
 					initialComputer,
@@ -9385,6 +9384,7 @@ var $author$project$Play$handleClickOnDistractionFreeButton = F2(
 			return model;
 		}
 	});
+var $author$project$Play$ShowingConfigurations = {$: 'ShowingConfigurations'};
 var $author$project$Play$ShowingInputs = {$: 'ShowingInputs'};
 var $author$project$Play$handleClickOnLeftBarButtonsButton = F2(
 	function (msg, model) {
@@ -16685,6 +16685,21 @@ var $author$project$RedFacedCube$Main$update = F3(
 			return A2($author$project$RedFacedCube$Main$handleMsgFromEditor, editorMsg, model);
 		}
 	});
+var $rtfeldman$elm_css$Css$int = function (val) {
+	return {
+		fontWeight: $rtfeldman$elm_css$Css$Structure$Compatible,
+		intOrAuto: $rtfeldman$elm_css$Css$Structure$Compatible,
+		lengthOrNumber: $rtfeldman$elm_css$Css$Structure$Compatible,
+		lengthOrNumberOrAutoOrNoneOrContent: $rtfeldman$elm_css$Css$Structure$Compatible,
+		number: $rtfeldman$elm_css$Css$Structure$Compatible,
+		numberOrInfinite: $rtfeldman$elm_css$Css$Structure$Compatible,
+		numericValue: val,
+		unitLabel: '',
+		units: $rtfeldman$elm_css$Css$UnitlessInteger,
+		value: $elm$core$String$fromInt(val)
+	};
+};
+var $rtfeldman$elm_css$Css$letterSpacing = $rtfeldman$elm_css$Css$prop1('letter-spacing');
 var $rtfeldman$elm_css$Css$margin2 = $rtfeldman$elm_css$Css$prop2('margin');
 var $rtfeldman$elm_css$Css$marginTop = $rtfeldman$elm_css$Css$prop1('margin-top');
 var $author$project$DesignSystem$Color$red = $author$project$DesignSystem$Color$red500;
@@ -16698,6 +16713,13 @@ var $author$project$DesignSystem$Color$setOpacity = F2(
 			{alpha: opacity, blue: c.blue, green: c.green, red: c.red});
 	});
 var $rtfeldman$elm_css$Html$Styled$span = $rtfeldman$elm_css$Html$Styled$node('span');
+var $rtfeldman$elm_css$Css$textAlign = function (fn) {
+	return A3(
+		$rtfeldman$elm_css$Css$Internal$getOverloadedProperty,
+		'textAlign',
+		'text-align',
+		fn($rtfeldman$elm_css$Css$Internal$lengthForOverloadedProperty));
+};
 var $author$project$RedFacedCube$Main$explanationText = F2(
 	function (computer, model) {
 		var animatingMistakeForTopFaceCannotBeRed = function () {
@@ -16746,9 +16768,18 @@ var $author$project$RedFacedCube$Main$explanationText = F2(
 								[
 									A2($rtfeldman$elm_css$Css$margin2, $rtfeldman$elm_css$Css$zero, $rtfeldman$elm_css$Css$auto),
 									$rtfeldman$elm_css$Css$width(
-									$rtfeldman$elm_css$Css$pct(100)),
+									$rtfeldman$elm_css$Css$pct(90)),
+									$rtfeldman$elm_css$Css$maxWidth(
+									$rtfeldman$elm_css$Css$px(800)),
 									$rtfeldman$elm_css$Css$marginTop(
-									$rtfeldman$elm_css$Css$px(16))
+									$rtfeldman$elm_css$Css$px(16)),
+									$rtfeldman$elm_css$Css$textAlign($rtfeldman$elm_css$Css$center),
+									$rtfeldman$elm_css$Css$fontSize(
+									$rtfeldman$elm_css$Css$px(16)),
+									$rtfeldman$elm_css$Css$fontWeight(
+									$rtfeldman$elm_css$Css$int(500)),
+									$rtfeldman$elm_css$Css$letterSpacing(
+									$rtfeldman$elm_css$Css$px(0.3))
 								]))
 						]),
 					_List_fromArray(
@@ -16796,8 +16827,49 @@ var $author$project$RedFacedCube$Main$explanationText = F2(
 				]));
 	});
 var $rtfeldman$elm_css$Css$fixed = {backgroundAttachment: $rtfeldman$elm_css$Css$Structure$Compatible, position: $rtfeldman$elm_css$Css$Structure$Compatible, tableLayout: $rtfeldman$elm_css$Css$Structure$Compatible, value: 'fixed'};
+var $author$project$DesignSystem$Color$black = A4($avh4$elm_color$Color$rgba, 0, 0, 0, 1);
 var $rtfeldman$elm_css$Css$fontStyle = $rtfeldman$elm_css$Css$prop1('font-style');
+var $author$project$Playground$Configurations$getColorFromBlock = F2(
+	function (name, block) {
+		return A2(
+			$elmcraft$core_extra$List$Extra$findMap,
+			function (_v0) {
+				var k = _v0.a;
+				var config = _v0.b;
+				var _v1 = _Utils_Tuple2(
+					_Utils_eq(k, name),
+					config);
+				if (_v1.a && (_v1.b.$ === 'ColorConfig')) {
+					var value = _v1.b.a;
+					return $elm$core$Maybe$Just(value);
+				} else {
+					return $elm$core$Maybe$Nothing;
+				}
+			},
+			block.configs);
+	});
+var $author$project$Playground$Configurations$getColor = F2(
+	function (name, configurations) {
+		return A2(
+			$elm$core$Maybe$withDefault,
+			$avh4$elm_color$Color$black,
+			A2(
+				$elmcraft$core_extra$List$Extra$findMap,
+				$author$project$Playground$Configurations$getColorFromBlock(name),
+				configurations));
+	});
+var $author$project$Playground$Computer$getColor = F2(
+	function (name, computer) {
+		return A2($author$project$Playground$Configurations$getColor, name, computer.configurations);
+	});
+var $author$project$Play$getColor = $author$project$Playground$Computer$getColor;
 var $rtfeldman$elm_css$Css$italic = {fontStyle: $rtfeldman$elm_css$Css$Structure$Compatible, value: 'italic'};
+var $rtfeldman$elm_css$Css$paddingBottom = $rtfeldman$elm_css$Css$prop1('padding-bottom');
+var $rtfeldman$elm_css$Css$prop4 = F5(
+	function (key, argA, argB, argC, argD) {
+		return A2($rtfeldman$elm_css$Css$property, key, argA.value + (' ' + (argB.value + (' ' + (argC.value + (' ' + argD.value))))));
+	});
+var $rtfeldman$elm_css$Css$textShadow4 = $rtfeldman$elm_css$Css$prop4('text-shadow');
 var $author$project$RedFacedCube$Main$headerText = F2(
 	function (computer, model) {
 		return A2(
@@ -16844,7 +16916,7 @@ var $author$project$RedFacedCube$Main$headerText = F2(
 											$rtfeldman$elm_css$Css$displayFlex,
 											$rtfeldman$elm_css$Css$flexDirection($rtfeldman$elm_css$Css$column),
 											$rtfeldman$elm_css$Css$alignItems($rtfeldman$elm_css$Css$center),
-											A2($rtfeldman$elm_css$Css$property, 'gap', '16px')
+											A2($rtfeldman$elm_css$Css$property, 'gap', '12px')
 										]))
 								]),
 							_List_fromArray(
@@ -16857,8 +16929,23 @@ var $author$project$RedFacedCube$Main$headerText = F2(
 											_List_fromArray(
 												[
 													$rtfeldman$elm_css$Css$fontSize(
-													$rtfeldman$elm_css$Css$px(24)),
-													$rtfeldman$elm_css$Css$fontWeight($rtfeldman$elm_css$Css$bold)
+													$rtfeldman$elm_css$Css$px(28)),
+													$rtfeldman$elm_css$Css$fontWeight($rtfeldman$elm_css$Css$bold),
+													$rtfeldman$elm_css$Css$color(
+													$author$project$DesignSystem$Color$toCssColor(
+														A2(
+															$author$project$DesignSystem$Color$setOpacity,
+															0.8,
+															A2($author$project$Play$getColor, 'color 1', computer)))),
+													A4(
+													$rtfeldman$elm_css$Css$textShadow4,
+													$rtfeldman$elm_css$Css$px(1),
+													$rtfeldman$elm_css$Css$px(1),
+													$rtfeldman$elm_css$Css$px(2),
+													$author$project$DesignSystem$Color$toCssColor(
+														A2($author$project$DesignSystem$Color$setOpacity, 0.2, $author$project$DesignSystem$Color$black))),
+													$rtfeldman$elm_css$Css$letterSpacing(
+													$rtfeldman$elm_css$Css$px(0.5))
 												]))
 										]),
 									_List_fromArray(
@@ -16873,7 +16960,20 @@ var $author$project$RedFacedCube$Main$headerText = F2(
 											_List_fromArray(
 												[
 													$rtfeldman$elm_css$Css$fontWeight($rtfeldman$elm_css$Css$bold),
-													$rtfeldman$elm_css$Css$fontStyle($rtfeldman$elm_css$Css$italic)
+													$rtfeldman$elm_css$Css$fontStyle($rtfeldman$elm_css$Css$italic),
+													$rtfeldman$elm_css$Css$fontSize(
+													$rtfeldman$elm_css$Css$px(16)),
+													A3(
+													$rtfeldman$elm_css$Css$borderBottom3,
+													$rtfeldman$elm_css$Css$px(2),
+													$rtfeldman$elm_css$Css$solid,
+													$author$project$DesignSystem$Color$toCssColor(
+														A2(
+															$author$project$DesignSystem$Color$setOpacity,
+															0.3,
+															A2($author$project$Play$getColor, 'color 1', computer)))),
+													$rtfeldman$elm_css$Css$paddingBottom(
+													$rtfeldman$elm_css$Css$px(4))
 												]))
 										]),
 									_List_fromArray(
@@ -16882,16 +16982,29 @@ var $author$project$RedFacedCube$Main$headerText = F2(
 										])),
 									A2(
 									$rtfeldman$elm_css$Html$Styled$div,
-									_List_Nil,
 									_List_fromArray(
 										[
-											$rtfeldman$elm_css$Html$Styled$text('Roll the cube via swiping or pressing arrow keys.')
+											$rtfeldman$elm_css$Html$Styled$Attributes$css(
+											_List_fromArray(
+												[
+													A2(
+													$rtfeldman$elm_css$Css$padding2,
+													$rtfeldman$elm_css$Css$px(4),
+													$rtfeldman$elm_css$Css$px(8)),
+													$rtfeldman$elm_css$Css$marginTop(
+													$rtfeldman$elm_css$Css$px(8)),
+													$rtfeldman$elm_css$Css$fontSize(
+													$rtfeldman$elm_css$Css$px(16))
+												]))
+										]),
+									_List_fromArray(
+										[
+											$rtfeldman$elm_css$Html$Styled$text('Roll the cube via swiping or pressing arrow keys')
 										]))
 								]))
 						]))
 				]));
 	});
-var $author$project$DesignSystem$Color$black = A4($avh4$elm_color$Color$rgba, 0, 0, 0, 1);
 var $author$project$RedFacedCube$Main$FromLevelEditor = function (a) {
 	return {$: 'FromLevelEditor', a: a};
 };
@@ -17065,13 +17178,6 @@ var $rtfeldman$elm_css$Html$Styled$Events$onMouseDown = function (msg) {
 		$elm$json$Json$Decode$succeed(msg));
 };
 var $rtfeldman$elm_css$Html$Styled$Attributes$placeholder = $rtfeldman$elm_css$Html$Styled$Attributes$stringProperty('placeholder');
-var $rtfeldman$elm_css$Css$textAlign = function (fn) {
-	return A3(
-		$rtfeldman$elm_css$Css$Internal$getOverloadedProperty,
-		'textAlign',
-		'text-align',
-		fn($rtfeldman$elm_css$Css$Internal$lengthForOverloadedProperty));
-};
 var $rtfeldman$elm_css$Css$transparent = {color: $rtfeldman$elm_css$Css$Structure$Compatible, value: 'transparent'};
 var $rtfeldman$elm_css$Css$whiteSpace = $rtfeldman$elm_css$Css$prop1('white-space');
 var $author$project$Levels$view = function (_v0) {
@@ -21360,40 +21466,6 @@ var $author$project$SceneWebGL$cube = F2(
 				A3($ianmackenzie$elm_geometry$Point3d$meters, -hw, -hw, -hw),
 				A3($ianmackenzie$elm_geometry$Point3d$meters, hw, hw, hw)));
 	});
-var $author$project$Playground$Configurations$getColorFromBlock = F2(
-	function (name, block) {
-		return A2(
-			$elmcraft$core_extra$List$Extra$findMap,
-			function (_v0) {
-				var k = _v0.a;
-				var config = _v0.b;
-				var _v1 = _Utils_Tuple2(
-					_Utils_eq(k, name),
-					config);
-				if (_v1.a && (_v1.b.$ === 'ColorConfig')) {
-					var value = _v1.b.a;
-					return $elm$core$Maybe$Just(value);
-				} else {
-					return $elm$core$Maybe$Nothing;
-				}
-			},
-			block.configs);
-	});
-var $author$project$Playground$Configurations$getColor = F2(
-	function (name, configurations) {
-		return A2(
-			$elm$core$Maybe$withDefault,
-			$avh4$elm_color$Color$black,
-			A2(
-				$elmcraft$core_extra$List$Extra$findMap,
-				$author$project$Playground$Configurations$getColorFromBlock(name),
-				configurations));
-	});
-var $author$project$Playground$Computer$getColor = F2(
-	function (name, computer) {
-		return A2($author$project$Playground$Configurations$getColor, name, computer.configurations);
-	});
-var $author$project$Play$getColor = $author$project$Playground$Computer$getColor;
 var $ianmackenzie$elm_3d_scene$Scene3d$group = function (entities) {
 	return $ianmackenzie$elm_3d_scene$Scene3d$Entity$group(entities);
 };
