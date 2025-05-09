@@ -5,3 +5,10 @@ elm-stuff
 build
 *.local
 elm-watch.json
+
+# Claude-related files
+CLAUDE.md
+.claude*
+claude-*
+*claude*
+*.claude

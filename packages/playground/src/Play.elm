@@ -255,13 +255,8 @@ init app flags =
             )
                 initialComputer
                 initialAppModel
-      , distractionFree = flags.inputs.screen.width < 500
-      , leftBarState =
-            if flags.inputs.screen.width < 1000 then
-                ShowingNothing
-
-            else
-                ShowingConfigurations
+      , distractionFree = True
+      , leftBarState = ShowingNothing
       }
     , Cmd.map FromApp
         initialAppCmd
@@ -430,8 +425,6 @@ leftBarButton hidden isSelected msg title icon =
 
               else
                 batch []
-
-            -- bg-white/10 if selected
             , if hidden then
                 display none
 
@@ -513,9 +506,9 @@ viewHUD computer model =
         leftStripe =
             div
                 [ css
-                    [ width (rem 3) -- w-12
-                    , height (pct 100) -- h-full
-                    , backgroundColor (rgba 0 0 0 0.8) -- bg-black/80
+                    [ width (rem 3)
+                    , height (pct 100)
+                    , backgroundColor (rgba 0 0 0 0.8)
                     , displayFlex
                     , flexDirection column
                     , justifyContent spaceBetween
@@ -546,9 +539,9 @@ viewHUD computer model =
         viewConfigurations =
             div
                 [ css
-                    [ overflowY auto -- overflow-y-auto
-                    , left (rem 3) -- left-12
-                    , backgroundColor (rgba 0 0 0 0.4) -- bg-black/40
+                    [ overflowY auto
+                    , left (rem 3)
+                    , backgroundColor (rgba 0 0 0 0.4)
                     , width (px 260)
                     , height (px computer.screen.height)
                     , if model.leftBarState /= ShowingConfigurations then
@@ -565,9 +558,9 @@ viewHUD computer model =
         viewInputs =
             div
                 [ css
-                    [ overflowY auto -- overflow-y-auto
-                    , left (rem 3) -- left-12
-                    , backgroundColor (rgba 0 0 0 0.4) -- bg-black/40
+                    [ overflowY auto
+                    , left (rem 3)
+                    , backgroundColor (rgba 0 0 0 0.4)
                     , width (px 260)
                     , height (px (Tape.currentComputer model.tape).screen.height)
                     , if model.leftBarState /= ShowingInputs then
@@ -588,9 +581,9 @@ viewHUD computer model =
                     , bottom zero
                     , right zero
                     , maxWidth fitContent
-                    , height (rem 3) -- h-12
-                    , backgroundColor (rgb 0 0 0) -- bg-black
-                    , borderTopLeftRadius (rem 0.5) -- rounded-tl-lg
+                    , height (rem 3)
+                    , backgroundColor (rgb 0 0 0)
+                    , borderTopLeftRadius (rem 0.5)
                     ]
                 ]
                 [ Html.Styled.map FromTapeControls (Tape.view model.tape) ]
@@ -602,8 +595,8 @@ viewHUD computer model =
                     [ position absolute
                     , top zero
                     , left zero
-                    , width (rem 3) -- w-12
-                    , height (rem 3) -- h-12
+                    , width (rem 3)
+                    , height (rem 3)
                     ]
                 ]
                 [ yinYangButton ]
@@ -616,7 +609,7 @@ viewHUD computer model =
                     [ position absolute
                     , left zero
                     , top zero
-                    , height (pct 100) -- h-full
+                    , height (pct 100)
                     , displayFlex
                     , flexDirection row
                     ]
@@ -648,8 +641,8 @@ viewPointer computer model =
     div
         [ css
             [ position absolute
-            , width (rem 2) -- w-8
-            , height (rem 2) -- h-8
+            , width (rem 2)
+            , height (rem 2)
             , left (px (computer.pointer.x + 0.5 * computer.screen.width))
             , top (px (-computer.pointer.y + 0.5 * computer.screen.height))
             ]
@@ -659,12 +652,9 @@ viewPointer computer model =
                 [ color <|
                     if computer.pointer.isDown then
                         rgba 0 0 0 0.8
-                        -- text-black/80
 
                     else
                         rgba 0 0 0 0.4
-
-                -- text-black/40
                 ]
             ]
             [ Icons.icons.pointer ]

@@ -3,8 +3,6 @@ module RedFacedCube.Main exposing (main)
 import Animation exposing (wave)
 import Color
 import Css
-import Css.Global
-import Css.Transitions
 import DesignSystem.Color exposing (..)
 import Ease
 import Geometry3d exposing (Point, Vector)
@@ -396,14 +394,20 @@ explanationText computer model =
         [ div
             [ css
                 [ Css.margin2 Css.zero Css.auto
-                , Css.width (Css.pct 100)
+                , Css.width (Css.pct 90)
+                , Css.maxWidth (Css.px 800)
                 , Css.marginTop (Css.px 16)
+                , Css.textAlign Css.center
+                , Css.fontSize (Css.px 16)
+                , Css.fontWeight (Css.int 500)
+                , Css.letterSpacing (Css.px 0.3)
                 ]
             ]
             [ span
                 [ css
                     (if animatingMistakeForMustVisitEachCellBeforeReachingFinishCell then
-                        [ Css.backgroundColor (setOpacity 0.5 red |> toCssColor) ]
+                        [ Css.backgroundColor (setOpacity 0.5 red |> toCssColor)
+                        ]
 
                      else
                         []
@@ -414,7 +418,8 @@ explanationText computer model =
             , span
                 [ css
                     (if animatingMistakeForTopFaceCannotBeRed then
-                        [ Css.backgroundColor (setOpacity 0.5 red |> toCssColor) ]
+                        [ Css.backgroundColor (setOpacity 0.5 red |> toCssColor)
+                        ]
 
                      else
                         []
@@ -442,19 +447,37 @@ headerText computer model =
                     , Css.displayFlex
                     , Css.flexDirection Css.column
                     , Css.alignItems Css.center
-                    , Css.property "gap" "16px"
+                    , Css.property "gap" "12px"
                     ]
                 ]
                 [ div
                     [ css
-                        [ Css.fontSize (Css.px 24)
+                        [ Css.fontSize (Css.px 28)
                         , Css.fontWeight Css.bold
+                        , Css.color (setOpacity 0.8 (getColor "color 1" computer) |> toCssColor)
+                        , Css.textShadow4 (Css.px 1) (Css.px 1) (Css.px 2) (setOpacity 0.2 black |> toCssColor)
+                        , Css.letterSpacing (Css.px 0.5)
                         ]
                     ]
                     [ text "The Red-Faced Cube" ]
-                , div [ css [ Css.fontWeight Css.bold, Css.fontStyle Css.italic ] ]
+                , div
+                    [ css
+                        [ Css.fontWeight Css.bold
+                        , Css.fontStyle Css.italic
+                        , Css.fontSize (Css.px 16)
+                        , Css.borderBottom3 (Css.px 2) Css.solid (setOpacity 0.3 (getColor "color 1" computer) |> toCssColor)
+                        , Css.paddingBottom (Css.px 4)
+                        ]
+                    ]
                     [ text "A puzzle from the book Mathematical Carnival (1975, Martin Gardner)" ]
-                , div [] [ text "Roll the cube via swiping or pressing arrow keys." ]
+                , div
+                    [ css
+                        [ Css.padding2 (Css.px 4) (Css.px 8)
+                        , Css.marginTop (Css.px 8)
+                        , Css.fontSize (Css.px 16)
+                        ]
+                    ]
+                    [ text "Roll the cube via swiping or pressing arrow keys" ]
                 ]
             ]
         ]
