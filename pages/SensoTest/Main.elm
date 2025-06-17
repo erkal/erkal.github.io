@@ -139,17 +139,10 @@ viewSensoAsDrawing computer model =
             , sunlightElevation = -(degrees 45)
             }
             [ viewSenso computer model
-            , axes
+            , SceneWebGL.axes 100 0.2
             ]
 
 
-axes : Shape
-axes =
-    group
-        [ line red ( 100, 0, 0 ) -- x axis
-        , line green ( 0, 100, 0 ) -- y axis
-        , line blue ( 0, 0, 100 ) -- z axis
-        ]
 
 
 viewSenso : Computer -> Model -> Shape

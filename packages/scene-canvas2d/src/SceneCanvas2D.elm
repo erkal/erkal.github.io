@@ -43,7 +43,7 @@ import Canvas.Settings.Text exposing (TextAlign(..), TextBaseLine(..), align, ba
 import Canvas.Texture as Texture exposing (Texture)
 import Color exposing (Color)
 import Html exposing (Html)
-import SceneCanvas2d.Geometry as Geometry exposing (Geometry, defaultGeometry)
+import SceneCanvas2D.Geometry as Geometry exposing (Geometry, defaultGeometry)
 
 
 type Drawable

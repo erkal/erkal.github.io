@@ -583,7 +583,7 @@ view computer model =
                         , drawPlayerGraph computer model
                         , drawDraggedBaseEdge computer model
 
-                        --, axes
+                        --, SceneWebGL.axes 100 0.2
                         --, sphere red 0.1
                         , floor computer
                         , drawPointerReach computer model
@@ -600,13 +600,6 @@ floor computer =
         |> moveZ -(getFloat "base height" computer)
 
 
-axes : Shape
-axes =
-    group
-        [ line red ( 100, 0, 0 ) -- x axis
-        , line green ( 0, 100, 0 ) -- y axis
-        , line blue ( 0, 0, 100 ) -- z axis
-        ]
 
 
 drawDraggedBaseEdge : Computer -> Model -> Shape

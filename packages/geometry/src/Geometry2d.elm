@@ -9,11 +9,40 @@ type alias Vector2d =
     ( Float, Float )
 
 
+vectorTo : Point2d -> Point2d -> Vector2d
+vectorTo end start =
+    ( end.x - start.x
+    , end.y - start.y
+    )
+
+
+vectorFrom : Point2d -> Point2d -> Vector2d
+vectorFrom p q =
+    ( q.x - p.x
+    , q.y - p.y
+    )
+
+
 scaleAbout : Point2d -> Float -> Point2d -> Point2d
 scaleAbout centerPoint scale point =
     vectorFrom centerPoint point
         |> scaleBy scale
         |> (\vec -> translateBy vec centerPoint)
+
+
+rotate : Float -> Point2d -> Point2d
+rotate theta { x, y } =
+    { x = x * cos theta - y * sin theta
+    , y = x * sin theta + y * cos theta
+    }
+
+
+rotateAround : Point2d -> Float -> Point2d -> Point2d
+rotateAround rotationCenter theta p =
+    p
+        |> translateBy (rotationCenter |> vectorTo (Point2d 0 0))
+        |> rotate theta
+        |> translateBy (Point2d 0 0 |> vectorTo rotationCenter)
 
 
 translateBy : Vector2d -> Point2d -> Point2d
@@ -39,13 +68,6 @@ add ( x1, y1 ) ( x2, y2 ) =
 scaleBy : Float -> Vector2d -> Vector2d
 scaleBy k ( x, y ) =
     ( k * x, k * y )
-
-
-vectorFrom : Point2d -> Point2d -> Vector2d
-vectorFrom p q =
-    ( q.x - p.x
-    , q.y - p.y
-    )
 
 
 distance : Point2d -> Point2d -> Float

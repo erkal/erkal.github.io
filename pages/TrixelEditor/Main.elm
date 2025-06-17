@@ -192,19 +192,12 @@ viewWebGLCanvas computer model =
                 [ drawFaces computer model
 
                 --, drawGrid computer
-                --, axes
+                --, SceneWebGL.axes 100 0.2
                 --, drawMouseOveredFace computer model
                 ]
             ]
 
 
-axes : Shape
-axes =
-    group
-        [ line red ( 100, 0, 0 ) -- x axis
-        , line green ( 0, 100, 0 ) -- y axis
-        , line blue ( 0, 0, 100 ) -- z axis
-        ]
 
 
 drawMouseOveredFace : Computer -> Model -> Shape

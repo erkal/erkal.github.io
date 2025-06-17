@@ -1,41 +1,48 @@
 module SelectList exposing
-    ( SelectList
-    , add
-    , create
-    , duplicateCurrent
-    , getBeforeReversed
-    , getCurrent
-    , getCurrentIndex
-    , goTo
-    , goToEnd
-    , goToNext
-    , goToPrevious
-    , goToStart
-    , init
+    ( init, singleton, create
+    , getCurrent, getBeforeReversed, getAfter, getCurrentIndex, toList, size, isAtStart, isAtEnd
+    , goTo, goToNext, goToPrevious, goToStart, goToEnd, selectNextOccurrenceOf
+    , mapCurrent, setCurrent, map, mapAt, moveCurrentToIndex
+    , add, duplicateCurrent, removeCurrent, removeAfter, removeBefore, moveElementDown, moveElementUp
     , insertAt
-    , isAtEnd
-    , isAtStart
-    , map
-    , mapAt
-    , mapCurrent
-    , moveCurrentToIndex
-    , moveElementDown
-    , moveElementUp
-    , removeAfter
-    , removeBefore
-    , removeCurrent
-    , selectNextOccurrenceOf
-    , setCurrent
-    , singleton
-    , size
-    , toList
+    , SelectList
     )
 
-{-|
+{-| `SelectList` is a data structure that allows you to store and browse a list of elements, in which always one element is selected.
 
-    `SelectList` is a data structure that allows you to store and browse a list of elements, in which always one element is selected.
+
+# Creation
+
+@docs init, singleton, create
+
+
+# Query
+
+@docs getCurrent, getBeforeReversed, getAfter, getCurrentIndex, toList, size, isAtStart, isAtEnd
+
+
+# Navigation
+
+@docs goTo, goToNext, goToPrevious, goToStart, goToEnd, selectNextOccurrenceOf
+
+
+# Update
+
+@docs mapCurrent, setCurrent, map, mapAt, moveCurrentToIndex
+
+
+# Add and Remove
+
+@docs add, duplicateCurrent, removeCurrent, removeAfter, removeBefore, moveElementDown, moveElementUp
+
+
+# Insertion
+
+@docs insertAt
 
 -}
+
+import List.Extra
 
 
 type SelectList a
@@ -46,6 +53,12 @@ type SelectList a
         }
 
 
+{-| Initialize a SelectList with a first element and a list of remaining elements.
+The first element becomes the selected element.
+
+    init ( 1, [ 2, 3, 4 ] ) --> SelectList with 1 selected, followed by 2, 3, 4
+
+-}
 init : ( a, List a ) -> SelectList a
 init ( first, rest ) =
     SelectList
@@ -55,11 +68,22 @@ init ( first, rest ) =
         }
 
 
+{-| Create a SelectList with a single element.
+
+    singleton 1 --> SelectList with only 1
+
+-}
 singleton : a -> SelectList a
 singleton el =
     init ( el, [] )
 
 
+{-| Create a SelectList with elements before, the current element, and elements after.
+This gives you full control over the initial state of the SelectList.
+
+    create ( [ 1, 2 ], 3, [ 4, 5 ] ) --> SelectList with 1, 2 before, 3 selected, and 4, 5 after
+
+-}
 create : ( List a, a, List a ) -> SelectList a
 create ( before, current, after ) =
     SelectList
@@ -73,36 +97,82 @@ create ( before, current, after ) =
 -- QUERY
 
 
+{-| Get the currently selected element.
+
+    getCurrent (create ( [ 1, 2 ], 3, [ 4, 5 ] )) --> 3
+
+-}
 getCurrent : SelectList a -> a
 getCurrent (SelectList p) =
     p.current
 
 
+{-| Get the list of elements before the current element, in reverse order.
+
+    getBeforeReversed (create ( [ 1, 2 ], 3, [ 4, 5 ] )) --> [2, 1]
+
+-}
 getBeforeReversed : SelectList a -> List a
 getBeforeReversed (SelectList p) =
     p.beforeReversed
 
 
+{-| Get the list of elements after the current element.
+-}
+getAfter : SelectList a -> List a
+getAfter (SelectList p) =
+    p.after
+
+
+{-| Get the index of the currently selected element.
+
+    getCurrentIndex (create ( [ 1, 2 ], 3, [ 4, 5 ] )) --> 2
+
+-}
 getCurrentIndex : SelectList a -> Int
 getCurrentIndex (SelectList p) =
     List.length p.beforeReversed
 
 
+{-| Convert a SelectList to a regular List.
+
+    toList (create ( [ 1, 2 ], 3, [ 4, 5 ] )) --> [1, 2, 3, 4, 5]
+
+-}
 toList : SelectList a -> List a
 toList (SelectList p) =
     List.reverse p.beforeReversed ++ (p.current :: p.after)
 
 
+{-| Get the total number of elements in the SelectList.
+
+    size (create ( [ 1, 2 ], 3, [ 4, 5 ] )) --> 5
+
+-}
 size : SelectList a -> Int
 size (SelectList p) =
     1 + List.length p.beforeReversed + List.length p.after
 
 
+{-| Check if the current element is the first element in the list.
+
+    isAtStart (init ( 1, [ 2, 3 ] )) --> True
+
+    isAtStart (create ( [ 1, 2 ], 3, [ 4, 5 ] )) --> False
+
+-}
 isAtStart : SelectList a -> Bool
 isAtStart (SelectList p) =
     List.isEmpty p.beforeReversed
 
 
+{-| Check if the current element is the last element in the list.
+
+    isAtEnd (create ( [ 1, 2 ], 3, [] )) --> True
+
+    isAtEnd (create ( [ 1, 2 ], 3, [ 4, 5 ] )) --> False
+
+-}
 isAtEnd : SelectList a -> Bool
 isAtEnd (SelectList p) =
     List.isEmpty p.after
@@ -112,16 +182,31 @@ isAtEnd (SelectList p) =
 -- UPDATE
 
 
+{-| Apply a function to the current element only.
+
+    mapCurrent String.fromInt (create ( [ 1, 2 ], 3, [ 4, 5 ] )) --> SelectList with 1, 2 before, "3" selected, and 4, 5 after
+
+-}
 mapCurrent : (a -> a) -> SelectList a -> SelectList a
 mapCurrent up (SelectList p) =
     SelectList { p | current = up p.current }
 
 
+{-| Replace the current element with a new value.
+
+    setCurrent 99 (create ( [ 1, 2 ], 3, [ 4, 5 ] )) --> SelectList with 1, 2 before, 99 selected, and 4, 5 after
+
+-}
 setCurrent : a -> SelectList a -> SelectList a
 setCurrent newCurrent (SelectList p) =
     SelectList { p | current = newCurrent }
 
 
+{-| Apply a function to all elements in the SelectList.
+
+    map String.fromInt (create ( [ 1, 2 ], 3, [ 4, 5 ] )) --> SelectList with "1", "2" before, "3" selected, and "4", "5" after
+
+-}
 map : (a -> b) -> SelectList a -> SelectList b
 map up (SelectList p) =
     SelectList
@@ -131,6 +216,13 @@ map up (SelectList p) =
         }
 
 
+{-| Apply a function to the element at the specified index.
+
+    mapAt 2 String.fromInt (create ( [ 1, 2 ], 3, [ 4, 5 ] )) --> SelectList with 1, 2 before, "3" selected, and 4, 5 after
+
+    mapAt 0 String.fromInt (create ( [ 1, 2 ], 3, [ 4, 5 ] )) --> SelectList with "1", 2 before, 3 selected, and 4, 5 after
+
+-}
 mapAt : Int -> (a -> a) -> SelectList a -> SelectList a
 mapAt index up selectList =
     selectList
@@ -139,12 +231,24 @@ mapAt index up selectList =
         |> goTo (getCurrentIndex selectList)
 
 
+{-| Insert a new element at the specified index.
+The new element becomes selected.
+
+    insertAt 2 99 (create ( [ 1, 2 ], 3, [ 4, 5 ] )) --> SelectList with 1, 2 before, 99 selected, and 3, 4, 5 after
+
+-}
 insertAt : Int -> a -> SelectList a -> SelectList a
 insertAt targetIndex element =
     goTo (targetIndex - 1)
         >> add element
 
 
+{-| Move the current element to a different index in the list.
+The element remains selected.
+
+    moveCurrentToIndex 0 (create ( [ 1, 2 ], 3, [ 4, 5 ] )) --> SelectList with 3 selected, followed by 1, 2, 4, 5
+
+-}
 moveCurrentToIndex : Int -> SelectList a -> SelectList a
 moveCurrentToIndex targetIndex (SelectList p) =
     let
@@ -160,16 +264,34 @@ moveCurrentToIndex targetIndex (SelectList p) =
         |> insertAt correctedTargetIndex p.current
 
 
+{-| Move to the first element of the list.
+
+    goToStart (create ( [ 1, 2 ], 3, [ 4, 5 ] )) --> SelectList with 1 selected, followed by 2, 3, 4, 5
+
+-}
 goToStart : SelectList a -> SelectList a
 goToStart selectList =
     selectList |> goTo 0
 
 
+{-| Move to the last element of the list.
+
+    goToEnd (create ( [ 1, 2 ], 3, [ 4, 5 ] )) --> SelectList with 1, 2, 3, 4 before, 5 selected
+
+-}
 goToEnd : SelectList a -> SelectList a
 goToEnd selectList =
     selectList |> goTo (size selectList - 1)
 
 
+{-| Move to the element at the specified index.
+Uses modBy to handle indices outside the valid range.
+
+    goTo 0 (create ( [ 1, 2 ], 3, [ 4, 5 ] )) --> SelectList with 1 selected, followed by 2, 3, 4, 5
+
+    goTo 4 (create ( [ 1, 2 ], 3, [ 4, 5 ] )) --> SelectList with 1, 2, 3, 4 before, 5 selected
+
+-}
 goTo : Int -> SelectList a -> SelectList a
 goTo i (SelectList p) =
     let
@@ -191,6 +313,13 @@ goTo i (SelectList p) =
             SelectList p
 
 
+{-| Move to the next element in the list. Does nothing if already at the end.
+
+    goToNext (create ( [ 1, 2 ], 3, [ 4, 5 ] )) --> SelectList with 1, 2, 3 before, 4 selected, and 5 after
+
+    goToNext (create ( [ 1, 2, 3, 4 ], 5, [] )) --> SelectList with 1, 2, 3, 4 before, 5 selected (unchanged)
+
+-}
 goToNext : SelectList a -> SelectList a
 goToNext (SelectList p) =
     case p.after of
@@ -205,6 +334,15 @@ goToNext (SelectList p) =
             SelectList p
 
 
+{-| Move to the next occurrence of the specified element. If not found, stays at the current element.
+
+Note: This may result in an infinite loop if the element doesn't exist and the SelectList has more than one element.
+
+    selectNextOccurrenceOf 5 (create ( [ 1, 2 ], 3, [ 4, 5 ] )) --> SelectList with 1, 2, 3, 4 before, 5 selected
+
+    selectNextOccurrenceOf 3 (create ( [ 1, 2 ], 3, [ 4, 5 ] )) --> SelectList with 1, 2 before, 3 selected, and 4, 5 after (unchanged)
+
+-}
 selectNextOccurrenceOf : a -> SelectList a -> SelectList a
 selectNextOccurrenceOf a selectList =
     let
@@ -218,6 +356,13 @@ selectNextOccurrenceOf a selectList =
     go selectList
 
 
+{-| Move to the previous element in the list. Does nothing if already at the start.
+
+    goToPrevious (create ( [ 1, 2 ], 3, [ 4, 5 ] )) --> SelectList with 1 before, 2 selected, and 3, 4, 5 after
+
+    goToPrevious (create ( [], 1, [ 2, 3 ] )) --> SelectList with 1 selected, followed by 2, 3 (unchanged)
+
+-}
 goToPrevious : SelectList a -> SelectList a
 goToPrevious (SelectList p) =
     case p.beforeReversed of
@@ -232,6 +377,11 @@ goToPrevious (SelectList p) =
             SelectList p
 
 
+{-| Add a new element after the current element, and select it.
+
+    add 99 (create ( [ 1, 2 ], 3, [ 4, 5 ] )) --> SelectList with 1, 2, 3 before, 99 selected, and 4, 5 after
+
+-}
 add : a -> SelectList a -> SelectList a
 add a (SelectList p) =
     SelectList
@@ -241,24 +391,48 @@ add a (SelectList p) =
         }
 
 
+{-| Remove all elements after the current element.
+
+    removeAfter (create ( [ 1, 2 ], 3, [ 4, 5 ] )) --> SelectList with 1, 2 before and 3 selected
+
+-}
 removeAfter : SelectList a -> SelectList a
 removeAfter (SelectList p) =
     SelectList
         { p | after = [] }
 
 
+{-| Remove all elements before the current element.
+
+    removeBefore (create ( [ 1, 2 ], 3, [ 4, 5 ] )) --> SelectList with 3 selected, followed by 4, 5
+
+-}
 removeBefore : SelectList a -> SelectList a
 removeBefore (SelectList p) =
     SelectList
         { p | beforeReversed = [] }
 
 
+{-| Add a duplicate of the current element after the current element and select it.
+
+    duplicateCurrent (create ( [ 1, 2 ], 3, [ 4, 5 ] )) --> SelectList with 1, 2, 3 before, 3 selected, and 4, 5 after
+
+-}
 duplicateCurrent : SelectList a -> SelectList a
 duplicateCurrent selectList =
     selectList
         |> add (getCurrent selectList)
 
 
+{-| Remove the current element and select the previous element.
+If there is no previous element, select the next element.
+If there are no other elements, the SelectList remains unchanged.
+
+    removeCurrent (create ( [ 1, 2 ], 3, [ 4, 5 ] )) --> SelectList with 1 before, 2 selected, and 4, 5 after
+
+    removeCurrent (create ( [], 1, [ 2, 3 ] )) --> SelectList with 2 selected, followed by 3
+
+-}
 removeCurrent : SelectList a -> SelectList a
 removeCurrent (SelectList p) =
     case p.beforeReversed of
@@ -282,6 +456,14 @@ removeCurrent (SelectList p) =
                     SelectList p
 
 
+{-| Move the current element down in the list (exchange with next element).
+If at end, wraps to the beginning.
+
+    moveElementDown (create ( [ 1, 2 ], 3, [ 4, 5 ] )) --> SelectList with 1, 2, 4 before, 3 selected, and 5 after
+
+    moveElementDown (create ( [ 1, 2 ], 3, [] )) --> SelectList with 3 selected, followed by 2, 1
+
+-}
 moveElementDown : SelectList a -> SelectList a
 moveElementDown (SelectList p) =
     case p.after of
@@ -300,6 +482,14 @@ moveElementDown (SelectList p) =
                 }
 
 
+{-| Move the current element up in the list (exchange with previous element).
+If at start, wraps to the end.
+
+    moveElementUp (create ( [ 1, 2 ], 3, [ 4, 5 ] )) --> SelectList with 1 before, 2 selected, and 3, 4, 5 after
+
+    moveElementUp (create ( [], 1, [ 2, 3 ] )) --> SelectList with 2, 3 before, 1 selected
+
+-}
 moveElementUp : SelectList a -> SelectList a
 moveElementUp (SelectList p) =
     case p.beforeReversed of

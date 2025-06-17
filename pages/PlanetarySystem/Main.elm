@@ -83,19 +83,12 @@ view computer model =
             }
             [ sun computer
             , earthAndMoon computer
-            , axes
+            , SceneWebGL.axes 100 0.2
 
             --, block gray ( 10, 0.01, 10 )
             ]
 
 
-axes : Shape
-axes =
-    group
-        [ line red ( 100, 0, 0 ) -- x axis
-        , line green ( 0, 100, 0 ) -- y axis
-        , line blue ( 0, 0, 100 ) -- z axis
-        ]
 
 
 sun : Computer -> Shape

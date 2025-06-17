@@ -288,7 +288,7 @@ viewGame computer model =
     in
     fromUnstyled <|
         viewScene
-            [ drawAxes computer
+            [ SceneWebGL.axes 10 0.1
 
             --, drawFloor computer
             , drawBall computer model
@@ -297,15 +297,6 @@ viewGame computer model =
             , drawMouseOverXY computer model
             , drawPolygonBeingEdited computer model
             ]
-
-
-drawAxes : Computer -> Shape
-drawAxes computer =
-    group
-        [ thickLine computer red 0.1 ( Point 0 0 0, Point 10 0 0 ) -- x axis
-        , thickLine computer green 0.1 ( Point 0 0 0, Point 0 10 0 ) -- y axis
-        , thickLine computer blue 0.1 ( Point 0 0 0, Point 0 0 10 ) -- z axis
-        ]
 
 
 material computer color =

@@ -1,4 +1,4 @@
-module SceneCanvas2d.Geometry exposing (..)
+module SceneCanvas2D.Geometry exposing (..)
 
 
 type alias Geometry =

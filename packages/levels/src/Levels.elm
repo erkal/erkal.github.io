@@ -2,6 +2,7 @@ module Levels exposing
     ( Levels
     , Msg
     , current
+    , nameOfCurrent
     , importJSON
     , init
     , mapCurrent
@@ -9,7 +10,7 @@ module Levels exposing
     , view
     )
 
-import Css
+import Css exposing (pct, px)
 import DesignSystem.Color exposing (..)
 import Html.Styled exposing (Html, button, div, input, pre, text, textarea, toUnstyled)
 import Html.Styled.Attributes exposing (autocomplete, cols, css, placeholder, rows, title, value)
@@ -54,6 +55,11 @@ init encodeLevel levelDecoder first rest =
 current : Levels level -> level
 current (Levels p) =
     p.selectList |> SelectList.getCurrent |> .level
+
+
+nameOfCurrent : Levels level -> String
+nameOfCurrent (Levels p) =
+    p.selectList |> SelectList.getCurrent |> .name
 
 
 
@@ -235,6 +241,7 @@ addNewLevel msg (Levels p) =
 view : Levels level -> Html Msg
 view (Levels p) =
     let
+        addNewLevelButton : Html Msg
         addNewLevelButton =
             button
                 [ css
@@ -249,8 +256,9 @@ view (Levels p) =
                 ]
                 [ Icons.icons.plus ]
 
+        deleteCurrentLevelButton : Html Msg
         deleteCurrentLevelButton =
-            div
+            button
                 [ css
                     [ Css.display Css.inlineBlock
                     , Css.marginLeft (Css.px 4)
@@ -263,8 +271,9 @@ view (Levels p) =
                 ]
                 [ Icons.icons.trash ]
 
+        moveLevelDownButton : Html Msg
         moveLevelDownButton =
-            div
+            button
                 [ css
                     [ Css.display Css.inlineBlock
                     , Css.marginLeft (Css.px 4)
@@ -277,8 +286,9 @@ view (Levels p) =
                 ]
                 [ Icons.icons.moveDown ]
 
+        moveLevelUpButton : Html Msg
         moveLevelUpButton =
-            div
+            button
                 [ css
                     [ Css.display Css.inlineBlock
                     , Css.marginLeft (Css.px 4)
@@ -291,6 +301,7 @@ view (Levels p) =
                 ]
                 [ Icons.icons.moveUp ]
 
+        levelItem : Int -> String -> Html Msg
         levelItem index levelName =
             button
                 [ css
@@ -340,33 +351,21 @@ view (Levels p) =
     in
     div
         [ css
-            [ Css.width (Css.px 240)
-            , Css.fontSize (Css.px 12)
+            [ Css.displayFlex
+            , Css.flexDirection Css.column
+            , Css.property "gap" "16px"
             ]
         ]
         [ div
             [ css
-                [ Css.width (Css.pct 100)
-                , Css.height (Css.px 200)
-                , Css.overflow Css.hidden
+                [ Css.height (Css.px 200)
                 , Css.overflowY Css.scroll
+                , Css.border3 (px 1) Css.solid (Css.rgba 255 255 255 0.1)
                 ]
             ]
             (p.selectList |> SelectList.toList |> List.indexedMap (\index { name } -> levelItem index name))
-        , div
-            [ css
-                [ Css.padding (Css.px 16)
-                , Css.border3 (Css.px 0.5) Css.solid (setOpacity 0.2 white |> toCssColor)
-                ]
-            ]
-            [ exportingLevels (Levels p) ]
-        , div
-            [ css
-                [ Css.padding (Css.px 16)
-                , Css.border3 (Css.px 0.5) Css.solid (setOpacity 0.2 white |> toCssColor)
-                ]
-            ]
-            [ importingLevels (Levels p) ]
+        , div [] [ exportingLevels (Levels p) ]
+        , div [] [ importingLevels (Levels p) ]
         ]
 
 
@@ -374,7 +373,7 @@ makeButton : msg -> String -> Html msg
 makeButton msg string =
     button
         [ css
-            [ Css.margin (Css.px 4)
+            [ Css.marginBottom (Css.px 4)
             , Css.padding (Css.px 8)
             , Css.borderRadius (Css.px 4)
             , Css.color (setOpacity 0.6 white |> toCssColor)
@@ -394,12 +393,10 @@ exportingLevels (Levels p) =
         , pre
             [ css
                 [ Css.width (Css.pct 100)
-                , Css.padding (Css.px 8)
                 , Css.height (Css.px 112)
                 , Css.overflowY Css.scroll
-                , Css.color (setOpacity 0.6 white |> toCssColor)
+                , Css.color (whiteAlpha800 |> toCssColor)
                 , Css.fontSize (Css.px 8)
-                , Css.lineHeight (Css.px 9)
                 , Css.backgroundColor (setOpacity 0.4 black |> toCssColor)
                 , Css.property "user-select" "text"
                 ]
@@ -415,12 +412,10 @@ importingLevels (Levels p) =
         , textarea
             [ css
                 [ Css.width (Css.pct 100)
-                , Css.padding (Css.px 8)
                 , Css.height (Css.px 112)
                 , Css.overflowY Css.scroll
-                , Css.color (setOpacity 0.6 white |> toCssColor)
+                , Css.color (whiteAlpha800 |> toCssColor)
                 , Css.fontSize (Css.px 8)
-                , Css.lineHeight (Css.px 9)
                 , Css.backgroundColor (setOpacity 0.4 black |> toCssColor)
                 , Css.property "user-select" "text"
                 ]
