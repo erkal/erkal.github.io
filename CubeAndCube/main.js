@@ -16752,16 +16752,29 @@ var $ianmackenzie$elm_geometry$Point3d$meters = F3(
 		return $ianmackenzie$elm_geometry$Geometry$Types$Point3d(
 			{x: x, y: y, z: z});
 	});
-var $author$project$SceneWebGL$cube = F2(
-	function (material_, width) {
-		var hw = width / 2;
+var $author$project$SceneWebGL$block = F2(
+	function (material_, _v0) {
+		var xDim = _v0.a;
+		var yDim = _v0.b;
+		var zDim = _v0.c;
+		var _v1 = _Utils_Tuple3(xDim / 2, yDim / 2, zDim / 2);
+		var hXDim = _v1.a;
+		var hYDim = _v1.b;
+		var hZDim = _v1.c;
 		return A2(
 			$ianmackenzie$elm_3d_scene$Scene3d$blockWithShadow,
 			material_,
 			A2(
 				$ianmackenzie$elm_geometry$Block3d$from,
-				A3($ianmackenzie$elm_geometry$Point3d$meters, -hw, -hw, -hw),
-				A3($ianmackenzie$elm_geometry$Point3d$meters, hw, hw, hw)));
+				A3($ianmackenzie$elm_geometry$Point3d$meters, -hXDim, -hYDim, -hZDim),
+				A3($ianmackenzie$elm_geometry$Point3d$meters, hXDim, hYDim, hZDim)));
+	});
+var $author$project$SceneWebGL$cube = F2(
+	function (material_, width) {
+		return A2(
+			$author$project$SceneWebGL$block,
+			material_,
+			_Utils_Tuple3(width, width, width));
 	});
 var $ianmackenzie$elm_3d_scene$Scene3d$group = function (entities) {
 	return $ianmackenzie$elm_3d_scene$Scene3d$Entity$group(entities);

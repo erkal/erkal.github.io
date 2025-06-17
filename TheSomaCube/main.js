@@ -17250,14 +17250,10 @@ var $author$project$TheSomaCube$Main$drawBigCube = function (computer) {
 };
 var $author$project$SceneWebGL$cube = F2(
 	function (material_, width) {
-		var hw = width / 2;
 		return A2(
-			$ianmackenzie$elm_3d_scene$Scene3d$blockWithShadow,
+			$author$project$SceneWebGL$block,
 			material_,
-			A2(
-				$ianmackenzie$elm_geometry$Block3d$from,
-				A3($ianmackenzie$elm_geometry$Point3d$meters, -hw, -hw, -hw),
-				A3($ianmackenzie$elm_geometry$Point3d$meters, hw, hw, hw)));
+			_Utils_Tuple3(width, width, width));
 	});
 var $author$project$SceneWebGL$moveY = function (y) {
 	return $author$project$SceneWebGL$move(

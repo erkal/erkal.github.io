@@ -12049,12 +12049,12 @@ var $author$project$SceneCanvas2D$Drawable = F2(
 	function (a, b) {
 		return {$: 'Drawable', a: a, b: b};
 	});
-var $author$project$SceneCanvas2d$Geometry$defaultGeometry = {rotation: 0, x: 0, xScale: 1, y: 0, yScale: 1, z: 0};
+var $author$project$SceneCanvas2D$Geometry$defaultGeometry = {rotation: 0, x: 0, xScale: 1, y: 0, yScale: 1, z: 0};
 var $author$project$SceneCanvas2D$circle = F2(
 	function (radius, color) {
 		return A2(
 			$author$project$SceneCanvas2D$Drawable,
-			$author$project$SceneCanvas2d$Geometry$defaultGeometry,
+			$author$project$SceneCanvas2D$Geometry$defaultGeometry,
 			A2($author$project$SceneCanvas2D$Circle, radius, color));
 	});
 var $avh4$elm_color$Color$darkPurple = A4($avh4$elm_color$Color$RgbaSpace, 92 / 255, 53 / 255, 102 / 255, 1.0);
@@ -12066,7 +12066,7 @@ var $author$project$SceneCanvas2D$Group = function (a) {
 var $author$project$SceneCanvas2D$group = function (elements) {
 	return A2(
 		$author$project$SceneCanvas2D$Drawable,
-		$author$project$SceneCanvas2d$Geometry$defaultGeometry,
+		$author$project$SceneCanvas2D$Geometry$defaultGeometry,
 		$author$project$SceneCanvas2D$Group(elements));
 };
 var $avh4$elm_color$Color$lightBlue = A4($avh4$elm_color$Color$RgbaSpace, 114 / 255, 159 / 255, 207 / 255, 1.0);
@@ -12081,7 +12081,7 @@ var $author$project$SceneCanvas2D$mapGeometry = F2(
 			up(geometry),
 			bareDrawable);
 	});
-var $author$project$SceneCanvas2d$Geometry$move = F2(
+var $author$project$SceneCanvas2D$Geometry$move = F2(
 	function (_v0, geometry) {
 		var dx = _v0.a;
 		var dy = _v0.b;
@@ -12092,7 +12092,7 @@ var $author$project$SceneCanvas2d$Geometry$move = F2(
 	});
 var $author$project$SceneCanvas2D$move = function (vec) {
 	return $author$project$SceneCanvas2D$mapGeometry(
-		$author$project$SceneCanvas2d$Geometry$move(vec));
+		$author$project$SceneCanvas2D$Geometry$move(vec));
 };
 var $author$project$SceneCanvas2D$moveX = function (x) {
 	return $author$project$SceneCanvas2D$move(
@@ -12111,7 +12111,7 @@ var $author$project$SceneCanvas2D$rectangle = F3(
 	function (w, h, color) {
 		return A2(
 			$author$project$SceneCanvas2D$Drawable,
-			$author$project$SceneCanvas2d$Geometry$defaultGeometry,
+			$author$project$SceneCanvas2D$Geometry$defaultGeometry,
 			A3($author$project$SceneCanvas2D$Rectangle, w, h, color));
 	});
 var $elm$core$Basics$sin = _Basics_sin;
@@ -13280,13 +13280,13 @@ var $joakin$elm_canvas$Canvas$Settings$Advanced$Rotate = function (a) {
 	return {$: 'Rotate', a: a};
 };
 var $joakin$elm_canvas$Canvas$Settings$Advanced$rotate = $joakin$elm_canvas$Canvas$Settings$Advanced$Rotate;
-var $author$project$SceneCanvas2d$Geometry$rotateAroundItsCenter = F2(
+var $author$project$SceneCanvas2D$Geometry$rotateAroundItsCenter = F2(
 	function (angle, geometry) {
 		return _Utils_update(
 			geometry,
 			{rotation: geometry.rotation + angle});
 	});
-var $author$project$SceneCanvas2d$Geometry$rotatePoint = F2(
+var $author$project$SceneCanvas2D$Geometry$rotatePoint = F2(
 	function (angle, p) {
 		return _Utils_update(
 			p,
@@ -13295,41 +13295,41 @@ var $author$project$SceneCanvas2d$Geometry$rotatePoint = F2(
 				y: (p.x * $elm$core$Basics$sin(angle)) + (p.y * $elm$core$Basics$cos(angle))
 			});
 	});
-var $author$project$SceneCanvas2d$Geometry$rotateAroundOrigin = F2(
+var $author$project$SceneCanvas2D$Geometry$rotateAroundOrigin = F2(
 	function (angle, geometry) {
 		return A2(
-			$author$project$SceneCanvas2d$Geometry$rotateAroundItsCenter,
+			$author$project$SceneCanvas2D$Geometry$rotateAroundItsCenter,
 			angle,
-			A2($author$project$SceneCanvas2d$Geometry$rotatePoint, angle, geometry));
+			A2($author$project$SceneCanvas2D$Geometry$rotatePoint, angle, geometry));
 	});
 var $author$project$SceneCanvas2D$rotateAroundOrigin = function (angle) {
 	return $author$project$SceneCanvas2D$mapGeometry(
-		$author$project$SceneCanvas2d$Geometry$rotateAroundOrigin(angle));
+		$author$project$SceneCanvas2D$Geometry$rotateAroundOrigin(angle));
 };
 var $joakin$elm_canvas$Canvas$Settings$Advanced$Scale = F2(
 	function (a, b) {
 		return {$: 'Scale', a: a, b: b};
 	});
 var $joakin$elm_canvas$Canvas$Settings$Advanced$scale = $joakin$elm_canvas$Canvas$Settings$Advanced$Scale;
-var $author$project$SceneCanvas2d$Geometry$scaleX = F2(
+var $author$project$SceneCanvas2D$Geometry$scaleX = F2(
 	function (k, geometry) {
 		return _Utils_update(
 			geometry,
 			{xScale: geometry.xScale * k});
 	});
-var $author$project$SceneCanvas2d$Geometry$scaleY = F2(
+var $author$project$SceneCanvas2D$Geometry$scaleY = F2(
 	function (k, geometry) {
 		return _Utils_update(
 			geometry,
 			{yScale: geometry.yScale * k});
 	});
-var $author$project$SceneCanvas2d$Geometry$scaleAroundOrigin = F3(
+var $author$project$SceneCanvas2D$Geometry$scaleAroundOrigin = F3(
 	function (xScale, yScale, geometry) {
 		return A2(
-			$author$project$SceneCanvas2d$Geometry$scaleY,
+			$author$project$SceneCanvas2D$Geometry$scaleY,
 			yScale,
 			A2(
-				$author$project$SceneCanvas2d$Geometry$scaleX,
+				$author$project$SceneCanvas2D$Geometry$scaleX,
 				xScale,
 				_Utils_update(
 					geometry,
@@ -13338,7 +13338,7 @@ var $author$project$SceneCanvas2d$Geometry$scaleAroundOrigin = F3(
 var $author$project$SceneCanvas2D$scaleAroundOrigin = F2(
 	function (xScale, yScale) {
 		return $author$project$SceneCanvas2D$mapGeometry(
-			A2($author$project$SceneCanvas2d$Geometry$scaleAroundOrigin, xScale, yScale));
+			A2($author$project$SceneCanvas2D$Geometry$scaleAroundOrigin, xScale, yScale));
 	});
 var $joakin$elm_canvas$Canvas$Internal$Canvas$DrawableShapes = function (a) {
 	return {$: 'DrawableShapes', a: a};

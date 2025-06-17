@@ -21710,8 +21710,6 @@ var $rtfeldman$elm_css$Html$Styled$Attributes$autocomplete = function (bool) {
 };
 var $author$project$DesignSystem$Color$black = A4($avh4$elm_color$Color$rgba, 0, 0, 0, 1);
 var $author$project$Levels$ClickedExportLevelsButton = {$: 'ClickedExportLevelsButton'};
-var $rtfeldman$elm_css$Css$lineHeight = $rtfeldman$elm_css$Css$prop1('line-height');
-var $rtfeldman$elm_css$Css$margin = $rtfeldman$elm_css$Css$prop1('margin');
 var $avh4$elm_color$Color$fromRgba = function (components) {
 	return A4($avh4$elm_color$Color$RgbaSpace, components.red, components.green, components.blue, components.alpha);
 };
@@ -21730,7 +21728,7 @@ var $author$project$Levels$makeButton = F2(
 					$rtfeldman$elm_css$Html$Styled$Attributes$css(
 					_List_fromArray(
 						[
-							$rtfeldman$elm_css$Css$margin(
+							$rtfeldman$elm_css$Css$marginBottom(
 							$rtfeldman$elm_css$Css$px(4)),
 							$rtfeldman$elm_css$Css$padding(
 							$rtfeldman$elm_css$Css$px(8)),
@@ -21777,18 +21775,13 @@ var $author$project$Levels$exportingLevels = function (_v0) {
 							[
 								$rtfeldman$elm_css$Css$width(
 								$rtfeldman$elm_css$Css$pct(100)),
-								$rtfeldman$elm_css$Css$padding(
-								$rtfeldman$elm_css$Css$px(8)),
 								$rtfeldman$elm_css$Css$height(
 								$rtfeldman$elm_css$Css$px(112)),
 								$rtfeldman$elm_css$Css$overflowY($rtfeldman$elm_css$Css$scroll),
 								$rtfeldman$elm_css$Css$color(
-								$author$project$DesignSystem$Color$toCssColor(
-									A2($author$project$DesignSystem$Color$setOpacity, 0.6, $author$project$DesignSystem$Color$white))),
+								$author$project$DesignSystem$Color$toCssColor($author$project$DesignSystem$Color$whiteAlpha800)),
 								$rtfeldman$elm_css$Css$fontSize(
 								$rtfeldman$elm_css$Css$px(8)),
-								$rtfeldman$elm_css$Css$lineHeight(
-								$rtfeldman$elm_css$Css$px(9)),
 								$rtfeldman$elm_css$Css$backgroundColor(
 								$author$project$DesignSystem$Color$toCssColor(
 									A2($author$project$DesignSystem$Color$setOpacity, 0.4, $author$project$DesignSystem$Color$black))),
@@ -21835,18 +21828,13 @@ var $author$project$Levels$importingLevels = function (_v0) {
 							[
 								$rtfeldman$elm_css$Css$width(
 								$rtfeldman$elm_css$Css$pct(100)),
-								$rtfeldman$elm_css$Css$padding(
-								$rtfeldman$elm_css$Css$px(8)),
 								$rtfeldman$elm_css$Css$height(
 								$rtfeldman$elm_css$Css$px(112)),
 								$rtfeldman$elm_css$Css$overflowY($rtfeldman$elm_css$Css$scroll),
 								$rtfeldman$elm_css$Css$color(
-								$author$project$DesignSystem$Color$toCssColor(
-									A2($author$project$DesignSystem$Color$setOpacity, 0.6, $author$project$DesignSystem$Color$white))),
+								$author$project$DesignSystem$Color$toCssColor($author$project$DesignSystem$Color$whiteAlpha800)),
 								$rtfeldman$elm_css$Css$fontSize(
 								$rtfeldman$elm_css$Css$px(8)),
-								$rtfeldman$elm_css$Css$lineHeight(
-								$rtfeldman$elm_css$Css$px(9)),
 								$rtfeldman$elm_css$Css$backgroundColor(
 								$author$project$DesignSystem$Color$toCssColor(
 									A2($author$project$DesignSystem$Color$setOpacity, 0.4, $author$project$DesignSystem$Color$black))),
@@ -21885,7 +21873,7 @@ var $rtfeldman$elm_css$Css$whiteSpace = $rtfeldman$elm_css$Css$prop1('white-spac
 var $author$project$Levels$view = function (_v0) {
 	var p = _v0.a;
 	var moveLevelUpButton = A2(
-		$rtfeldman$elm_css$Html$Styled$div,
+		$rtfeldman$elm_css$Html$Styled$button,
 		_List_fromArray(
 			[
 				$rtfeldman$elm_css$Html$Styled$Attributes$css(
@@ -21911,7 +21899,7 @@ var $author$project$Levels$view = function (_v0) {
 		_List_fromArray(
 			[$author$project$Icons$icons.moveUp]));
 	var moveLevelDownButton = A2(
-		$rtfeldman$elm_css$Html$Styled$div,
+		$rtfeldman$elm_css$Html$Styled$button,
 		_List_fromArray(
 			[
 				$rtfeldman$elm_css$Html$Styled$Attributes$css(
@@ -21937,7 +21925,7 @@ var $author$project$Levels$view = function (_v0) {
 		_List_fromArray(
 			[$author$project$Icons$icons.moveDown]));
 	var deleteCurrentLevelButton = A2(
-		$rtfeldman$elm_css$Html$Styled$div,
+		$rtfeldman$elm_css$Html$Styled$button,
 		_List_fromArray(
 			[
 				$rtfeldman$elm_css$Html$Styled$Attributes$css(
@@ -22109,10 +22097,9 @@ var $author$project$Levels$view = function (_v0) {
 				$rtfeldman$elm_css$Html$Styled$Attributes$css(
 				_List_fromArray(
 					[
-						$rtfeldman$elm_css$Css$width(
-						$rtfeldman$elm_css$Css$px(240)),
-						$rtfeldman$elm_css$Css$fontSize(
-						$rtfeldman$elm_css$Css$px(12))
+						$rtfeldman$elm_css$Css$displayFlex,
+						$rtfeldman$elm_css$Css$flexDirection($rtfeldman$elm_css$Css$column),
+						A2($rtfeldman$elm_css$Css$property, 'gap', '16px')
 					]))
 			]),
 		_List_fromArray(
@@ -22124,12 +22111,14 @@ var $author$project$Levels$view = function (_v0) {
 						$rtfeldman$elm_css$Html$Styled$Attributes$css(
 						_List_fromArray(
 							[
-								$rtfeldman$elm_css$Css$width(
-								$rtfeldman$elm_css$Css$pct(100)),
 								$rtfeldman$elm_css$Css$height(
 								$rtfeldman$elm_css$Css$px(200)),
-								$rtfeldman$elm_css$Css$overflow($rtfeldman$elm_css$Css$hidden),
-								$rtfeldman$elm_css$Css$overflowY($rtfeldman$elm_css$Css$scroll)
+								$rtfeldman$elm_css$Css$overflowY($rtfeldman$elm_css$Css$scroll),
+								A3(
+								$rtfeldman$elm_css$Css$border3,
+								$rtfeldman$elm_css$Css$px(1),
+								$rtfeldman$elm_css$Css$solid,
+								A4($rtfeldman$elm_css$Css$rgba, 255, 255, 255, 0.1))
 							]))
 					]),
 				A2(
@@ -22142,21 +22131,7 @@ var $author$project$Levels$view = function (_v0) {
 					$author$project$SelectList$toList(p.selectList))),
 				A2(
 				$rtfeldman$elm_css$Html$Styled$div,
-				_List_fromArray(
-					[
-						$rtfeldman$elm_css$Html$Styled$Attributes$css(
-						_List_fromArray(
-							[
-								$rtfeldman$elm_css$Css$padding(
-								$rtfeldman$elm_css$Css$px(16)),
-								A3(
-								$rtfeldman$elm_css$Css$border3,
-								$rtfeldman$elm_css$Css$px(0.5),
-								$rtfeldman$elm_css$Css$solid,
-								$author$project$DesignSystem$Color$toCssColor(
-									A2($author$project$DesignSystem$Color$setOpacity, 0.2, $author$project$DesignSystem$Color$white)))
-							]))
-					]),
+				_List_Nil,
 				_List_fromArray(
 					[
 						$author$project$Levels$exportingLevels(
@@ -22164,21 +22139,7 @@ var $author$project$Levels$view = function (_v0) {
 					])),
 				A2(
 				$rtfeldman$elm_css$Html$Styled$div,
-				_List_fromArray(
-					[
-						$rtfeldman$elm_css$Html$Styled$Attributes$css(
-						_List_fromArray(
-							[
-								$rtfeldman$elm_css$Css$padding(
-								$rtfeldman$elm_css$Css$px(16)),
-								A3(
-								$rtfeldman$elm_css$Css$border3,
-								$rtfeldman$elm_css$Css$px(0.5),
-								$rtfeldman$elm_css$Css$solid,
-								$author$project$DesignSystem$Color$toCssColor(
-									A2($author$project$DesignSystem$Color$setOpacity, 0.2, $author$project$DesignSystem$Color$white)))
-							]))
-					]),
+				_List_Nil,
 				_List_fromArray(
 					[
 						$author$project$Levels$importingLevels(
@@ -22227,6 +22188,7 @@ var $author$project$IsomorphismGame$Main$levelSelection = function (model) {
 					]))
 			]));
 };
+var $rtfeldman$elm_css$Css$margin = $rtfeldman$elm_css$Css$prop1('margin');
 var $author$project$IsomorphismGame$Main$makeButton = F2(
 	function (msg, string) {
 		return A2(

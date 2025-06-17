@@ -17025,8 +17025,6 @@ var $rtfeldman$elm_css$Html$Styled$Attributes$autocomplete = function (bool) {
 		bool ? 'on' : 'off');
 };
 var $author$project$Levels$ClickedExportLevelsButton = {$: 'ClickedExportLevelsButton'};
-var $rtfeldman$elm_css$Css$lineHeight = $rtfeldman$elm_css$Css$prop1('line-height');
-var $rtfeldman$elm_css$Css$margin = $rtfeldman$elm_css$Css$prop1('margin');
 var $author$project$Levels$makeButton = F2(
 	function (msg, string) {
 		return A2(
@@ -17036,7 +17034,7 @@ var $author$project$Levels$makeButton = F2(
 					$rtfeldman$elm_css$Html$Styled$Attributes$css(
 					_List_fromArray(
 						[
-							$rtfeldman$elm_css$Css$margin(
+							$rtfeldman$elm_css$Css$marginBottom(
 							$rtfeldman$elm_css$Css$px(4)),
 							$rtfeldman$elm_css$Css$padding(
 							$rtfeldman$elm_css$Css$px(8)),
@@ -17083,18 +17081,13 @@ var $author$project$Levels$exportingLevels = function (_v0) {
 							[
 								$rtfeldman$elm_css$Css$width(
 								$rtfeldman$elm_css$Css$pct(100)),
-								$rtfeldman$elm_css$Css$padding(
-								$rtfeldman$elm_css$Css$px(8)),
 								$rtfeldman$elm_css$Css$height(
 								$rtfeldman$elm_css$Css$px(112)),
 								$rtfeldman$elm_css$Css$overflowY($rtfeldman$elm_css$Css$scroll),
 								$rtfeldman$elm_css$Css$color(
-								$author$project$DesignSystem$Color$toCssColor(
-									A2($author$project$DesignSystem$Color$setOpacity, 0.6, $author$project$DesignSystem$Color$white))),
+								$author$project$DesignSystem$Color$toCssColor($author$project$DesignSystem$Color$whiteAlpha800)),
 								$rtfeldman$elm_css$Css$fontSize(
 								$rtfeldman$elm_css$Css$px(8)),
-								$rtfeldman$elm_css$Css$lineHeight(
-								$rtfeldman$elm_css$Css$px(9)),
 								$rtfeldman$elm_css$Css$backgroundColor(
 								$author$project$DesignSystem$Color$toCssColor(
 									A2($author$project$DesignSystem$Color$setOpacity, 0.4, $author$project$DesignSystem$Color$black))),
@@ -17141,18 +17134,13 @@ var $author$project$Levels$importingLevels = function (_v0) {
 							[
 								$rtfeldman$elm_css$Css$width(
 								$rtfeldman$elm_css$Css$pct(100)),
-								$rtfeldman$elm_css$Css$padding(
-								$rtfeldman$elm_css$Css$px(8)),
 								$rtfeldman$elm_css$Css$height(
 								$rtfeldman$elm_css$Css$px(112)),
 								$rtfeldman$elm_css$Css$overflowY($rtfeldman$elm_css$Css$scroll),
 								$rtfeldman$elm_css$Css$color(
-								$author$project$DesignSystem$Color$toCssColor(
-									A2($author$project$DesignSystem$Color$setOpacity, 0.6, $author$project$DesignSystem$Color$white))),
+								$author$project$DesignSystem$Color$toCssColor($author$project$DesignSystem$Color$whiteAlpha800)),
 								$rtfeldman$elm_css$Css$fontSize(
 								$rtfeldman$elm_css$Css$px(8)),
-								$rtfeldman$elm_css$Css$lineHeight(
-								$rtfeldman$elm_css$Css$px(9)),
 								$rtfeldman$elm_css$Css$backgroundColor(
 								$author$project$DesignSystem$Color$toCssColor(
 									A2($author$project$DesignSystem$Color$setOpacity, 0.4, $author$project$DesignSystem$Color$black))),
@@ -17183,7 +17171,7 @@ var $rtfeldman$elm_css$Css$whiteSpace = $rtfeldman$elm_css$Css$prop1('white-spac
 var $author$project$Levels$view = function (_v0) {
 	var p = _v0.a;
 	var moveLevelUpButton = A2(
-		$rtfeldman$elm_css$Html$Styled$div,
+		$rtfeldman$elm_css$Html$Styled$button,
 		_List_fromArray(
 			[
 				$rtfeldman$elm_css$Html$Styled$Attributes$css(
@@ -17209,7 +17197,7 @@ var $author$project$Levels$view = function (_v0) {
 		_List_fromArray(
 			[$author$project$Icons$icons.moveUp]));
 	var moveLevelDownButton = A2(
-		$rtfeldman$elm_css$Html$Styled$div,
+		$rtfeldman$elm_css$Html$Styled$button,
 		_List_fromArray(
 			[
 				$rtfeldman$elm_css$Html$Styled$Attributes$css(
@@ -17235,7 +17223,7 @@ var $author$project$Levels$view = function (_v0) {
 		_List_fromArray(
 			[$author$project$Icons$icons.moveDown]));
 	var deleteCurrentLevelButton = A2(
-		$rtfeldman$elm_css$Html$Styled$div,
+		$rtfeldman$elm_css$Html$Styled$button,
 		_List_fromArray(
 			[
 				$rtfeldman$elm_css$Html$Styled$Attributes$css(
@@ -17407,10 +17395,9 @@ var $author$project$Levels$view = function (_v0) {
 				$rtfeldman$elm_css$Html$Styled$Attributes$css(
 				_List_fromArray(
 					[
-						$rtfeldman$elm_css$Css$width(
-						$rtfeldman$elm_css$Css$px(240)),
-						$rtfeldman$elm_css$Css$fontSize(
-						$rtfeldman$elm_css$Css$px(12))
+						$rtfeldman$elm_css$Css$displayFlex,
+						$rtfeldman$elm_css$Css$flexDirection($rtfeldman$elm_css$Css$column),
+						A2($rtfeldman$elm_css$Css$property, 'gap', '16px')
 					]))
 			]),
 		_List_fromArray(
@@ -17422,12 +17409,14 @@ var $author$project$Levels$view = function (_v0) {
 						$rtfeldman$elm_css$Html$Styled$Attributes$css(
 						_List_fromArray(
 							[
-								$rtfeldman$elm_css$Css$width(
-								$rtfeldman$elm_css$Css$pct(100)),
 								$rtfeldman$elm_css$Css$height(
 								$rtfeldman$elm_css$Css$px(200)),
-								$rtfeldman$elm_css$Css$overflow($rtfeldman$elm_css$Css$hidden),
-								$rtfeldman$elm_css$Css$overflowY($rtfeldman$elm_css$Css$scroll)
+								$rtfeldman$elm_css$Css$overflowY($rtfeldman$elm_css$Css$scroll),
+								A3(
+								$rtfeldman$elm_css$Css$border3,
+								$rtfeldman$elm_css$Css$px(1),
+								$rtfeldman$elm_css$Css$solid,
+								A4($rtfeldman$elm_css$Css$rgba, 255, 255, 255, 0.1))
 							]))
 					]),
 				A2(
@@ -17440,21 +17429,7 @@ var $author$project$Levels$view = function (_v0) {
 					$author$project$SelectList$toList(p.selectList))),
 				A2(
 				$rtfeldman$elm_css$Html$Styled$div,
-				_List_fromArray(
-					[
-						$rtfeldman$elm_css$Html$Styled$Attributes$css(
-						_List_fromArray(
-							[
-								$rtfeldman$elm_css$Css$padding(
-								$rtfeldman$elm_css$Css$px(16)),
-								A3(
-								$rtfeldman$elm_css$Css$border3,
-								$rtfeldman$elm_css$Css$px(0.5),
-								$rtfeldman$elm_css$Css$solid,
-								$author$project$DesignSystem$Color$toCssColor(
-									A2($author$project$DesignSystem$Color$setOpacity, 0.2, $author$project$DesignSystem$Color$white)))
-							]))
-					]),
+				_List_Nil,
 				_List_fromArray(
 					[
 						$author$project$Levels$exportingLevels(
@@ -17462,21 +17437,7 @@ var $author$project$Levels$view = function (_v0) {
 					])),
 				A2(
 				$rtfeldman$elm_css$Html$Styled$div,
-				_List_fromArray(
-					[
-						$rtfeldman$elm_css$Html$Styled$Attributes$css(
-						_List_fromArray(
-							[
-								$rtfeldman$elm_css$Css$padding(
-								$rtfeldman$elm_css$Css$px(16)),
-								A3(
-								$rtfeldman$elm_css$Css$border3,
-								$rtfeldman$elm_css$Css$px(0.5),
-								$rtfeldman$elm_css$Css$solid,
-								$author$project$DesignSystem$Color$toCssColor(
-									A2($author$project$DesignSystem$Color$setOpacity, 0.2, $author$project$DesignSystem$Color$white)))
-							]))
-					]),
+				_List_Nil,
 				_List_fromArray(
 					[
 						$author$project$Levels$importingLevels(
@@ -17531,6 +17492,7 @@ var $author$project$RedFacedCube$Main$MouseEnterSolution = function (a) {
 var $author$project$RedFacedCube$Main$MouseLeftSolution = {$: 'MouseLeftSolution'};
 var $author$project$RedFacedCube$Main$PressedCalculateSolutionsButton = {$: 'PressedCalculateSolutionsButton'};
 var $rtfeldman$elm_css$Css$crosshair = {cursor: $rtfeldman$elm_css$Css$Structure$Compatible, value: 'crosshair'};
+var $rtfeldman$elm_css$Css$margin = $rtfeldman$elm_css$Css$prop1('margin');
 var $author$project$RedFacedCube$Main$makeButton = F2(
 	function (msg, string) {
 		return A2(
@@ -21455,16 +21417,29 @@ var $ianmackenzie$elm_geometry$Block3d$from = F2(
 			$ianmackenzie$elm_geometry$Point3d$yCoordinate(p2),
 			$ianmackenzie$elm_geometry$Point3d$zCoordinate(p2));
 	});
-var $author$project$SceneWebGL$cube = F2(
-	function (material_, width) {
-		var hw = width / 2;
+var $author$project$SceneWebGL$block = F2(
+	function (material_, _v0) {
+		var xDim = _v0.a;
+		var yDim = _v0.b;
+		var zDim = _v0.c;
+		var _v1 = _Utils_Tuple3(xDim / 2, yDim / 2, zDim / 2);
+		var hXDim = _v1.a;
+		var hYDim = _v1.b;
+		var hZDim = _v1.c;
 		return A2(
 			$ianmackenzie$elm_3d_scene$Scene3d$blockWithShadow,
 			material_,
 			A2(
 				$ianmackenzie$elm_geometry$Block3d$from,
-				A3($ianmackenzie$elm_geometry$Point3d$meters, -hw, -hw, -hw),
-				A3($ianmackenzie$elm_geometry$Point3d$meters, hw, hw, hw)));
+				A3($ianmackenzie$elm_geometry$Point3d$meters, -hXDim, -hYDim, -hZDim),
+				A3($ianmackenzie$elm_geometry$Point3d$meters, hXDim, hYDim, hZDim)));
+	});
+var $author$project$SceneWebGL$cube = F2(
+	function (material_, width) {
+		return A2(
+			$author$project$SceneWebGL$block,
+			material_,
+			_Utils_Tuple3(width, width, width));
 	});
 var $ianmackenzie$elm_3d_scene$Scene3d$group = function (entities) {
 	return $ianmackenzie$elm_3d_scene$Scene3d$Entity$group(entities);
@@ -21571,23 +21546,6 @@ var $author$project$RedFacedCube$Main$drawBoard = F2(
 				drawCellOnPath,
 				$author$project$RedFacedCube$Path$cells(
 					$author$project$Levels$current(model.levels).levelEditingPath)));
-	});
-var $author$project$SceneWebGL$block = F2(
-	function (material_, _v0) {
-		var xDim = _v0.a;
-		var yDim = _v0.b;
-		var zDim = _v0.c;
-		var _v1 = _Utils_Tuple3(xDim / 2, yDim / 2, zDim / 2);
-		var hXDim = _v1.a;
-		var hYDim = _v1.b;
-		var hZDim = _v1.c;
-		return A2(
-			$ianmackenzie$elm_3d_scene$Scene3d$blockWithShadow,
-			material_,
-			A2(
-				$ianmackenzie$elm_geometry$Block3d$from,
-				A3($ianmackenzie$elm_geometry$Point3d$meters, -hXDim, -hYDim, -hZDim),
-				A3($ianmackenzie$elm_geometry$Point3d$meters, hXDim, hYDim, hZDim)));
 	});
 var $elm$core$Basics$degrees = function (angleInDegrees) {
 	return (angleInDegrees * $elm$core$Basics$pi) / 180;
