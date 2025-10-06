@@ -1,8 +1,8 @@
 module SelectList exposing
     ( init, singleton, create
-    , getCurrent, getBeforeReversed, getAfter, getCurrentIndex, toList, size, isAtStart, isAtEnd
+    , getCurrent, getBeforeReversed, getAfter, getCurrentIndex, toList, size, isAtStart, isAtEnd, member
     , goTo, goToNext, goToPrevious, goToStart, goToEnd, selectNextOccurrenceOf
-    , mapCurrent, setCurrent, map, mapAt, moveCurrentToIndex
+    , mapCurrent, setCurrent, map, mapAt, moveCurrentToIndex, moveElement
     , add, duplicateCurrent, removeCurrent, removeAfter, removeBefore, moveElementDown, moveElementUp
     , insertAt
     , SelectList
@@ -18,7 +18,7 @@ module SelectList exposing
 
 # Query
 
-@docs getCurrent, getBeforeReversed, getAfter, getCurrentIndex, toList, size, isAtStart, isAtEnd
+@docs getCurrent, getBeforeReversed, getAfter, getCurrentIndex, toList, size, isAtStart, isAtEnd, member
 
 
 # Navigation
@@ -28,7 +28,7 @@ module SelectList exposing
 
 # Update
 
-@docs mapCurrent, setCurrent, map, mapAt, moveCurrentToIndex
+@docs mapCurrent, setCurrent, map, mapAt, moveCurrentToIndex, moveElement
 
 
 # Add and Remove
@@ -178,6 +178,18 @@ isAtEnd (SelectList p) =
     List.isEmpty p.after
 
 
+{-| Check if an element exists in the SelectList.
+
+    member 3 (create ( [ 1, 2 ], 3, [ 4, 5 ] )) --> True
+
+    member 6 (create ( [ 1, 2 ], 3, [ 4, 5 ] )) --> False
+
+-}
+member : a -> SelectList a -> Bool
+member element (SelectList p) =
+    element == p.current || List.member element p.beforeReversed || List.member element p.after
+
+
 
 -- UPDATE
 
@@ -250,18 +262,61 @@ The element remains selected.
 
 -}
 moveCurrentToIndex : Int -> SelectList a -> SelectList a
-moveCurrentToIndex targetIndex (SelectList p) =
+moveCurrentToIndex targetIndex selectList =
     let
-        correctedTargetIndex =
-            if targetIndex > List.length p.beforeReversed then
-                targetIndex - 1
-
-            else
-                targetIndex
+        ( before, after ) =
+            selectList
+                |> removeCurrent
+                |> toList
+                |> List.Extra.splitAt targetIndex
     in
-    SelectList p
-        |> removeCurrent
-        |> insertAt correctedTargetIndex p.current
+    SelectList
+        { beforeReversed = before |> List.reverse
+        , current = getCurrent selectList
+        , after = after
+        }
+
+
+{-| Move the element at index i to index j.
+The selected element doesn't change. If the element at index i was selected,
+it stays selected after being moved to index j.
+
+    moveElement 0 3 (create ( [], 1, [ 2, 3, 4, 5 ] )) --> SelectList with 2, 3, 4 before, 1 selected, and 5 after
+
+    moveElement 1 4 (create ( [ 1 ], 2, [ 3, 4, 5 ] )) --> SelectList with 1, 3, 4, 5 before, 2 selected
+
+-}
+moveElement : Int -> Int -> SelectList a -> SelectList a
+moveElement fromIndex toIndex selectList =
+    let
+        currentIndex : Int
+        currentIndex =
+            getCurrentIndex selectList
+    in
+    if fromIndex == toIndex then
+        selectList
+
+    else if currentIndex == fromIndex then
+        selectList
+            |> moveCurrentToIndex toIndex
+
+    else
+        let
+            adjustedCurrentIndex : Int
+            adjustedCurrentIndex =
+                if fromIndex < currentIndex && toIndex >= currentIndex then
+                    currentIndex - 1
+
+                else if fromIndex > currentIndex && toIndex <= currentIndex then
+                    currentIndex + 1
+
+                else
+                    currentIndex
+        in
+        selectList
+            |> goTo fromIndex
+            |> moveCurrentToIndex toIndex
+            |> goTo adjustedCurrentIndex
 
 
 {-| Move to the first element of the list.
@@ -336,24 +391,28 @@ goToNext (SelectList p) =
 
 {-| Move to the next occurrence of the specified element. If not found, stays at the current element.
 
-Note: This may result in an infinite loop if the element doesn't exist and the SelectList has more than one element.
-
     selectNextOccurrenceOf 5 (create ( [ 1, 2 ], 3, [ 4, 5 ] )) --> SelectList with 1, 2, 3, 4 before, 5 selected
 
     selectNextOccurrenceOf 3 (create ( [ 1, 2 ], 3, [ 4, 5 ] )) --> SelectList with 1, 2 before, 3 selected, and 4, 5 after (unchanged)
 
 -}
-selectNextOccurrenceOf : a -> SelectList a -> SelectList a
+selectNextOccurrenceOf : a -> SelectList a -> Maybe (SelectList a)
 selectNextOccurrenceOf a selectList =
     let
+        go : SelectList a -> Maybe (SelectList a)
         go sL =
             if getCurrent sL == a then
-                sL
+                Just sL
+
+            else if isAtEnd sL then
+                Nothing
 
             else
-                go (goToNext sL)
+                Maybe.andThen go (Just (goToNext sL))
     in
-    go selectList
+    selectList
+        |> goToStart
+        |> go
 
 
 {-| Move to the previous element in the list. Does nothing if already at the start.

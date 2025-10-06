@@ -7,7 +7,7 @@ import Play exposing (..)
 import Playground.Tape exposing (Message(..))
 import Scene3d.Material exposing (matte)
 import SceneWebGL exposing (..)
-import SceneWebGL.Camera as Camera exposing (Camera, perspectiveWithOrbit)
+import SceneWebGL.Camera exposing (Camera, perspectiveWithOrbit)
 
 
 main : Playground Model Never

@@ -10,9 +10,9 @@
   "scripts": {
     "postinstall": "elm-tooling install",
     "formatWithPrettier": "prettier --write \"**/*.{js,jsx,ts,tsx,json,css,md}\"",
-    "dev": "node ./scripts/prebuild.js && node ./scripts/generate-index-for-dev.js && npx elm-watch hot",
-    "build": "node ./scripts/prebuild.js && npx elm-watch make && node ./scripts/generate-index-for-build.js",
-    "deploy": "npm run build && gh-pages -d build"
+    "dev": "node ./scripts/prebuild.js && node ./scripts/generate-index-for-dev.js && pnpm exec elm-watch hot",
+    "build": "node ./scripts/prebuild.js && pnpm exec elm-watch make && node ./scripts/generate-index-for-build.js",
+    "deploy": "pnpm run build && gh-pages -d build"
   },
   "devDependencies": {
     "@lydell/elm-json-darwin-arm64": "^0.2.13-0",
@@ -26,5 +26,6 @@
     "inquirer": "^12.1.0",
     "prettier": "3.5.3",
     "shelljs": "^0.8.5"
-  }
+  },
+  "packageManager": "pnpm@10.18.1+sha512.77a884a165cbba2d8d1c19e3b4880eee6d2fcabd0d879121e282196b80042351d5eb3ca0935fa599da1dc51265cc68816ad2bddd2a2de5ea9fdf92adbec7cd34"
 }

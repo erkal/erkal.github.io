@@ -24,13 +24,13 @@ To begin with the development setup, follow the steps listed below:
 3. **Install all dependencies:**
 
    ```bash
-   npm install
+   pnpm install
    ```
 
 4. **Run the development server:**
 
    ```bash
-   npm run dev
+   pnpm run dev
    ```
 
    This starts serving of all pages. To access them, launch your browser and navigate to [http://localhost:8000/](http://localhost:8000/).

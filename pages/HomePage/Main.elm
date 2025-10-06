@@ -51,7 +51,7 @@ cards computer model =
             }
             "Kite: An Interactive Visualization Tool for Graph Theory"
         , cardWithInternalLink "UndoRedo" "Implementing safe undo/redo in Elm. A blog post with interactive explanations"
-        , cardWithInternalLink "TrixelEditor" "A trixel editor"
+        , cardWithInternalLink "TrixelEditor" "An editor for drawing on triangular grid"
         , cardWithInternalLink "RedFacedCube" "The Red-Faced Cube: One of the puzzles from Martin Gardner's column. It has a unique solution!"
         , cardWithInternalLink "WaveInWave" "A Creative coding example"
         , cardWithInternalLink "ColorShower" "A Creative coding example"

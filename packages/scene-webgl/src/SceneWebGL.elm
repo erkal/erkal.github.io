@@ -2,8 +2,7 @@ module SceneWebGL exposing
     ( Shape, block, cube, cylinder, group, line, sphere, triangle, square, convexPolygon
     , move, moveX, moveY, moveZ, rotateX, rotateY, rotateZ, rotateAround, scale, scaleAround
     , custom, sunny, unlit
-    , ngon, ngonWithWalls, rectangle
-    , axes
+    , axes, ngon, ngonWithWalls, rectangle, convexPolygonWithWalls
     )
 
 {-|
@@ -26,7 +25,7 @@ module SceneWebGL exposing
 
 # Special Shapes
 
-@docs axes, ngon, ngonWithWalls, rectangle
+@docs axes, ngon, ngonWithWalls, rectangle, convexPolygonWithWalls
 
 -}
 
@@ -212,6 +211,18 @@ polygonWalls material_ vertices height =
                 )
 
 
+{-| Create a convex polygon on XY plane, with walls into -Z direction
+-}
+convexPolygonWithWalls : Material_ -> List Point -> Float -> Shape
+convexPolygonWithWalls material_ vertices height =
+    group
+        [ convexPolygon material_ vertices
+        , polygonWalls material_ vertices height
+        , convexPolygon material_ vertices
+            |> moveZ -height
+        ]
+
+
 {-| Create a regular ngon on XY plane with a corner at Y direction
 -}
 ngon : Int -> Material_ -> Float -> Shape
@@ -233,7 +244,7 @@ ngon n material_ radius =
     convexPolygon material_ vertices
 
 
-{-| Create a regular ngon on XY plane with a corner at Y direction, with walls into -Z direction of heights
+{-| Create a regular ngon on XY plane with a corner at Y direction, with walls into -Z direction
 -}
 ngonWithWalls : Int -> Material_ -> Float -> Float -> Shape
 ngonWithWalls n material_ radius height =
@@ -254,6 +265,8 @@ ngonWithWalls n material_ radius height =
     group
         [ convexPolygon material_ vertices
         , polygonWalls material_ vertices height
+        , convexPolygon material_ vertices
+            |> moveZ -height
         ]
 
 
@@ -402,15 +415,17 @@ moveZ z =
 
 
 {-| Create 3D coordinate axes with cylinders. The axes are color-coded:
+
   - Red for X axis
-  - Green for Y axis  
+  - Green for Y axis
   - Blue for Z axis
-  
+
 The length parameter determines how long each axis is, and the thickness parameter
 controls the visual thickness of the cylinders.
 
     -- Standard axes with length 10 and thickness 0.2
     axes 10 0.2
+
 -}
 axes : Float -> Float -> Shape
 axes length thickness =
