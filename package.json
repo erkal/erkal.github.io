@@ -15,15 +15,15 @@
     "deploy": "pnpm run build && gh-pages -d build"
   },
   "devDependencies": {
-    "@lydell/elm-json-darwin-arm64": "^0.2.13-0",
+    "@lydell/elm-json-darwin-arm64": "0.2.13-0",
     "cors": "^2.8.5",
-    "elm": "^0.19.1-6",
-    "elm-tooling": "^1.15.1",
-    "elm-watch": "^2.0.0-beta.6",
+    "elm": "0.19.1-6",
+    "elm-tooling": "^1.16.0",
+    "elm-watch": "2.0.0-beta.7",
     "express": "^4.21.2",
-    "gh-pages": "^6.1.0",
-    "http-proxy-middleware": "^3.0.3",
-    "inquirer": "^12.1.0",
+    "gh-pages": "^6.3.0",
+    "http-proxy-middleware": "^3.0.5",
+    "inquirer": "^12.10.0",
     "prettier": "3.5.3",
     "shelljs": "^0.8.5"
   },
