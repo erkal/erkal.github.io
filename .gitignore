@@ -1,6 +1,8 @@
 .DS_Store
 .idea
 node_modules
+.pnpm-store/
+pnpm-debug.log*
 elm-stuff
 build
 *.local
