@@ -80,6 +80,19 @@ withHomePageHeader content =
                         , color (toCssColor whiteAlpha600)
                         , hover [ color (toCssColor whiteAlpha900) ]
                         ]
+                    , href "https://bsky.app/profile/azizerkalselman.bsky.social"
+                    , HA.target "_blank"
+                    , HA.title "Bluesky"
+                    ]
+                    [ Icons.icons.blueskyLogo ]
+                , a
+                    [ css
+                        [ padding (px 16)
+                        , width (px 80)
+                        , height (px 80)
+                        , color (toCssColor whiteAlpha600)
+                        , hover [ color (toCssColor whiteAlpha900) ]
+                        ]
                     , href "https://github.com/erkal"
                     , HA.target "_blank"
                     , HA.title "GitHub"
